@@ -134,6 +134,10 @@ customElements.define('dab-game-window',
       this._drag = this._drag.bind(this)
 
       this._closeApplication = this._closeApplication.bind(this)
+
+      this.setZIndex = this.setZIndex.bind(this)
+
+      this._setElementActive = this._setElementActive.bind(this)
     }
 
     /**
@@ -165,6 +169,7 @@ customElements.define('dab-game-window',
       this._topbar.addEventListener('mousemove', this._drag, false)
       this.addEventListener('doneMoving', this._dragEnd, false)
       this._cancelButton.addEventListener('click', this._closeApplication)
+      this.addEventListener('click', this._setElementActive)
     }
 
     /**
@@ -177,11 +182,22 @@ customElements.define('dab-game-window',
       this._topbar.removeEventListener('mousemove', this._drag, false)
       this.removeEventListener('doneMoving', this._dragEnd, false)
       this._cancelButton.removeEventListener('click', this._closeApplication)
+      this.removeEventListener('click', this._setElementActive)
     }
     
     _dragStart (event) {
         this._initialX = event.clientX - this._xOffset
         this._initialY = event.clientY - this._yOffset
+
+        this.dispatchEvent(new window.CustomEvent('elementInFocus', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            currentInstance: this
+          }
+        }))
+
+        this.style.zIndex = 1000
 
       if(event.target === this._topbar) {
         this._active = true
@@ -211,6 +227,23 @@ customElements.define('dab-game-window',
 
     _setTranslate(posX, posY, elem) {
       elem.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+    }
+
+    setZIndex (currentInstance) {
+      if(this === currentInstance) {
+        return this.style.zIndex = 1000
+      }
+      this.style.zIndex = 1
+    }
+
+    _setElementActive () {
+      this.dispatchEvent(new window.CustomEvent('elementInFocus', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          currentInstance: this
+        }
+      }))
     }
 
     _closeApplication () {

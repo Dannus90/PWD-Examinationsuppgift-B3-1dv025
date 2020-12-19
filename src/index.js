@@ -17,6 +17,8 @@ import './components/dab-application-icon/dab-application-icon'
 // Variables
 let translationPositionX = -50
 let translationPositionY = -50
+let uniqueId = 1
+const applicationArray = []
 
 // --- TARGETING DOM ELEMENTS --- //
 const pwdApplication = document.querySelector('#pwd-application')
@@ -24,11 +26,13 @@ const pwdApplication = document.querySelector('#pwd-application')
 /// //////////////////////////
 //  ADDING EVENT LISTENERS  //
 /// //////////////////////////
-document.addEventListener('createNewAppInstance', (event) => { 
-    console.log(event.detail.applicationName)
-    const application = document.createElement(event.detail.applicationName)
+document.addEventListener('createNewAppInstance', ({detail: {applicationName}}) => { 
+    // Creating a new instance of a specific application based on the detail name.
+    const application = document.createElement(applicationName)
     const applicationWindow = document.createElement('dab-game-window')
     applicationWindow.setAttribute('slot', 'application')
+    applicationWindow.setAttribute('id', uniqueId)
+
     application.setAttribute('slot', 'application-container')
 
     applicationWindow.appendChild(application)
@@ -41,6 +45,9 @@ document.addEventListener('createNewAppInstance', (event) => {
     translationPositionX -= 2
     translationPositionY -= 2
 
+    applicationArray.push(applicationWindow)
+    console.log(applicationArray)
+
     pwdApplication.appendChild(applicationWindow)
 })
 
@@ -52,7 +59,20 @@ document.addEventListener('mouseup', (event) => {
 })
 
 document.addEventListener('deleteAppInstance', (event) => {
+    const applicationIndex = applicationArray.indexOf(event.detail.applicationName)
+    
+    // Remove the specific application instance from the array. 
+    if (applicationIndex > -1) {
+        applicationArray.splice(applicationIndex, 1);
+    }
+      
     event.detail.applicationName.remove()
     translationPositionY += 2
     translationPositionX += 2
+})
+
+document.addEventListener('elementInFocus', (event) => {
+    applicationArray.forEach((app) => {
+        app.setZIndex(event.detail.currentInstance)
+    })
 })
