@@ -131,6 +131,8 @@ customElements.define('dab-game-window',
       this._dragEnd = this._dragEnd.bind(this)
 
       this._drag = this._drag.bind(this)
+
+      this._closeApplication = this._closeApplication.bind(this)
     }
 
     /**
@@ -156,20 +158,28 @@ customElements.define('dab-game-window',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      this._topbar.addEventListener('mousedown', this._dragStart, false);
-      this._topbar.addEventListener('mouseup', this._dragEnd, false);
+      this._topbar.addEventListener('mousedown', this._dragStart, false)
+      this._topbar.addEventListener('mouseup', this._dragEnd, false)
       this._topbar.addEventListener('mouseleave', this._dragEnd, false)
       this._topbar.addEventListener('mousemove', this._drag, false)
+      this.addEventListener('doneMoving', this._dragEnd, false)
+      this._cancelButton.addEventListener('click', this._closeApplication)
+    }
+
+    _test () {
+      console.log('hello')
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-      this._topbar.removeEventListener('mousedown', this._dragStart, false);
-      this._topbar.removeEventListener('mouseup', this._dragEnd, false);
+      this._topbar.removeEventListener('mousedown', this._dragStart, false)
+      this._topbar.removeEventListener('mouseup', this._dragEnd, false)
       this._topbar.removeEventListener('mouseleave', this._dragEnd, false)
       this._topbar.removeEventListener('mousemove', this._drag, false)
+      this.removeEventListener('doneMoving', this._dragEnd, false)
+      this._cancelButton.removeEventListener('click', this._closeApplication)
     }
     
     _dragStart (event) {
@@ -192,18 +202,28 @@ customElements.define('dab-game-window',
       if(this._active) {
         event.preventDefault()
 
+        this._setTranslate((event.clientX - this._initialX), (event.clientY - this._initialY), this._windowWrapper)
+
         this._currentX = event.clientX - this._initialX;
         this._currentY = event.clientY - this._initialY
 
         this._xOffset = this._currentX
         this._yOffset = this._currentY
-
-        this._setTranslate(this._currentX, this._currentY, this._windowWrapper)
       }
     }
 
     _setTranslate(posX, posY, elem) {
-      elem.style.transform = "translate3d(" + posX + "px, " + posY + "px, 0)";
+      elem.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+    }
+
+    _closeApplication () {
+      this.dispatchEvent(new window.CustomEvent('deleteAppInstance', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          applicationName: this
+        }
+      }))
     }
   }
 )

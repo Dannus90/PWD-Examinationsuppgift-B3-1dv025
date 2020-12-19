@@ -21,5 +21,16 @@ import './components/dab-application-icon/dab-application-icon'
 /// //////////////////////////
 document.addEventListener('createNewAppInstance', (event) => { 
     console.log(event.detail.applicationName)
-    document.createElement(event.detail.applicatioName)
+    document.createElement(event.detail.applicationName)
+})
+
+document.addEventListener('mouseup', (event) => {
+    event.target.dispatchEvent(new window.CustomEvent('doneMoving', {
+        bubbles: true,
+        composed: true,
+    }))
+})
+
+document.addEventListener('deleteAppInstance', (event) => {
+    event.detail.applicationName.remove()
 })
