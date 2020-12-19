@@ -5,4 +5,10 @@
  * @version 1.0.0
  */
 
-console.log('TODO: Start working on the assignment')
+// --- IMPORTS --- //
+import './components/dab-pwd-application/dab-pwd-application'
+import './components/dab-game-window/dab-game-window'
+import './components/dab-game-window/dab-game-window'
+import './components/dab-memory-game/dab-flipping-tile/dab-flipping-tile'
+import './components/dab-chat-application/dab-chat-application'
+import './components/dab-face-detection-application/dab-face-detection-application'
