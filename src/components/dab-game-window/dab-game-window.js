@@ -85,6 +85,7 @@ template.innerHTML = `
     <div class="game-window-wrapper-topbar">
       <button class="cancel-button"></button>
     </div>
+    <slot name="application-container" />
   </div>
 `
 
@@ -164,10 +165,6 @@ customElements.define('dab-game-window',
       this._topbar.addEventListener('mousemove', this._drag, false)
       this.addEventListener('doneMoving', this._dragEnd, false)
       this._cancelButton.addEventListener('click', this._closeApplication)
-    }
-
-    _test () {
-      console.log('hello')
     }
 
     /**

@@ -14,7 +14,7 @@ template.innerHTML = `
   </style>
 
   <div id="face-detection-application-wrapper">
-    
+    <h1>Face detection</h1>
   </div>
 `
 

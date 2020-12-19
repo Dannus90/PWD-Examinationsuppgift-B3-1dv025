@@ -14,7 +14,7 @@ template.innerHTML = `
   </style>
 
   <div id="chat-application-wrapper">
-    
+    <h1>Chat application</h1>
   </div>
 `
 

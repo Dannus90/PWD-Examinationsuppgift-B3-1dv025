@@ -14,7 +14,7 @@ template.innerHTML = `
   </style>
 
   <div id="memory-game-wrapper">
-    
+    <h1>Memory game</h1>
   </div>
 `
 
