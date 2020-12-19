@@ -21,7 +21,7 @@ template.innerHTML = `
         height: 100vh;
         width: 100vw;
         background-color: #fff;
-        overflow: hidden;
+        overflow-x: hidden;
     }
 
     .pwd-application-topbar {
@@ -60,6 +60,18 @@ template.innerHTML = `
         background-repeat: no-repeat;
     }
 
+    .pwd-application-icons-container {
+        background-image: linear-gradient(
+            110deg,
+            var(--bg-color-primary) 0%,
+            var(--bg-color-secondary) 50%,
+            var(--bg-color-tertiary) 89%
+          );
+          width: 100%;
+          display: flex;
+          padding: 1rem;
+    }
+
     @media only screen and (max-width: 1150px) {
         .pwd-application-topbar .pwd-application-heading {
             font-size: 1.9rem;
@@ -92,7 +104,9 @@ template.innerHTML = `
         <h1 class="pwd-application-heading"></h1>
     </div>
     <div class="pwd-application-applications-container"></div>
-    <div class="pwd-application-icons-container"><div>    
+    <div class="pwd-application-icons-container">
+        <slot name="application-icon" />
+    <div>    
   </div>
 `
 
