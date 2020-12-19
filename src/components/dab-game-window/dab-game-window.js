@@ -31,6 +31,10 @@ template.innerHTML = `
       user-select: none;
       cursor: grab;
     }
+    
+    .game-window-wrapper-topbar:active {
+      cursor: grabbing;
+    }
 
     .cancel-button {
       position: relative;
@@ -154,6 +158,7 @@ customElements.define('dab-game-window',
     connectedCallback () {
       this._topbar.addEventListener('mousedown', this._dragStart, false);
       this._topbar.addEventListener('mouseup', this._dragEnd, false);
+      this._topbar.addEventListener('mouseleave', this._dragEnd, false)
       this._topbar.addEventListener('mousemove', this._drag, false)
     }
 
@@ -163,6 +168,7 @@ customElements.define('dab-game-window',
     disconnectedCallback () {
       this._topbar.removeEventListener('mousedown', this._dragStart, false);
       this._topbar.removeEventListener('mouseup', this._dragEnd, false);
+      this._topbar.removeEventListener('mouseleave', this._dragEnd, false)
       this._topbar.removeEventListener('mousemove', this._drag, false)
     }
     
