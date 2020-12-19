@@ -12,9 +12,10 @@
 
 <body>
   <dab-pwd-application id="pwd-application" name="Your Personal Web Desktop Application" src="./assets/night-sky.jpg">
-    <div slot="application-icon" id="chat-application-icon"><dab-application-icon src="./assets/memory-game-icon.png" /></div>
-    <div slot="application-icon"><dab-application-icon src="./assets/memory-game-icon.png" /></div>
-    <div slot="application-icon"><dab-application-icon src="./assets/memory-game-icon.png" /></div>
+    <dab-game-window slot="application"></dab-game-window>
+    <div slot="application-icon" id="memory-game-icon"><dab-application-icon src="./assets/memory-game-icon.png" name="dab-memory-game"/></div>
+    <div slot="application-icon" id="chat-application-icon"><dab-application-icon src="./assets/memory-game-icon.png" name="dab-chat-application" /></div>
+    <div slot="application-icon" id="face-recognition-application-icon"><dab-application-icon src="./assets/memory-game-icon.png" name="dab-face-detection-application" /></div>
   </dab-pwd-application>
 </body>
 

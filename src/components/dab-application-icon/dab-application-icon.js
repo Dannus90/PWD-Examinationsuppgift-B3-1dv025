@@ -59,6 +59,9 @@ customElements.define('dab-application-icon',
 
       // The application icon name.
       this._name = ''
+      
+      // Binding this.
+      this._createNewAppInstance = this._createNewAppInstance.bind(this)
     }
 
     /**
@@ -79,7 +82,7 @@ customElements.define('dab-application-icon',
      */
     attributeChangedCallback (name, oldValue, newValue) {
         if(name === 'name') {
-            this._name = name
+            this._name = newValue
         }
 
         if(name === 'src') {
@@ -91,12 +94,24 @@ customElements.define('dab-application-icon',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+        this._applicationIconWrapper.addEventListener('click', this._createNewAppInstance)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+        this._applicationIconWrapper.removeEventListener('click', this._createNewAppInstance)
+    }
+
+    _createNewAppInstance () {
+        this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
+            bubbles: true,
+            composed: true,
+            detail: {
+              applicationName: this._name
+            }
+          }))
     }
   }
 )

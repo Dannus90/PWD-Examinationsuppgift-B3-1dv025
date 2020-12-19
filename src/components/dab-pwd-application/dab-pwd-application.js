@@ -103,7 +103,9 @@ template.innerHTML = `
     <div class="pwd-application-topbar">
         <h1 class="pwd-application-heading"></h1>
     </div>
-    <div class="pwd-application-applications-container"></div>
+    <div class="pwd-application-applications-container">
+        <slot name="application" />
+    </div>
     <div class="pwd-application-icons-container">
         <slot name="application-icon" />
     <div>    
