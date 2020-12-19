@@ -58,6 +58,7 @@ template.innerHTML = `
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        position:relative
     }
 
     .pwd-application-icons-container {
@@ -104,7 +105,7 @@ template.innerHTML = `
         <h1 class="pwd-application-heading"></h1>
     </div>
     <div class="pwd-application-applications-container">
-        <slot name="application" />
+        <slot name="application" class="application-position" />
     </div>
     <div class="pwd-application-icons-container">
         <slot name="application-icon" />

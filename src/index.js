@@ -14,6 +14,10 @@ import './components/dab-chat-application/dab-chat-application'
 import './components/dab-face-detection-application/dab-face-detection-application'
 import './components/dab-application-icon/dab-application-icon'
 
+// Variables
+let translationPositionX = -50
+let translationPositionY = -50
+
 // --- TARGETING DOM ELEMENTS --- //
 const pwdApplication = document.querySelector('#pwd-application')
 
@@ -29,6 +33,14 @@ document.addEventListener('createNewAppInstance', (event) => {
 
     applicationWindow.appendChild(application)
 
+    applicationWindow.style.position = 'absolute'
+    applicationWindow.style.top = '50%'
+    applicationWindow.style.left = '50%'
+    applicationWindow.style.transform = `translate(${translationPositionX}%, ${translationPositionY}%)`
+
+    translationPositionX -= 2
+    translationPositionY -= 2
+
     pwdApplication.appendChild(applicationWindow)
 })
 
@@ -41,4 +53,6 @@ document.addEventListener('mouseup', (event) => {
 
 document.addEventListener('deleteAppInstance', (event) => {
     event.detail.applicationName.remove()
+    translationPositionY += 2
+    translationPositionX += 2
 })
