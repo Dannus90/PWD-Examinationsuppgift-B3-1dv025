@@ -14,7 +14,6 @@ template.innerHTML = `
   #application-icon-wrapper {
     height: 45px;
     width: 45px;
-    background-color: red;
     margin-right: 25px;
     cursor: pointer;
     background-size: cover;

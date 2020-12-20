@@ -46,7 +46,6 @@ document.addEventListener('createNewAppInstance', ({detail: {applicationName}}) 
     translationPositionY -= 2
 
     applicationArray.push(applicationWindow)
-    console.log(applicationArray)
 
     pwdApplication.appendChild(applicationWindow)
 })
