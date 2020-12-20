@@ -15,6 +15,8 @@ template.innerHTML = `
       cursor: pointer;
       overflow: hidden;
       display: block;
+      height: 100px;
+      width: 100px;
     }
 
     #flipping-tile-wrapper {
@@ -26,12 +28,16 @@ template.innerHTML = `
       border-radius: 10px;
       perspective: 1000px;
       padding: 0.3rem;
+      width: 90px;
+      height: 90px;
+      word-break: break-all;
+      line-height: 1.2rem;
     }
 
     .card-inner {
       position: relative;
       width: 100%;
-      height: 130px;
+      height: 100%;
       text-align: center;
       transition: transform 0.8s;
       transform-style: preserve-3d;
@@ -48,12 +54,16 @@ template.innerHTML = `
 
     .front-side-image,
     .back-side-image {
-      height: 75%;
-      width: 75%;
+      height: 100%;
+      width: 100%;
       position: absolute;
       transform: translate(-50%, -50%);
       left: 50%;
       top: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.75rem;
     }
 
     .card-front {
@@ -81,7 +91,7 @@ template.innerHTML = `
             <img part="front-image" class="front-side-image" src="/images/2.png" alt="Gramophone">
         </div>
         <div part="card-back" class="card-back">
-            <img part="back-image" class="back-side-image" src="/images/lnu-symbol.png" alt="Questionmark">
+            <img part="back-image" class="back-side-image" src="./assets/memory-game/back-side/questionmark.png" alt="Questionmark">
         </div>
     </div>
   </div>
