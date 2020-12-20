@@ -136,10 +136,10 @@ customElements.define('dab-pwd-application',
 
       // Selecting the main application heading.
       this._applicationHeader = this.shadowRoot.querySelector('.pwd-application-heading')
-      
+
       // The application standard name.
       this._applicationHeaderText = 'Personal Web Desktop'
-      
+
       // The application applications container
       this._applicationsContainer = this.shadowRoot.querySelector('.pwd-application-applications-container')
     }
@@ -161,19 +161,19 @@ customElements.define('dab-pwd-application',
      * @param {*} newValue - The new value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-        if(name === 'name') {
-            this._applicationHeaderText = newValue
-        }
-        if(name === 'src') {
-            this._applicationsContainer.style.backgroundImage = `url(${newValue})`
-        }
+      if (name === 'name') {
+        this._applicationHeaderText = newValue
+      }
+      if (name === 'src') {
+        this._applicationsContainer.style.backgroundImage = `url(${newValue})`
+      }
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-        this._applicationHeader.textContent = this._applicationHeaderText
+      this._applicationHeader.textContent = this._applicationHeaderText
     }
 
     /**

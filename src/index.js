@@ -17,7 +17,7 @@ import './components/dab-application-icon/dab-application-icon'
 // Variables
 let translationPositionX = -50
 let translationPositionY = -50
-let uniqueId = 1
+const uniqueId = 1
 const applicationArray = []
 
 // --- TARGETING DOM ELEMENTS --- //
@@ -26,52 +26,52 @@ const pwdApplication = document.querySelector('#pwd-application')
 /// //////////////////////////
 //  ADDING EVENT LISTENERS  //
 /// //////////////////////////
-document.addEventListener('createNewAppInstance', ({detail: {applicationName}}) => { 
-    // Creating a new instance of a specific application based on the detail name.
-    const application = document.createElement(applicationName)
-    const applicationWindow = document.createElement('dab-game-window')
-    applicationWindow.setAttribute('slot', 'application')
-    applicationWindow.setAttribute('id', uniqueId)
+document.addEventListener('createNewAppInstance', ({ detail: { applicationName } }) => {
+  // Creating a new instance of a specific application based on the detail name.
+  const application = document.createElement(applicationName)
+  const applicationWindow = document.createElement('dab-game-window')
+  applicationWindow.setAttribute('slot', 'application')
+  applicationWindow.setAttribute('id', uniqueId)
 
-    application.setAttribute('slot', 'application-container')
+  application.setAttribute('slot', 'application-container')
 
-    applicationWindow.appendChild(application)
+  applicationWindow.appendChild(application)
 
-    applicationWindow.style.position = 'absolute'
-    applicationWindow.style.top = '50%'
-    applicationWindow.style.left = '50%'
-    applicationWindow.style.transform = `translate(${translationPositionX}%, ${translationPositionY}%)`
+  applicationWindow.style.position = 'absolute'
+  applicationWindow.style.top = '50%'
+  applicationWindow.style.left = '50%'
+  applicationWindow.style.transform = `translate(${translationPositionX}%, ${translationPositionY}%)`
 
-    translationPositionX -= 2
-    translationPositionY -= 2
+  translationPositionX -= 2
+  translationPositionY -= 2
 
-    applicationArray.push(applicationWindow)
+  applicationArray.push(applicationWindow)
 
-    pwdApplication.appendChild(applicationWindow)
+  pwdApplication.appendChild(applicationWindow)
 })
 
 document.addEventListener('mouseup', (event) => {
-    event.target.dispatchEvent(new window.CustomEvent('doneMoving', {
-        bubbles: true,
-        composed: true,
-    }))
+  event.target.dispatchEvent(new window.CustomEvent('doneMoving', {
+    bubbles: true,
+    composed: true
+  }))
 })
 
 document.addEventListener('deleteAppInstance', (event) => {
-    const applicationIndex = applicationArray.indexOf(event.detail.applicationName)
-    
-    // Remove the specific application instance from the array. 
-    if (applicationIndex > -1) {
-        applicationArray.splice(applicationIndex, 1);
-    }
-      
-    event.detail.applicationName.remove()
-    translationPositionY += 2
-    translationPositionX += 2
+  const applicationIndex = applicationArray.indexOf(event.detail.applicationName)
+
+  // Remove the specific application instance from the array.
+  if (applicationIndex > -1) {
+    applicationArray.splice(applicationIndex, 1)
+  }
+
+  event.detail.applicationName.remove()
+  translationPositionY += 2
+  translationPositionX += 2
 })
 
 document.addEventListener('elementInFocus', (event) => {
-    applicationArray.forEach((app) => {
-        app.setZIndex(event.detail.currentInstance)
-    })
+  applicationArray.forEach((app) => {
+    app.setZIndex(event.detail.currentInstance)
+  })
 })

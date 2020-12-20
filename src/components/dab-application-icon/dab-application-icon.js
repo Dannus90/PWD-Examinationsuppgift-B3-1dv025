@@ -52,13 +52,13 @@ customElements.define('dab-application-icon',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      
+
       // Selecting the application wrapper.
       this._applicationIconWrapper = this.shadowRoot.querySelector('#application-icon-wrapper')
 
       // The application icon name.
       this._name = ''
-      
+
       // Binding this.
       this._createNewAppInstance = this._createNewAppInstance.bind(this)
     }
@@ -80,37 +80,40 @@ customElements.define('dab-application-icon',
      * @param {*} newValue - The new value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-        if(name === 'name') {
-            this._name = newValue
-        }
+      if (name === 'name') {
+        this._name = newValue
+      }
 
-        if(name === 'src') {
-            this._applicationIconWrapper.style.backgroundImage = `url(${newValue})`
-        }
+      if (name === 'src') {
+        this._applicationIconWrapper.style.backgroundImage = `url(${newValue})`
+      }
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-        this._applicationIconWrapper.addEventListener('click', this._createNewAppInstance)
+      this._applicationIconWrapper.addEventListener('click', this._createNewAppInstance)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
-        this._applicationIconWrapper.removeEventListener('click', this._createNewAppInstance)
+      this._applicationIconWrapper.removeEventListener('click', this._createNewAppInstance)
     }
 
+    /**
+     *
+     */
     _createNewAppInstance () {
-        this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
-            bubbles: true,
-            composed: true,
-            detail: {
-              applicationName: this._name
-            }
-          }))
+      this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          applicationName: this._name
+        }
+      }))
     }
   }
 )

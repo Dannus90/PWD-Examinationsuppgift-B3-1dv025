@@ -118,13 +118,13 @@ customElements.define('dab-game-window',
       this._cancelButton = this.shadowRoot.querySelector('.cancel-button')
 
       // Position related variables.
-      this._active = false;
-      this._currentX;
-      this._currentY;
-      this._initialX;
-      this._initialY;
-      this._xOffset = 0;
-      this._yOffset = 0;
+      this._active = false
+      this._currentX
+      this._currentY
+      this._initialX
+      this._initialY
+      this._xOffset = 0
+      this._yOffset = 0
 
       // Binding this to class methods.
       this._dragStart = this._dragStart.bind(this)
@@ -184,26 +184,32 @@ customElements.define('dab-game-window',
       this._cancelButton.removeEventListener('click', this._closeApplication)
       this.removeEventListener('click', this._setElementActive)
     }
-    
+
+    /**
+     * @param event
+     */
     _dragStart (event) {
-        this._initialX = event.clientX - this._xOffset
-        this._initialY = event.clientY - this._yOffset
+      this._initialX = event.clientX - this._xOffset
+      this._initialY = event.clientY - this._yOffset
 
-        this.dispatchEvent(new window.CustomEvent('elementInFocus', {
-          bubbles: true,
-          composed: true,
-          detail: {
-            currentInstance: this
-          }
-        }))
+      this.dispatchEvent(new window.CustomEvent('elementInFocus', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          currentInstance: this
+        }
+      }))
 
-        this.style.zIndex = 1000
+      this.style.zIndex = 1000
 
-      if(event.target === this._topbar) {
+      if (event.target === this._topbar) {
         this._active = true
       }
     }
 
+    /**
+     * @param event
+     */
     _dragEnd (event) {
       this._initialX = this._currentX
       this._initialY = this._currentY
@@ -211,13 +217,16 @@ customElements.define('dab-game-window',
       this._active = false
     }
 
+    /**
+     * @param event
+     */
     _drag (event) {
-      if(this._active) {
+      if (this._active) {
         event.preventDefault()
 
         this._setTranslate((event.clientX - this._initialX), (event.clientY - this._initialY), this._windowWrapper)
 
-        this._currentX = event.clientX - this._initialX;
+        this._currentX = event.clientX - this._initialX
         this._currentY = event.clientY - this._initialY
 
         this._xOffset = this._currentX
@@ -225,17 +234,28 @@ customElements.define('dab-game-window',
       }
     }
 
-    _setTranslate(posX, posY, elem) {
+    /**
+     * @param posX
+     * @param posY
+     * @param elem
+     */
+    _setTranslate (posX, posY, elem) {
       elem.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
     }
 
+    /**
+     * @param currentInstance
+     */
     setZIndex (currentInstance) {
-      if(this === currentInstance) {
+      if (this === currentInstance) {
         return this.style.zIndex = 1000
       }
       this.style.zIndex = 1
     }
 
+    /**
+     *
+     */
     _setElementActive () {
       this.dispatchEvent(new window.CustomEvent('elementInFocus', {
         bubbles: true,
@@ -246,6 +266,9 @@ customElements.define('dab-game-window',
       }))
     }
 
+    /**
+     *
+     */
     _closeApplication () {
       this.dispatchEvent(new window.CustomEvent('deleteAppInstance', {
         bubbles: true,
