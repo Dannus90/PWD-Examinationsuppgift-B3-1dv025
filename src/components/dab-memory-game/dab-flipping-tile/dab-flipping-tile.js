@@ -5,6 +5,8 @@
  * @version 1.0.0
  */
 
+const imageUrl = (new URL('assets/questionmark.png', import.meta.url)).href
+
 /**
  * Define template.
  */
@@ -15,8 +17,10 @@ template.innerHTML = `
       cursor: pointer;
       overflow: hidden;
       display: block;
-      height: 100px;
-      width: 100px;
+      --tile-height: 80px;
+      --tile-width: 80px;
+      height: var(--tile-height);
+      width: var(--tile-width);
     }
 
     #flipping-tile-wrapper {
@@ -27,9 +31,8 @@ template.innerHTML = `
       position: relative;
       border-radius: 10px;
       perspective: 1000px;
-      padding: 0.3rem;
-      width: 90px;
-      height: 90px;
+      height: var(--tile-height);
+      width: var(--tile-width);
       word-break: break-all;
       line-height: 1.2rem;
     }
@@ -50,6 +53,7 @@ template.innerHTML = `
       width: 100%;
       -webkit-backface-visibility: hidden; /* Safari */
       backface-visibility: hidden;
+      overflow: hidden;
     }
 
     .front-side-image,
@@ -75,23 +79,29 @@ template.innerHTML = `
       );
       color: black;
       border-radius: 10px;
+      transform: rotateY(180deg);
     }
 
     .card-back {
-      background-color: dodgerblue;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 1) 19%,
+        rgba(19, 220, 206, 1) 72%
+      );
       color: white;
-      transform: rotateY(180deg);
       border-radius: 10px;
+      transform: rotateY(0deg);
     }
   </style>
 
   <div id="flipping-tile-wrapper" part="flipping-tile-wrapper">
     <div part="card-inner" class="card-inner">
         <div part="card-front" class="card-front">
-            <img part="front-image" class="front-side-image" src="/images/2.png" alt="Gramophone">
+            <img part="front-image" class="front-side-image" src="" alt="Gramophone">
         </div>
         <div part="card-back" class="card-back">
-            <img part="back-image" class="back-side-image" src="./assets/memory-game/back-side/questionmark.png" alt="Questionmark">
+            <img part="back-image" class="back-side-image" src=${imageUrl} alt="Questionmark">
         </div>
     </div>
   </div>
@@ -118,10 +128,8 @@ customElements.define('dab-flipping-tile',
 
       /* Selecting the flipping tile wrapper. */
       this._cardContentContainer = this.shadowRoot.querySelector('#flipping-tile-wrapper')
-      /* Get the p-element in which we display the information about which side is displayed */
-      this._imageElement = this.shadowRoot.querySelector('.image-container')
       /* Used to toggle side information */
-      this._frontSideDisplayed = true
+      this._frontSideDisplayed = false
       /* Front- and backside image element */
       this._frontSideImageElement = this.shadowRoot.querySelector('.front-side-image')
       this._backSideImageElement = this.shadowRoot.querySelector('.back-side-image')
@@ -191,14 +199,14 @@ customElements.define('dab-flipping-tile',
       if (this._frontSideDisplayed) {
         this._frontSideDisplayed = false
         this.dispatchEvent(new window.CustomEvent('flipped'))
-        this._cardInner.style.transform = 'rotateY(180deg)'
+        this._cardInner.style.transform = 'rotateY(0deg)'
         return
       }
 
       if (!this._frontSideDisplayed) {
         this._frontSideDisplayed = true
         this.dispatchEvent(new window.CustomEvent('flipped'))
-        this._cardInner.style.transform = 'rotateY(0deg)'
+        this._cardInner.style.transform = 'rotateY(180deg)'
       }
     }
   }
