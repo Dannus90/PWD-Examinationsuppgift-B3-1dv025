@@ -22,20 +22,37 @@ template.innerHTML = `
     :host {
       --tile-size: 80px;
     }
+
+    #memory-game-wrapper {
+      background-color: #fff;
+    }
+
     #memory-game-board {
       display: grid;
       grid-template-columns: repeat(4, var(--tile-size));
       gap: 15px;
       justify-content: center;
       align-items: center;
+      padding: 1.5rem;
     }
+
     #memory-game-board.small {
       grid-template-columns: repeat(2, var(--tile-size));
     }
+
+    #memory-game-wrapper h2 {
+      text-align: center;
+      margin: 0;
+      font-size: 1.8rem;
+      padding-top: 1.5rem;
+      color: #b2b2b2b;
+    }
+
     my-flipping-tile {
       width: var(--tile-size);
       height: var(--tile-size);
     }
+
     my-flipping-tile::part(tile-back) {
       border-width: 5px;
       background: url("${imageUrls[0]}") no-repeat center/80%, radial-gradient(#fff, #ffd700);;
@@ -44,7 +61,10 @@ template.innerHTML = `
   <template id="tile-template">
     <dab-flipping-tile></dab-flipping-tile>
   </template>
-  <div id="memory-game-board">
+  <div id="memory-game-wrapper">
+    <h2>Memory game</h2>
+    <div id="memory-game-board">
+    </div>
   </div>
 
 `

@@ -12,16 +12,16 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     #game-window-wrapper {
-      width: 600px;
-      height: 400px;
       background-color: #fff;
       overflow: hidden;
       border-radius: 7px;
       touch-action: none;
+      box-shadow: 5px 5px 5px -6px rgba(255,255,255,0.75);
     }
 
     .game-window-wrapper-topbar {
-      background-color: #292aa8;
+      background: rgb(131,58,180);
+      background-image: linear-gradient( 110deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
       height: 40px;
       width: 100%;
       display: flex;
