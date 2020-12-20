@@ -25,6 +25,7 @@ template.innerHTML = `
 
     #memory-game-wrapper {
       background-color: #fff;
+      position: relative;
     }
 
     #memory-game-board {
@@ -69,6 +70,64 @@ template.innerHTML = `
       border-width: 5px;
       background: url("${imageUrls[0]}") no-repeat center/80%, radial-gradient(#fff, #ffd700);;
     }
+
+    .victory-modal {
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      position: absolute;
+      width: 101%;
+      height: 101%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      display: none;
+    }
+
+    .victory-modal h3 {
+      font-size: 3.5rem;
+      color: #fff;
+      margin: 1rem;
+      margin-bottom: 0;
+      line-height: 4rem;
+      text-align: center;
+    }
+
+    .victory-modal p {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #fff;
+      text-align: center;
+    }
+
+    .play-again-button {
+      box-shadow: 0px 4px 5px -7px #276873;
+      border-radius: 8px;
+      display: inline-block;
+      cursor: pointer;
+      color: #fff;
+      font-family: Arial;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 10px 26px;
+      text-decoration: none;
+      margin: 1rem auto;
+      outline: none;
+      background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .play-again-button:focus,
+    .try-again-button:active {
+      transform: scale(1.05);
+      box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+    }
+
+    .play-again-button:hover {
+      background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+    }
   </style>
   <template id="tile-template">
     <dab-flipping-tile></dab-flipping-tile>
@@ -77,6 +136,11 @@ template.innerHTML = `
     <h2>Memory game</h2>
     <p>Number of tries: <span class="number-of-tries-display"></span></p>
     <div id="memory-game-board">
+    </div>
+    <div class="victory-modal">
+      <h3>Victory!</h3>
+      <p></p>
+      <button class="play-again-button">Play again!</button>
     </div>
   </div>
 
@@ -107,11 +171,16 @@ customElements.define('dab-memory-game',
       // Selecting the tile template. 
       this._tileTemplate = this.shadowRoot.querySelector('#tile-template')
 
+      // Selecting the play again button.
+      this._playAgainButton = this.shadowRoot.querySelector('.play-again-button')
+
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
 
-      // Binding this to the method. 
+      // Binding this to methods. 
       this._tileFlipped = this._tileFlipped.bind(this)
+
+      this._resetGame = this._resetGame.bind(this)
 
       // The number of tries.
       this._numberOfTries = 0
@@ -173,6 +242,8 @@ customElements.define('dab-memory-game',
 
       this._memoryGameBoard.addEventListener('tileflipped', this._tileFlipped)
       this.addEventListener('dragstart', this._onDragStart)
+      this.addEventListener('gameover', this._gameover)
+      this._playAgainButton.addEventListener('click', this._resetGame)
     }
 
     /**
@@ -181,6 +252,7 @@ customElements.define('dab-memory-game',
     disconnectedCallback () {
       this._memoryGameBoard.removeEventListener('tileflipped', this._tileFlipped)
       this.removeEventListener('dragstart', this._onDragStart)
+      this.removeEventListener('gameover', this._gameover)
     }
 
     /**
@@ -200,40 +272,40 @@ customElements.define('dab-memory-game',
       const { width, height } = this._gameBoardSize
 
       const amountOfTiles = width * height
-
-      if (amountOfTiles !== this._tiles.all.length) {
-        while(this._memoryGameBoard.firstChild) {
-          this._memoryGameBoard.removeChild(this._memoryGameBoard.lastChild)
-        }
-
-        if(width === 2) {
-          this._memoryGameBoard.classList.add('small')
-        } else {
-          this._memoryGameBoard.classList.remove('small')
-        }
-
-        // Add tiles.
-        for (let i = 0; i < amountOfTiles; i++) {
-          const tile = this._tileTemplate.content.cloneNode(true)
-          this._memoryGameBoard.appendChild(tile)
-        }
-
-        const indexes = [...Array(amountOfTiles).keys()]
-        for(let i = indexes.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [indexes[i], indexes[j]] = [indexes[j], indexes[i]]
-        }
-
-        // Set the tiles images both for front and backside of the card.
-        this._tiles.all.forEach((tile, i) => {          
-          tile.shadowRoot.querySelector('.front-side-image').setAttribute('src', imageUrls[indexes[i] % (amountOfTiles / 2) + 1])
-          tile.shadowRoot.querySelector('.back-side-image').setAttribute('src', imageUrls[0])
-          tile.faceUp = tile.disabled = tile.hidden = false
-
-          // Making sure that the cards with the same image are matching. 
-          tile.setAttribute('matchingid', JSON.stringify((indexes[i] % (amountOfTiles / 2) + 1)))
-        })
+ 
+      while(this._memoryGameBoard.firstChild) {
+        this._memoryGameBoard.removeChild(this._memoryGameBoard.lastChild)
       }
+
+      if(width === 2) {
+        this._memoryGameBoard.classList.add('small')
+      } else {
+        this._memoryGameBoard.classList.remove('small')
+      }
+
+      // Add tiles.
+      for (let i = 0; i < amountOfTiles; i++) {
+        const tile = this._tileTemplate.content.cloneNode(true)
+        this._memoryGameBoard.appendChild(tile)
+      }
+
+      const indexes = [...Array(amountOfTiles).keys()]
+      for(let i = indexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]]
+      }
+
+      // Set the tiles images both for front and backside of the card.
+      this._tiles.all.forEach((tile, i) => {
+        
+        tile.shadowRoot.querySelector('.front-side-image').setAttribute('src', imageUrls[indexes[i] % (amountOfTiles / 2) + 1])
+        tile.shadowRoot.querySelector('.back-side-image').setAttribute('src', imageUrls[0])
+
+        tile.faceUp = tile.disabled = tile.hidden = false
+
+        // Making sure that the cards with the same image are matching. 
+        tile.setAttribute('matchingid', JSON.stringify((indexes[i] % (amountOfTiles / 2) + 1)))
+      })
     }
 
     /**
@@ -247,7 +319,6 @@ customElements.define('dab-memory-game',
       event.preventDefault()
       event.stopPropagation()
     }
-
 
     get _tiles () {
       const tiles = Array.from(this._memoryGameBoard.children)
@@ -269,7 +340,6 @@ customElements.define('dab-memory-game',
       
       const tilesToDisable = Array.from(tiles.faceUp)
 
-
       if (tiles.faceUp.length > 1) {
         tilesToDisable.push(...tiles.faceDown)
       }
@@ -287,6 +357,8 @@ customElements.define('dab-memory-game',
           if (isEqual) {
             first.setAttribute('hidden', '')
             second.setAttribute('hidden', '')
+            first.style.visibility = 'hidden'
+            second.style.visibility = 'hidden'
           } else {
             first.cardMissMatch()
             second.cardMissMatch()
@@ -307,5 +379,27 @@ customElements.define('dab-memory-game',
       }
     }
 
+    _gameover () {
+      this.shadowRoot.querySelector('.victory-modal').style.display = 'flex'
+      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = `Victory! It took you ${this._numberOfTries} tries.`
+    }
+
+    _resetGame () {
+      this.shadowRoot.querySelector('.victory-modal').style.display = 'none'
+      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = ""
+      this._numberOfTries = 0
+      this._displayNumberOfTries.textContent = this._numberOfTries
+
+      this._tiles.all.forEach((tile, i) => {
+        tile.cardMissMatch()
+      })
+
+      this._tiles.all.forEach((tile, i) => {
+        tile.style.visibility = 'visible'
+        tile.removeAttribute('hidden')
+        tile.removeAttribute('disabled')
+      })
+      this._initialize()
+    }
   }
 )
