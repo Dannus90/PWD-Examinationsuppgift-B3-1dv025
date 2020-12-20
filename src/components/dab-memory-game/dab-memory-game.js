@@ -94,7 +94,8 @@ customElements.define('dab-memory-game',
       // Selecting the tile template. 
       this._tileTemplate = this.shadowRoot.querySelector('#tile-template')
 
-      this._tileFlipped = this._onTileFlip.bind(this)
+      // Binding this to the method 
+      this._tileFlipped = this._tileFlipped.bind(this)
     }
 
     /**
@@ -149,7 +150,7 @@ customElements.define('dab-memory-game',
 
       this._upgradeProperty('boardsize')
 
-      this._memoryGameBoard.addEventListener('tileFlipper', this._onTileFlip)
+      this._memoryGameBoard.addEventListener('tileflipped', this._tileFlipped)
       this.addEventListener('dragstart', this._onDragStart)
     }
 
@@ -157,6 +158,8 @@ customElements.define('dab-memory-game',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+      this._memoryGameBoard.removeEventListener('tileflipped', this._tileFlipped)
+      this.removeEventListener('dragstart', this._onDragStart)
     }
 
     /**
@@ -200,11 +203,16 @@ customElements.define('dab-memory-game',
           [indexes[i], indexes[j]] = [indexes[j], indexes[i]]
         }
 
+        console.log(indexes)
+
         // Set the tiles images both for front and backside of the card.
         this._tiles.all.forEach((tile, i) => {          
           tile.shadowRoot.querySelector('.front-side-image').setAttribute('src', imageUrls[indexes[i] % (amountOfTiles / 2) + 1])
           tile.shadowRoot.querySelector('.back-side-image').setAttribute('src', imageUrls[0])
           tile.faceUp = tile.disabled = tile.hidden = false
+
+          // Making sure that the cards with the same image are matching. 
+          tile.setAttribute('matchingid', JSON.stringify((indexes[i] % (amountOfTiles / 2) + 1)))
         })
       }
     }
@@ -237,9 +245,11 @@ customElements.define('dab-memory-game',
      *
      * @param {CustomEvent} event - The custom event.
      */
-    _onTileFlip (event) {
+    _tileFlipped (event) {
       const tiles = this._tiles
+      
       const tilesToDisable = Array.from(tiles.faceUp)
+
 
       if (tiles.faceUp.length > 1) {
         tilesToDisable.push(...tiles.faceDown)
@@ -251,6 +261,7 @@ customElements.define('dab-memory-game',
 
       if (second) {
         const isEqual = first.isEqual(second)
+        console.log(isEqual)
         const delay = isEqual ? 1000 : 1500
         window.setTimeout(() => {
           let eventName = 'tilesmismatch'
@@ -259,8 +270,8 @@ customElements.define('dab-memory-game',
             second.setAttribute('hidden', '')
             eventName = 'tilesmatch'
           } else {
-            first.removeAttribute('face-up')
-            second.removeAttribute('face-up')
+            first.cardMissMatch()
+            second.cardMissMatch()
             tilesToEnable.push(first, second)
           }
 
@@ -275,7 +286,7 @@ customElements.define('dab-memory-game',
               bubbles: true
             }))
 
-            this.__initialize()
+            this._initialize()
           } else {
             tilesToEnable?.forEach(tile => (tile.removeAttribute('disabled')))
           }

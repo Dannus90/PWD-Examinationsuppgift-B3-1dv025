@@ -248,5 +248,12 @@ customElements.define('dab-flipping-tile',
         this._cardInner.style.transform = 'rotateY(180deg)'
       }
     }
+
+    cardMissMatch () {
+        this.removeAttribute('face-up')
+        this._frontSideDisplayed = false
+        this._cardInner.style.transform = 'rotateY(0deg)'
+        return
+    }
   }
 )
