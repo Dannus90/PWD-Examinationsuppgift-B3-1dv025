@@ -48,6 +48,18 @@ template.innerHTML = `
       color: #b2b2b2b;
     }
 
+    #memory-game-wrapper p {
+      text-align: center;
+      margin: 0;
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .number-of-tries-display {
+      color: #0d753a;
+      font-weight: bold;
+    }
+
     my-flipping-tile {
       width: var(--tile-size);
       height: var(--tile-size);
@@ -63,6 +75,7 @@ template.innerHTML = `
   </template>
   <div id="memory-game-wrapper">
     <h2>Memory game</h2>
+    <p>Number of tries: <span class="number-of-tries-display"></span></p>
     <div id="memory-game-board">
     </div>
   </div>
@@ -94,8 +107,14 @@ customElements.define('dab-memory-game',
       // Selecting the tile template. 
       this._tileTemplate = this.shadowRoot.querySelector('#tile-template')
 
-      // Binding this to the method 
+      // Display number of tries.
+      this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
+
+      // Binding this to the method. 
       this._tileFlipped = this._tileFlipped.bind(this)
+
+      // The number of tries.
+      this._numberOfTries = 0
     }
 
     /**
@@ -147,6 +166,8 @@ customElements.define('dab-memory-game',
       if (!this.hasAttribute('boardsize')) {
         this.setAttribute('boardsize', 'large')
       }
+
+      this._displayNumberOfTries.textContent = this._numberOfTries
 
       this._upgradeProperty('boardsize')
 
@@ -203,8 +224,6 @@ customElements.define('dab-memory-game',
           [indexes[i], indexes[j]] = [indexes[j], indexes[i]]
         }
 
-        console.log(indexes)
-
         // Set the tiles images both for front and backside of the card.
         this._tiles.all.forEach((tile, i) => {          
           tile.shadowRoot.querySelector('.front-side-image').setAttribute('src', imageUrls[indexes[i] % (amountOfTiles / 2) + 1])
@@ -260,25 +279,19 @@ customElements.define('dab-memory-game',
       const [first, second, ...tilesToEnable] = tilesToDisable
 
       if (second) {
+        this._numberOfTries ++
+        this._displayNumberOfTries.textContent = this._numberOfTries
         const isEqual = first.isEqual(second)
-        console.log(isEqual)
         const delay = isEqual ? 1000 : 1500
         window.setTimeout(() => {
-          let eventName = 'tilesmismatch'
           if (isEqual) {
             first.setAttribute('hidden', '')
             second.setAttribute('hidden', '')
-            eventName = 'tilesmatch'
           } else {
             first.cardMissMatch()
             second.cardMissMatch()
             tilesToEnable.push(first, second)
           }
-
-          this.dispatchEvent(new CustomEvent(eventName, {
-            bubbles: true,
-            detail: { first, second }
-          }))
 
           if (tiles.all.every(tile => tile.hidden)) {
             tiles.all.forEach(tile => (tile.disabled = true))
