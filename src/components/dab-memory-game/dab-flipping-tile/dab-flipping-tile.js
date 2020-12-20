@@ -223,8 +223,6 @@ customElements.define('dab-flipping-tile',
         return
       }
 
-      console.log('isFaceUp?', this.hasAttribute('face-up'))
-
       // Toggle the face-up attribute depending on previous state. 
       this.hasAttribute('face-up')
         ? this.removeAttribute('face-up')

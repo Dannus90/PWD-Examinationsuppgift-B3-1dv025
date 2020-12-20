@@ -5,6 +5,15 @@
  * @version 1.0.0
  */
 
+import './dab-flipping-tile/index.js'
+const numberOfImages = 9
+
+const imageUrls = new Array(numberOfImages)
+for (let i = 0; i < numberOfImages; i++) {
+  imageUrls[i] = (new URL(`assets/${i}.png`, import.meta.url)).href
+}
+
+console.log(imageUrls)
 /**
  * Define template.
  */
