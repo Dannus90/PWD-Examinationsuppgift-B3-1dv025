@@ -101,7 +101,7 @@ template.innerHTML = `
             <img part="front-image" class="front-side-image" src="" alt="Gramophone">
         </div>
         <div part="card-back" class="card-back">
-            <img part="back-image" class="back-side-image" src=${imageUrl} alt="Questionmark">
+            <img part="back-image" class="back-side-image" src="" alt="Questionmark">
         </div>
     </div>
   </div>
