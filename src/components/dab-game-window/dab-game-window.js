@@ -126,13 +126,6 @@ customElements.define('dab-game-window',
       this._xOffset = 0
       this._yOffset = 0
 
-      // Binding this to class methods.
-      this._dragStart = this._dragStart.bind(this)
-
-      this._dragEnd = this._dragEnd.bind(this)
-
-      this._drag = this._drag.bind(this)
-
       this._closeApplication = this._closeApplication.bind(this)
 
       this.setZIndex = this.setZIndex.bind(this)
@@ -164,10 +157,6 @@ customElements.define('dab-game-window',
      */
     connectedCallback () {
       this._topbar.addEventListener('mousedown', this._dragStart, false)
-      this._topbar.addEventListener('mouseup', this._dragEnd, false)
-      this._topbar.addEventListener('mouseleave', this._dragEnd, false)
-      this._topbar.addEventListener('mousemove', this._drag, false)
-      this.addEventListener('doneMoving', this._dragEnd, false)
       this._cancelButton.addEventListener('click', this._closeApplication)
       this.addEventListener('click', this._setElementActive)
     }
@@ -177,10 +166,6 @@ customElements.define('dab-game-window',
      */
     disconnectedCallback () {
       this._topbar.removeEventListener('mousedown', this._dragStart, false)
-      this._topbar.removeEventListener('mouseup', this._dragEnd, false)
-      this._topbar.removeEventListener('mouseleave', this._dragEnd, false)
-      this._topbar.removeEventListener('mousemove', this._drag, false)
-      this.removeEventListener('doneMoving', this._dragEnd, false)
       this._cancelButton.removeEventListener('click', this._closeApplication)
       this.removeEventListener('click', this._setElementActive)
     }
@@ -189,58 +174,32 @@ customElements.define('dab-game-window',
      * @param event
      */
     _dragStart (event) {
-      this._initialX = event.clientX - this._xOffset
-      this._initialY = event.clientY - this._yOffset
-
-      this.dispatchEvent(new window.CustomEvent('elementInFocus', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          currentInstance: this
-        }
-      }))
-
-      this.style.zIndex = 1000
-
-      if (event.target === this._topbar) {
-        this._active = true
+      // If the user clicks the cancel-button we close application directly to prevent glitch. 
+      if(event.target.classList.contains('cancel-button')) {
+        return this._closeApplication
       }
-    }
 
-    /**
-     * @param event
-     */
-    _dragEnd (event) {
-      this._initialX = this._currentX
-      this._initialY = this._currentY
-
-      this._active = false
-    }
-
-    /**
-     * @param event
-     */
-    _drag (event) {
-      if (this._active) {
-        event.preventDefault()
-
-        this._setTranslate((event.clientX - this._initialX), (event.clientY - this._initialY), this._windowWrapper)
-
-        this._currentX = event.clientX - this._initialX
-        this._currentY = event.clientY - this._initialY
-
-        this._xOffset = this._currentX
-        this._yOffset = this._currentY
+      let shiftX = event.clientX - event.target.getBoundingClientRect().left;
+      let shiftY = event.clientY - event.target.getBoundingClientRect().top;
+      
+      function moveAt(pageX, pageY) {
+        event.target.style.left = pageX - shiftX + 'px';
+        event.target.style.top = pageY - shiftY + 'px';
       }
-    }
 
-    /**
-     * @param posX
-     * @param posY
-     * @param elem
-     */
-    _setTranslate (posX, posY, elem) {
-      elem.style.transform = `translate3d(${posX}px, ${posY}px, 0)`
+      function onMouseMove(event) {
+        moveAt(event.pageX, event.pageY);
+      }
+      
+      event.target.parentNode.style.position = 'absolute'
+      event.target.parentNode.style.zIndex = 1000;
+
+      document.addEventListener('mousemove', onMouseMove);
+
+      event.target.onmouseup = function() {
+        document.removeEventListener('mousemove', onMouseMove);
+        event.target.onmouseup = null;
+      };
     }
 
     /**
