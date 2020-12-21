@@ -16,7 +16,7 @@ template.innerHTML = `
       overflow: hidden;
       border-radius: 7px;
       touch-action: none;
-      box-shadow: 5px 5px 5px -6px rgba(255,255,255,0.75);
+      box-shadow: 5px 5px 15px rgba(119, 119, 119, 0.5);
     }
 
     .game-window-wrapper-topbar {
