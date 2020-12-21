@@ -20,13 +20,14 @@ template.innerHTML = `
 
       #websocket-chat {
         list-style: none;
-        min-height: 400px;
+        height: 400px;
+        width: 430px;
         padding: 1.5rem 1.5rem;
         display: flex;
         flex-direction: column;
         background-color: #eafefd;
         margin: 0;
-        overflowY: scroll;
+        overflow-y: scroll;
       }
 
       .chat-application-header {
@@ -57,9 +58,10 @@ template.innerHTML = `
         display: inline-block;
         padding: 0.25rem 1rem;
         position: relative;
-        margin-bottom: 2rem;
-        width: 50%;
+        margin-bottom: 1.5rem;
+        max-width: 75%;
         line-height: 1.6rem;
+        font-size: 0.8rem;
       }
 
       #websocket-chat li:nth-child(odd) {
@@ -100,10 +102,15 @@ template.innerHTML = `
 
       #websocket-message {
         color: #79c7c5;
+        font-size: 1.05rem;
         height: 100%;
+        width: 100%;
+        max-width: 442px;
         background-color: #f9fbff;
         display: flex;
         align-items: center;
+        white-space: normal;
+        padding: 1rem;
       }
 
       form {
@@ -172,7 +179,7 @@ customElements.define('dab-chat-application',
 
       this._userInput = ''
 
-      this._userName = 'Tamimosaurus Rex'
+      this._userName = 'Gammelgäddan57'
 
       this._apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
@@ -220,7 +227,7 @@ customElements.define('dab-chat-application',
 
       webSocketConnection.onopen = () => {
         const li = document.createElement('li');
-        li.innerText = 'Welcome to LNU Messenger App!'
+        li.innerText = 'Welcome to LNU Messenger App! Welcome to LNU Messenger App! Welcome to LNU Messenger App!'
         this._webSocketChat.appendChild(li)
       }
 
@@ -239,6 +246,7 @@ customElements.define('dab-chat-application',
         const li = document.createElement('li');
         li.innerText = `${username}: ${data}`
         this._webSocketChat.appendChild(li)
+        this._webSocketChat.scrollTop = this._webSocketChat.scrollHeight
       }
     }
 
@@ -263,6 +271,8 @@ customElements.define('dab-chat-application',
       }
 
       this._websocketConnection.send(JSON.stringify(data))
+      this._userInput = ''
+      this._webSocketMessage.value = ''
     }
 
     _updateUserInput ({ target: { value } }) {
