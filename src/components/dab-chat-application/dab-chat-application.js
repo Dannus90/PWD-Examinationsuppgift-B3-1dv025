@@ -15,7 +15,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
       #chat-application-wrapper {
-        
+        position: relative;
       }
 
       #websocket-chat {
@@ -143,9 +143,58 @@ template.innerHTML = `
       .send-message-icon:active {
         transform: scale(0.975);
       }
+
+      .pickname-modal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba(0,0,0,0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .pickname-input {
+        padding: 0.5rem 0.75rem;
+        outline: none;
+      }
+
+      .pickname-button {
+        box-shadow: 0px 4px 5px -7px #276873;
+        border-radius: 8px;
+        display: inline-block;
+        cursor: pointer;
+        color: #fff;
+        font-family: Arial;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 10px 26px;
+        text-decoration: none;
+        margin: 1rem auto;
+        outline: none;
+        background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+        transition: transform 0.2s ease-in-out;
+      }
+
+      .pickname-button:focus {
+        transform: scale(1.05);
+        box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+      }
+
+      .pickname-button:hover {
+        background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+      }
   </style>
 
   <div id="chat-application-wrapper">
+    <div class="pickname-modal">
+      <input class="pickname-input" value="" />
+      <button class="pickname-button">Pick name</button>
+    </div>
     <div class="chat-application-header"><img src="${chatIcon}" class="chat-icon" height="35" width="35" /><h3>LNU Messenger App</h3></div>
     <ul id="websocket-chat"></ul>
     <form>
@@ -174,7 +223,8 @@ customElements.define('dab-chat-application',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-
+      
+        // Websocket related variables.
       this._websocketConnection = ''
 
       this._userInput = ''
@@ -189,11 +239,17 @@ customElements.define('dab-chat-application',
       this._webSocketMessage = this.shadowRoot.querySelector('#websocket-message')
       // Selecting the submit button
       this._submitButton = this.shadowRoot.querySelector('.submit-button')
+      // Selecting the pickname input.
+      this._picknameInput = this.shadowRoot.querySelector('.pickname-input')
+      // Selecting the pickname button.
+      this._picknameButton = this.shadowRoot.querySelector('.pickname-button')
 
       // Binding this.
       this._submitUserMessage = this._submitUserMessage.bind(this)
 
       this._updateUserInput = this._updateUserInput.bind(this)
+
+      this._pickName = this._pickName.bind(this)
     }
 
     /**
@@ -221,13 +277,14 @@ customElements.define('dab-chat-application',
     connectedCallback () {
       this._submitButton.addEventListener(('click'), this._submitUserMessage)
       this._webSocketMessage.addEventListener(('input'), this._updateUserInput)
+      this._picknameButton.addEventListener(('click'), this._pickName)
 
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
       this._websocketConnection = webSocketConnection
 
       webSocketConnection.onopen = () => {
         const li = document.createElement('li');
-        li.innerText = 'Welcome to LNU Messenger App! Welcome to LNU Messenger App! Welcome to LNU Messenger App!'
+        li.innerText = 'Welcome to LNU Messenger App!'
         this._webSocketChat.appendChild(li)
       }
 
@@ -246,6 +303,7 @@ customElements.define('dab-chat-application',
         const li = document.createElement('li');
         li.innerText = `${username}: ${data}`
         this._webSocketChat.appendChild(li)
+        // Scrolling to the bottom of the chat.
         this._webSocketChat.scrollTop = this._webSocketChat.scrollHeight
       }
     }
@@ -278,6 +336,12 @@ customElements.define('dab-chat-application',
     _updateUserInput ({ target: { value } }) {
       console.log(value)
       this._userInput = value
+    }
+    // TODO ADD WARNING IF THE PICKEDNAME IS TO SHORT!
+    _pickName (event) {
+      event.preventDefault()
+      this._userName = this._picknameInput.value
+      this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
     }
   }
 )
