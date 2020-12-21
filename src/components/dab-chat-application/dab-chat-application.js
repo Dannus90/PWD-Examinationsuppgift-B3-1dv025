@@ -15,7 +15,7 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
       #chat-application-wrapper {
-        /* padding: 1rem; */
+        
       }
 
       #websocket-chat {
@@ -26,6 +26,7 @@ template.innerHTML = `
         flex-direction: column;
         background-color: #eafefd;
         margin: 0;
+        overflowY: scroll;
       }
 
       .chat-application-header {
@@ -57,6 +58,8 @@ template.innerHTML = `
         padding: 0.25rem 1rem;
         position: relative;
         margin-bottom: 2rem;
+        width: 50%;
+        line-height: 1.6rem;
       }
 
       #websocket-chat li:nth-child(odd) {
@@ -139,7 +142,7 @@ template.innerHTML = `
     <div class="chat-application-header"><img src="${chatIcon}" class="chat-icon" height="35" width="35" /><h3>LNU Messenger App</h3></div>
     <ul id="websocket-chat"></ul>
     <form>
-      <textarea rows="8" cols="80" id="websocket-message"></textarea>
+      <textarea rows="8" cols="80" id="websocket-message" value=""></textarea>
       <button class="submit-button" type="submit"><img src="${sendMessage}" class="send-message-icon" height="20" width="20" />
       </button>
     </form>
@@ -167,10 +170,23 @@ customElements.define('dab-chat-application',
 
       this._websocketConnection = ''
 
+      this._userInput = ''
+
+      this._userName = 'Tamimosaurus Rex'
+
+      this._apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+
       // Selecting the websocket chat container.
       this._webSocketChat = this.shadowRoot.querySelector('#websocket-chat')
       // Selecting the websocket message field.
       this._webSocketMessage = this.shadowRoot.querySelector('#websocket-message')
+      // Selecting the submit button
+      this._submitButton = this.shadowRoot.querySelector('.submit-button')
+
+      // Binding this.
+      this._submitUserMessage = this._submitUserMessage.bind(this)
+
+      this._updateUserInput = this._updateUserInput.bind(this)
     }
 
     /**
@@ -196,16 +212,33 @@ customElements.define('dab-chat-application',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      this._submitButton.addEventListener(('click'), this._submitUserMessage)
+      this._webSocketMessage.addEventListener(('input'), this._updateUserInput)
+
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
+      this._websocketConnection = webSocketConnection
 
       webSocketConnection.onopen = () => {
-        console.log('Connected to the server!')
         const li = document.createElement('li');
-        li.innerText = 'Connected to the server!'
+        li.innerText = 'Welcome to LNU Messenger App!'
         this._webSocketChat.appendChild(li)
-        const li2 = document.createElement('li');
-        li2.innerText = 'Connected to the server!'
-        this._webSocketChat.appendChild(li2)
+      }
+
+      webSocketConnection.onclose = () => {
+        console.error('disconnected');
+      }
+
+      webSocketConnection.onerror = (error) => {
+        console.error('Connection could not be established', error)
+      }
+
+      webSocketConnection.onmessage = (event) => {
+        const parsedData = JSON.parse(event.data)
+        const { data, type, username} = parsedData
+        console.log('received', event.data);
+        const li = document.createElement('li');
+        li.innerText = `${username}: ${data}`
+        this._webSocketChat.appendChild(li)
       }
     }
 
@@ -213,6 +246,28 @@ customElements.define('dab-chat-application',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+    }
+
+    _submitUserMessage (event) {
+      event.preventDefault()
+      if(this._userInput === '') {
+        return
+      }
+
+      const data = {
+        type: "message",
+        data: this._userInput,
+        username: this._userName,
+        channel: "my, not so secret, channel",
+        key: this._apiKey
+      }
+
+      this._websocketConnection.send(JSON.stringify(data))
+    }
+
+    _updateUserInput ({ target: { value } }) {
+      console.log(value)
+      this._userInput = value
     }
   }
 )
