@@ -5,8 +5,8 @@
  * @version 1.0.0
  */
 
-const chatIcon = (new URL(`assets/chat-application-icon.svg`, import.meta.url)).href
-const sendMessage = (new URL(`assets/send-message.svg`, import.meta.url)).href
+const chatIcon = (new URL('assets/chat-application-icon.svg', import.meta.url)).href
+const sendMessage = (new URL('assets/send-message.svg', import.meta.url)).href
 
 /**
  * Define template.
@@ -223,8 +223,8 @@ customElements.define('dab-chat-application',
       // append the template to the shadow root.
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      
-        // Websocket related variables.
+
+      // Websocket related variables.
       this._websocketConnection = ''
 
       this._userInput = ''
@@ -282,25 +282,37 @@ customElements.define('dab-chat-application',
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
       this._websocketConnection = webSocketConnection
 
+      /**
+       *
+       */
       webSocketConnection.onopen = () => {
-        const li = document.createElement('li');
+        const li = document.createElement('li')
         li.innerText = 'Welcome to LNU Messenger App!'
         this._webSocketChat.appendChild(li)
       }
 
+      /**
+       *
+       */
       webSocketConnection.onclose = () => {
-        console.error('disconnected');
+        console.error('disconnected')
       }
 
+      /**
+       * @param error
+       */
       webSocketConnection.onerror = (error) => {
         console.error('Connection could not be established', error)
       }
 
+      /**
+       * @param event
+       */
       webSocketConnection.onmessage = (event) => {
         const parsedData = JSON.parse(event.data)
-        const { data, type, username} = parsedData
-        console.log('received', event.data);
-        const li = document.createElement('li');
+        const { data, type, username } = parsedData
+        console.log('received', event.data)
+        const li = document.createElement('li')
         li.innerText = `${username}: ${data}`
         this._webSocketChat.appendChild(li)
         // Scrolling to the bottom of the chat.
@@ -314,17 +326,20 @@ customElements.define('dab-chat-application',
     disconnectedCallback () {
     }
 
+    /**
+     * @param event
+     */
     _submitUserMessage (event) {
       event.preventDefault()
-      if(this._userInput === '') {
+      if (this._userInput === '') {
         return
       }
 
       const data = {
-        type: "message",
+        type: 'message',
         data: this._userInput,
         username: this._userName,
-        channel: "my, not so secret, channel",
+        channel: 'my, not so secret, channel',
         key: this._apiKey
       }
 
@@ -333,11 +348,20 @@ customElements.define('dab-chat-application',
       this._webSocketMessage.value = ''
     }
 
+    /**
+     * @param root0
+     * @param root0.target
+     * @param root0.target.value
+     */
     _updateUserInput ({ target: { value } }) {
       console.log(value)
       this._userInput = value
     }
+
     // TODO ADD WARNING IF THE PICKEDNAME IS TO SHORT!
+    /**
+     * @param event
+     */
     _pickName (event) {
       event.preventDefault()
       this._userName = this._picknameInput.value

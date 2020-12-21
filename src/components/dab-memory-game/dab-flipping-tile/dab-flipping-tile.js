@@ -179,7 +179,7 @@ customElements.define('dab-flipping-tile',
         // Determine if we should set or remove disabled attribute.
         const isToBeDisabled = Boolean(newValue) || newValue === ''
 
-        if(isToBeDisabled) {
+        if (isToBeDisabled) {
           this._cardContentContainer.setAttribute('disabled', '')
           this.blur()
         } else {
@@ -206,12 +206,12 @@ customElements.define('dab-flipping-tile',
      * Specifies the equality between nodes.
      *
      * @param {Node} other - The tile to test for equality.
+     * @param comparisonNode
      * @returns {boolean} - Returns true if the two compared nodes are equal.
      */
     isEqual (comparisonNode) {
       return this.isEqualNode(comparisonNode)
     }
-
 
     /**
      * This method will flip the card and display information regarding which side is currently displayed.
@@ -223,16 +223,16 @@ customElements.define('dab-flipping-tile',
         return
       }
 
-      // Toggle the face-up attribute depending on previous state. 
+      // Toggle the face-up attribute depending on previous state.
       this.hasAttribute('face-up')
         ? this.removeAttribute('face-up')
         : this.setAttribute('face-up', '')
 
-      // Dispatch the tile flipped custom event. 
+      // Dispatch the tile flipped custom event.
       this.dispatchEvent(new CustomEvent('tileflipped', {
         bubbles: true,
         composed: true,
-        detail: { 
+        detail: {
           faceUp: this.hasAttribute('face-up')
         }
       }))
@@ -249,11 +249,13 @@ customElements.define('dab-flipping-tile',
       }
     }
 
+    /**
+     *
+     */
     cardMissMatch () {
-        this.removeAttribute('face-up')
-        this._frontSideDisplayed = false
-        this._cardInner.style.transform = 'rotateY(0deg)'
-        return
+      this.removeAttribute('face-up')
+      this._frontSideDisplayed = false
+      this._cardInner.style.transform = 'rotateY(0deg)'
     }
   }
 )

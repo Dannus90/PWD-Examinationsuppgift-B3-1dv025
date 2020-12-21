@@ -168,7 +168,7 @@ customElements.define('dab-memory-game',
       // Selecting the game board.
       this._memoryGameBoard = this.shadowRoot.querySelector('#memory-game-board')
 
-      // Selecting the tile template. 
+      // Selecting the tile template.
       this._tileTemplate = this.shadowRoot.querySelector('#tile-template')
 
       // Selecting the play again button.
@@ -177,7 +177,7 @@ customElements.define('dab-memory-game',
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
 
-      // Binding this to methods. 
+      // Binding this to methods.
       this._tileFlipped = this._tileFlipped.bind(this)
 
       this._resetGame = this._resetGame.bind(this)
@@ -208,22 +208,31 @@ customElements.define('dab-memory-game',
       }
     }
 
+    /**
+     *
+     */
     get boardSize () {
       return this.getAttribute('boardsize')
     }
 
+    /**
+     *
+     */
     set boardSize (size) {
       this.setAttribute('boardsize', size)
     }
 
+    /**
+     *
+     */
     get _gameBoardSize () {
       const gameBoardSize = {
         width: 4,
         height: 4
       }
 
-      if(this.boardSize === 'small') return gameBoardSize.width = gameBoardSize.height = 2
-      if(this.boardSize === 'medium') return gameBoardSize.height = 2
+      if (this.boardSize === 'small') return gameBoardSize.width = gameBoardSize.height = 2
+      if (this.boardSize === 'medium') return gameBoardSize.height = 2
 
       return gameBoardSize
     }
@@ -268,16 +277,19 @@ customElements.define('dab-memory-game',
       }
     }
 
+    /**
+     *
+     */
     _initialize () {
       const { width, height } = this._gameBoardSize
 
       const amountOfTiles = width * height
- 
-      while(this._memoryGameBoard.firstChild) {
+
+      while (this._memoryGameBoard.firstChild) {
         this._memoryGameBoard.removeChild(this._memoryGameBoard.lastChild)
       }
 
-      if(width === 2) {
+      if (width === 2) {
         this._memoryGameBoard.classList.add('small')
       } else {
         this._memoryGameBoard.classList.remove('small')
@@ -290,20 +302,19 @@ customElements.define('dab-memory-game',
       }
 
       const indexes = [...Array(amountOfTiles).keys()]
-      for(let i = indexes.length - 1; i > 0; i--) {
+      for (let i = indexes.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [indexes[i], indexes[j]] = [indexes[j], indexes[i]]
       }
 
       // Set the tiles images both for front and backside of the card.
       this._tiles.all.forEach((tile, i) => {
-        
         tile.shadowRoot.querySelector('.front-side-image').setAttribute('src', imageUrls[indexes[i] % (amountOfTiles / 2) + 1])
         tile.shadowRoot.querySelector('.back-side-image').setAttribute('src', imageUrls[0])
 
         tile.faceUp = tile.disabled = tile.hidden = false
 
-        // Making sure that the cards with the same image are matching. 
+        // Making sure that the cards with the same image are matching.
         tile.setAttribute('matchingid', JSON.stringify((indexes[i] % (amountOfTiles / 2) + 1)))
       })
     }
@@ -320,6 +331,9 @@ customElements.define('dab-memory-game',
       event.stopPropagation()
     }
 
+    /**
+     *
+     */
     get _tiles () {
       const tiles = Array.from(this._memoryGameBoard.children)
       return {
@@ -337,7 +351,7 @@ customElements.define('dab-memory-game',
      */
     _tileFlipped (event) {
       const tiles = this._tiles
-      
+
       const tilesToDisable = Array.from(tiles.faceUp)
 
       if (tiles.faceUp.length > 1) {
@@ -349,7 +363,7 @@ customElements.define('dab-memory-game',
       const [first, second, ...tilesToEnable] = tilesToDisable
 
       if (second) {
-        this._numberOfTries ++
+        this._numberOfTries++
         this._displayNumberOfTries.textContent = this._numberOfTries
         const isEqual = first.isEqual(second)
         const delay = isEqual ? 1000 : 1500
@@ -379,14 +393,20 @@ customElements.define('dab-memory-game',
       }
     }
 
+    /**
+     *
+     */
     _gameover () {
       this.shadowRoot.querySelector('.victory-modal').style.display = 'flex'
       this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = `Victory! It took you ${this._numberOfTries} tries.`
     }
 
+    /**
+     *
+     */
     _resetGame () {
       this.shadowRoot.querySelector('.victory-modal').style.display = 'none'
-      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = ""
+      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = ''
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
 

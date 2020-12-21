@@ -174,32 +174,42 @@ customElements.define('dab-game-window',
      * @param event
      */
     _dragStart (event) {
-      // If the user clicks the cancel-button we close application directly to prevent glitch. 
-      if(event.target.classList.contains('cancel-button')) {
+      // If the user clicks the cancel-button we close application directly to prevent glitch.
+      if (event.target.classList.contains('cancel-button')) {
         return this._closeApplication
       }
 
-      let shiftX = event.clientX - event.target.getBoundingClientRect().left;
-      let shiftY = event.clientY - event.target.getBoundingClientRect().top;
-      
-      function moveAt(pageX, pageY) {
-        event.target.style.left = pageX - shiftX + 'px';
-        event.target.style.top = pageY - shiftY + 'px';
+      const shiftX = event.clientX - event.target.getBoundingClientRect().left
+      const shiftY = event.clientY - event.target.getBoundingClientRect().top
+
+      /**
+       * @param pageX
+       * @param pageY
+       */
+      function moveAt (pageX, pageY) {
+        event.target.style.left = pageX - shiftX + 'px'
+        event.target.style.top = pageY - shiftY + 'px'
       }
 
-      function onMouseMove(event) {
-        moveAt(event.pageX, event.pageY);
+      /**
+       * @param event
+       */
+      function onMouseMove (event) {
+        moveAt(event.pageX, event.pageY)
       }
-      
+
       event.target.parentNode.style.position = 'absolute'
-      event.target.parentNode.style.zIndex = 1000;
+      event.target.parentNode.style.zIndex = 1000
 
-      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener/**
+                                *
+                                */
+      ('mousemove', onMouseMove)
 
-      event.target.onmouseup = function() {
-        document.removeEventListener('mousemove', onMouseMove);
-        event.target.onmouseup = null;
-      };
+      event.target.onmouseup = function () {
+        document.removeEventListener('mousemove', onMouseMove)
+        event.target.onmouseup = null
+      }
     }
 
     /**
