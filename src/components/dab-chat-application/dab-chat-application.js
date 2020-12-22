@@ -302,18 +302,19 @@ customElements.define('dab-chat-application',
      */
     connectedCallback () {
       const input = this._webSocketMessage
+      // eslint-disable-next-line no-undef
       const picker = new EmojiButton({
         position: 'top-start'
       })
 
-      picker.on('emoji', function(emoji) {
+      picker.on('emoji', function (emoji) {
         input.value += emoji
       })
 
       this._emojiButton.addEventListener('click', (event) => {
         event.preventDefault()
         picker.pickerVisible ? picker.hidePicker() : picker.showPicker(input)
-      }) 
+      })
 
       /* console.log(tinymce.get("#text-area").getContent()) */
       this._submitButton.addEventListener(('click'), this._submitUserMessage)
@@ -370,6 +371,10 @@ customElements.define('dab-chat-application',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+      this._emojiButton.removeEventListener('click', (event) => {})
+      this._submitButton.removeEventListener(('click'), this._submitUserMessage)
+      this._webSocketMessage.removeEventListener(('input'), this._updateUserInput)
+      this._picknameButton.removeEventListener(('click'), this._pickName)
     }
 
     /**
