@@ -283,7 +283,8 @@ customElements.define('dab-chat-application',
       this._websocketConnection = webSocketConnection
 
       /**
-       *
+       * This one runs when the web socket connection is opened.
+       * It appends an list item to the unordered list.
        */
       webSocketConnection.onopen = () => {
         const li = document.createElement('li')
@@ -292,21 +293,25 @@ customElements.define('dab-chat-application',
       }
 
       /**
-       *
+       * This one runs when the web socket connection is closed.
        */
       webSocketConnection.onclose = () => {
         console.error('disconnected')
       }
 
       /**
-       * @param error
+       * This one runs on web socket connection error and displays a message and the error.
+       *
+       * @param {object} error The error event object.
        */
       webSocketConnection.onerror = (error) => {
         console.error('Connection could not be established', error)
       }
 
       /**
-       * @param event
+       * This runs when a message is recieved from the server and we append it to the chat and also scroll if needed.
+       *
+       * @param {object} event The event object with the data recieved from the server.
        */
       webSocketConnection.onmessage = (event) => {
         const parsedData = JSON.parse(event.data)
@@ -327,7 +332,10 @@ customElements.define('dab-chat-application',
     }
 
     /**
-     * @param event
+     * We return if user input is empty, otherwise a message is sent to the server.
+     * Afterwards the variables are resetted.
+     *
+     * @param {object} event The event object.
      */
     _submitUserMessage (event) {
       event.preventDefault()
@@ -349,18 +357,23 @@ customElements.define('dab-chat-application',
     }
 
     /**
-     * @param root0
-     * @param root0.target
-     * @param root0.target.value
+     * Updates the current user input to the value.
+     *
+     * @param {object} root0 The root object.
+     * @param {object} root0.target The target from which we extract the value.
+     * @param {string} root0.target.value A string containing the user input.
      */
     _updateUserInput ({ target: { value } }) {
-      console.log(value)
+      console.log(typeof target)
+      console.log(typeof value)
       this._userInput = value
     }
 
     // TODO ADD WARNING IF THE PICKEDNAME IS TO SHORT!
     /**
-     * @param event
+     * We set the username to the input vale and the modal is removed.
+     *
+     * @param {object} event The event object.
      */
     _pickName (event) {
       event.preventDefault()

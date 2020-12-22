@@ -69,9 +69,3 @@ document.addEventListener('deleteAppInstance', (event) => {
   translationPositionY += 2
   translationPositionX += 2
 })
-
-document.addEventListener('elementInFocus', (event) => {
-  applicationArray.forEach((app) => {
-    app.setZIndex(event.detail.currentInstance)
-  })
-})

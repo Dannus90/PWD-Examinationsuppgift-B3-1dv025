@@ -5,8 +5,6 @@
  * @version 1.0.0
  */
 
-const imageUrl = (new URL('assets/questionmark.png', import.meta.url)).href
-
 /**
  * Define template.
  */
@@ -142,6 +140,7 @@ customElements.define('dab-flipping-tile',
      *
      * @readonly
      * @static
+     * @returns {string[]} A string array of attributes to monitor.
      */
     static get observedAttributes () {
       return ['backimage', 'frontimage', 'frontalt', 'backalt', 'borderstyle', 'disabled', 'hidden', 'face-up']
@@ -156,23 +155,23 @@ customElements.define('dab-flipping-tile',
      */
     attributeChangedCallback (name, oldValue, newValue) {
       if (name === 'backimage') {
-        return this._backSideImageElement.setAttribute('src', newValue)
+        this._backSideImageElement.setAttribute('src', newValue)
       }
 
       if (name === 'backalt') {
-        return this._backSideImageElement.setAttribute('alt', newValue)
+        this._backSideImageElement.setAttribute('alt', newValue)
       }
 
       if (name === 'frontalt') {
-        return this._frontSideImageElement.setAttribute('alt', newValue)
+        this._frontSideImageElement.setAttribute('alt', newValue)
       }
 
       if (name === 'frontimage') {
-        return this._frontSideImageElement.setAttribute('src', newValue)
+        this._frontSideImageElement.setAttribute('src', newValue)
       }
 
       if (name === 'borderstyle') {
-        return this._cardContentContainer.style.border = newValue
+        this._cardContentContainer.style.border = newValue
       }
 
       if (name === 'disabled' || name === 'hidden') {
@@ -205,8 +204,7 @@ customElements.define('dab-flipping-tile',
     /**
      * Specifies the equality between nodes.
      *
-     * @param {Node} other - The tile to test for equality.
-     * @param comparisonNode
+     * @param {Node} comparisonNode - The tile to test for equality.
      * @returns {boolean} - Returns true if the two compared nodes are equal.
      */
     isEqual (comparisonNode) {
@@ -250,7 +248,7 @@ customElements.define('dab-flipping-tile',
     }
 
     /**
-     *
+     * Runs when two cards faced up does not match.
      */
     cardMissMatch () {
       this.removeAttribute('face-up')

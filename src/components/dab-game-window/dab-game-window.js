@@ -119,18 +119,14 @@ customElements.define('dab-game-window',
 
       // Position related variables.
       this._active = false
-      this._currentX
-      this._currentY
-      this._initialX
-      this._initialY
+      this._currentX = 0
+      this._currentY = 0
+      this._initialX = 0
+      this._initialY = 0
       this._xOffset = 0
       this._yOffset = 0
 
       this._closeApplication = this._closeApplication.bind(this)
-
-      this.setZIndex = this.setZIndex.bind(this)
-
-      this._setElementActive = this._setElementActive.bind(this)
     }
 
     /**
@@ -171,7 +167,10 @@ customElements.define('dab-game-window',
     }
 
     /**
-     * @param event
+     * This methods runs when the top bar is clicked.
+     *
+     * @param {object} event The event object.
+     * @returns {Function} A function that closes the application or nothing.
      */
     _dragStart (event) {
       // If the user clicks the cancel-button we close application directly to prevent glitch.
@@ -183,8 +182,10 @@ customElements.define('dab-game-window',
       const shiftY = event.clientY - event.target.getBoundingClientRect().top
 
       /**
-       * @param pageX
-       * @param pageY
+       * A function that moves the current element by changing styling on it.
+       *
+       * @param {number} pageX A number regarding the current position on the page.
+       * @param {number} pageY A number regarding the current position on the page.
        */
       function moveAt (pageX, pageY) {
         event.target.style.left = pageX - shiftX + 'px'
@@ -192,7 +193,9 @@ customElements.define('dab-game-window',
       }
 
       /**
-       * @param event
+       * A function that calls the moveAt functions responsible for updating the position of the element.
+       *
+       * @param {object} event The even object containing the current position on the page.
        */
       function onMouseMove (event) {
         moveAt(event.pageX, event.pageY)
@@ -201,11 +204,11 @@ customElements.define('dab-game-window',
       event.target.parentNode.style.position = 'absolute'
       event.target.parentNode.style.zIndex = 1000
 
-      document.addEventListener/**
-                                *
-                                */
-      ('mousemove', onMouseMove)
+      document.addEventListener('mousemove', onMouseMove)
 
+      /**
+       * A function that removes the mousemove event listener and the onmouseup.
+       */
       event.target.onmouseup = function () {
         document.removeEventListener('mousemove', onMouseMove)
         event.target.onmouseup = null
@@ -213,30 +216,7 @@ customElements.define('dab-game-window',
     }
 
     /**
-     * @param currentInstance
-     */
-    setZIndex (currentInstance) {
-      if (this === currentInstance) {
-        return this.style.zIndex = 1000
-      }
-      this.style.zIndex = 1
-    }
-
-    /**
-     *
-     */
-    _setElementActive () {
-      this.dispatchEvent(new window.CustomEvent('elementInFocus', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          currentInstance: this
-        }
-      }))
-    }
-
-    /**
-     *
+     * The method dispatches an event that deletes the current app instance.
      */
     _closeApplication () {
       this.dispatchEvent(new window.CustomEvent('deleteAppInstance', {

@@ -209,21 +209,27 @@ customElements.define('dab-memory-game',
     }
 
     /**
+     * Gets the current boardsize.
      *
+     * @returns {string} A string regarding the current boardsize.
      */
     get boardSize () {
       return this.getAttribute('boardsize')
     }
 
     /**
+     * Sets the boardsize.
      *
+     * @param {string} size The new boardsize to be set.
      */
     set boardSize (size) {
       this.setAttribute('boardsize', size)
     }
 
     /**
+     * Returns the boardsize depending on the boardsize attribute.
      *
+     * @returns {object} Returns an object containing the current boardsize.
      */
     get _gameBoardSize () {
       const gameBoardSize = {
@@ -231,8 +237,15 @@ customElements.define('dab-memory-game',
         height: 4
       }
 
-      if (this.boardSize === 'small') return gameBoardSize.width = gameBoardSize.height = 2
-      if (this.boardSize === 'medium') return gameBoardSize.height = 2
+      if (this.boardSize === 'small') {
+        gameBoardSize.width = gameBoardSize.height = 2
+        return gameBoardSize
+      }
+
+      if (this.boardSize === 'medium') {
+        gameBoardSize.height = 2
+        return gameBoardSize
+      }
 
       return gameBoardSize
     }
@@ -278,7 +291,7 @@ customElements.define('dab-memory-game',
     }
 
     /**
-     *
+     * This method initializes the memory game.
      */
     _initialize () {
       const { width, height } = this._gameBoardSize
@@ -332,7 +345,9 @@ customElements.define('dab-memory-game',
     }
 
     /**
+     * Gets all tiles from the memory boards children and converts them to an array, that is used to return an object.
      *
+     * @returns {object} Returns an object Returns an object containing all tiles and tiles with specific attributes.
      */
     get _tiles () {
       const tiles = Array.from(this._memoryGameBoard.children)
@@ -347,7 +362,7 @@ customElements.define('dab-memory-game',
     /**
      * Handles flip events.
      *
-     * @param {CustomEvent} event - The custom event.
+     * @param {CustomEvent} event The custom event.
      */
     _tileFlipped (event) {
       const tiles = this._tiles
@@ -394,7 +409,7 @@ customElements.define('dab-memory-game',
     }
 
     /**
-     *
+     * This method runs upon game victory and displays the amount of tries it took to finish the game.
      */
     _gameover () {
       this.shadowRoot.querySelector('.victory-modal').style.display = 'flex'
@@ -402,7 +417,7 @@ customElements.define('dab-memory-game',
     }
 
     /**
-     *
+     * This method resets the game and happens when the modal button is clicked.
      */
     _resetGame () {
       this.shadowRoot.querySelector('.victory-modal').style.display = 'none'
