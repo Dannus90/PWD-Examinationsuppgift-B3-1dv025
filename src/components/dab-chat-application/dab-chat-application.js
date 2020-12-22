@@ -101,9 +101,9 @@ template.innerHTML = `
       }
 
       #websocket-message {
-        color: #79c7c5;
+        color: #035e5c;
         font-size: 1.05rem;
-        height: 100%;
+        height: 65px;
         width: 100%;
         max-width: 442px;
         background-color: #f9fbff;
@@ -111,6 +111,10 @@ template.innerHTML = `
         align-items: center;
         white-space: normal;
         padding: 1rem;
+        outline: none;
+        border: none;
+        border-top: 1px solid #ccc;
+        resize: none;
       }
 
       form {
@@ -188,6 +192,25 @@ template.innerHTML = `
       .pickname-button:hover {
         background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
       }
+
+      .emoji-button {
+        background: transparent;
+        position: absolute;
+        top: 65px;
+        left: 0px;
+        border: none;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        font-size: 1.4rem;
+        display: flex;
+        flex-direction: row;
+        outline: none;
+      }
+
+      .emoji-span {
+        margin-right: 0.25rem;
+      }
   </style>
 
   <div id="chat-application-wrapper">
@@ -201,6 +224,7 @@ template.innerHTML = `
       <textarea rows="8" cols="80" id="websocket-message" value=""></textarea>
       <button class="submit-button" type="submit"><img src="${sendMessage}" class="send-message-icon" height="20" width="20" />
       </button>
+      <button class="emoji-button"><span class="emoji-span">😀</span><span>&laquo;</span></button>
     </form>
   </div>
 `
@@ -243,6 +267,8 @@ customElements.define('dab-chat-application',
       this._picknameInput = this.shadowRoot.querySelector('.pickname-input')
       // Selecting the pickname button.
       this._picknameButton = this.shadowRoot.querySelector('.pickname-button')
+      // Selecting the emoji button
+      this._emojiButton = this.shadowRoot.querySelector('.emoji-button')
 
       // Binding this.
       this._submitUserMessage = this._submitUserMessage.bind(this)
@@ -275,6 +301,21 @@ customElements.define('dab-chat-application',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      const input = this._webSocketMessage
+      const picker = new EmojiButton({
+        position: 'top-start'
+      })
+
+      picker.on('emoji', function(emoji) {
+        input.value += emoji
+      })
+
+      this._emojiButton.addEventListener('click', (event) => {
+        event.preventDefault()
+        picker.pickerVisible ? picker.hidePicker() : picker.showPicker(input)
+      }) 
+
+      /* console.log(tinymce.get("#text-area").getContent()) */
       this._submitButton.addEventListener(('click'), this._submitUserMessage)
       this._webSocketMessage.addEventListener(('input'), this._updateUserInput)
       this._picknameButton.addEventListener(('click'), this._pickName)
