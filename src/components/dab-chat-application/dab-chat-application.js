@@ -356,10 +356,12 @@ customElements.define('dab-chat-application',
        * @param {object} event The event object with the data recieved from the server.
        */
       webSocketConnection.onmessage = (event) => {
+        // Parsing the retrieved data.
         const parsedData = JSON.parse(event.data)
         const { data, type, username } = parsedData
-        console.log('received', event.data)
         const li = document.createElement('li')
+
+        // Appending username and data to the chat. 
         li.innerText = `${username}: ${data}`
         this._webSocketChat.appendChild(li)
         // Scrolling to the bottom of the chat.
