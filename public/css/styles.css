@@ -33,3 +33,7 @@ body {
   transform: translate(-50%, -50%) !important;
   width: 250px !important;
 }
+
+.emoji-picker__preview-name {
+  display: none !important;
+}
