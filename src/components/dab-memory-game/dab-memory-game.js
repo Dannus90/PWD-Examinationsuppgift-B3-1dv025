@@ -214,9 +214,9 @@ customElements.define('dab-memory-game',
 
       // The size buttons.
       this._sizeButtons = this.shadowRoot.querySelectorAll('.size-button')
-      
+
       this._memoryGameWrapper = this.shadowRoot.querySelector('#memory-game-wrapper')
-      
+
       // The number of tries.
       this._numberOfTries = 0
 
@@ -478,17 +478,23 @@ customElements.define('dab-memory-game',
       this._initialize()
     }
 
+    /**
+     * This method runs when a game size button is clicked and starts the game
+     * with the chosen game size.
+     *
+     * @param {object} event The event object.
+     */
     _pickNewGameBoardSize (event) {
       this.setAttribute('boardsize', event.target.value)
       // Resetting the number of tries.
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
 
-      if(event.target.value === 'small') {
+      if (event.target.value === 'small') {
         this._memoryGameWrapper.style.paddingLeft = '2rem'
         this._memoryGameWrapper.style.paddingRight = '2rem'
       } else {
-      this._memoryGameWrapper.style.padding = '0'
+        this._memoryGameWrapper.style.padding = '0'
       }
 
       this._initialize()
