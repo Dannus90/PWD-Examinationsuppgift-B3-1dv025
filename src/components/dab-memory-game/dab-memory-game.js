@@ -212,18 +212,17 @@ customElements.define('dab-memory-game',
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
 
-      // Binding this to methods.
-      this._tileFlipped = this._tileFlipped.bind(this)
-
-      this._resetGame = this._resetGame.bind(this)
-
+      // The size buttons.
+      this._sizeButtons = this.shadowRoot.querySelectorAll('.size-button')
+      
+      this._memoryGameWrapper = this.shadowRoot.querySelector('#memory-game-wrapper')
+      
       // The number of tries.
       this._numberOfTries = 0
 
-      // The size buttons.
-      this._sizeButtons = this.shadowRoot.querySelectorAll('.size-button')
-
-      // Binding this.
+      // Binding this to methods.
+      this._tileFlipped = this._tileFlipped.bind(this)
+      this._resetGame = this._resetGame.bind(this)
       this._pickNewGameBoardSize = this._pickNewGameBoardSize.bind(this)
     }
 
@@ -484,6 +483,14 @@ customElements.define('dab-memory-game',
       // Resetting the number of tries.
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
+
+      if(event.target.value === 'small') {
+        this._memoryGameWrapper.style.paddingLeft = '2rem'
+        this._memoryGameWrapper.style.paddingRight = '2rem'
+      } else {
+      this._memoryGameWrapper.style.padding = '0'
+      }
+
       this._initialize()
     }
   }
