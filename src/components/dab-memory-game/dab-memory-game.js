@@ -35,6 +35,7 @@ template.innerHTML = `
       justify-content: center;
       align-items: center;
       padding: 1.5rem;
+      padding-bottom: 1rem;
     }
 
     #memory-game-board.small {
@@ -128,6 +129,35 @@ template.innerHTML = `
     .play-again-button:hover {
       background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
     }
+
+    .gameSize-buttons-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .size-button {
+      padding: 0.2rem 0.8rem;
+      margin: 0.4rem;
+      border: none;
+      border-radius: 5px;
+      background-image: linear-gradient( 110deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.10s ease-in-out;
+    }
+
+    .size-button:hover {
+      background-image: linear-gradient( 50deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
+      transform: scale(1.03);
+      box-shadow: 2px 2px 20px -8px rgba(0,0,0,0.75);
+    }
+
+    .size-button:active {
+      transform: scale(0.98);
+    }
   </style>
   <template id="tile-template">
     <dab-flipping-tile></dab-flipping-tile>
@@ -142,8 +172,12 @@ template.innerHTML = `
       <p></p>
       <button class="play-again-button">Play again!</button>
     </div>
+    <div class="gameSize-buttons-container">
+      <button class="size-button" value="small">2x2</button>
+      <button class="size-button" value="medium">4x2</button>
+      <button class="size-button" value="large">4x4</button>
+    </div>
   </div>
-
 `
 
 /**
@@ -435,6 +469,10 @@ customElements.define('dab-memory-game',
         tile.removeAttribute('disabled')
       })
       this._initialize()
+    }
+
+    _pickNewGameBoardSize () {
+
     }
   }
 )

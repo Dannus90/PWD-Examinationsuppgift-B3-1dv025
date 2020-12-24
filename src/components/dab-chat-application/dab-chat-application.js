@@ -361,7 +361,7 @@ customElements.define('dab-chat-application',
         const { data, type, username } = parsedData
         const li = document.createElement('li')
 
-        // Appending username and data to the chat. 
+        // Appending username and data to the chat.
         li.innerText = `${username}: ${data}`
         this._webSocketChat.appendChild(li)
         // Scrolling to the bottom of the chat.
