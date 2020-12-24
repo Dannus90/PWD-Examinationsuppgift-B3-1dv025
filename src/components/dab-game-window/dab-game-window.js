@@ -220,6 +220,11 @@ customElements.define('dab-game-window',
         document.removeEventListener('mousemove', onMouseMove)
         event.target.onmouseup = null
       }
+
+      document.addEventListener('mouseleave', () => {
+        document.removeEventListener('mousemove', onMouseMove)
+        event.target.onmouseup = null
+      })
     }
 
     /**

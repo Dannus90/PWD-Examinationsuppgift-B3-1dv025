@@ -18,7 +18,7 @@ template.innerHTML = `
     }
 
     #pwd-application-wrapper {
-        height: 100vh;
+        height: 100%;
         width: 100vw;
         background-color: #fff;
         overflow-x: hidden;
@@ -51,7 +51,7 @@ template.innerHTML = `
     }
 
     .pwd-application-applications-container {
-        height: 100%;
+        min-height: calc(100vh - 154px);
         width: 100%;
         background-image: url("./assets/default-background.jpeg");
         box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
@@ -61,6 +61,7 @@ template.innerHTML = `
         display: flex;
         justify-content: center;
         align-items: center;
+        overflow: hidden;
     }
 
     .pwd-application-icons-container {

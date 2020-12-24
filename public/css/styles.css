@@ -13,7 +13,7 @@ body {
   letter-spacing: 0.105rem;
   line-height: 2.1rem;
   color: #2b2b2b;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* Overwrite emoji popup styles */
