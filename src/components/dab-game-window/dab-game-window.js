@@ -16,6 +16,10 @@ template.innerHTML = `
       border-radius: 7px;
       touch-action: none;
       box-shadow: 2px 2px 5px -2px rgba(119, 119, 119, 0.5);
+      position: absolute;
+      top: 50%;
+      left: 50;
+      transform: translate(-50%, -50%);
     }
 
     .window-wrapper-topbar {
@@ -126,6 +130,8 @@ customElements.define('dab-game-window',
       this._yOffset = 0
 
       this._closeApplication = this._closeApplication.bind(this)
+
+      this._dragStart = this._dragStart.bind(this)
     }
 
     /**
@@ -200,7 +206,9 @@ customElements.define('dab-game-window',
         moveAt(event.pageX, event.pageY)
       }
 
-      event.target.parentNode.style.position = 'absolute'
+      this.style.left = event.pageX - shiftX + 'px'
+      this.style.top = event.pageY - shiftY + 'px'
+      event.target.parentNode.style.transform = 'translate(0,0)'
       event.target.parentNode.style.zIndex = 1000
 
       document.addEventListener('mousemove', onMouseMove)
