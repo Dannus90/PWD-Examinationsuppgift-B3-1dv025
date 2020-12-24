@@ -134,11 +134,11 @@ template.innerHTML = `
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 1rem;
+      padding-bottom: 1rem;
     }
 
     .size-button {
-      padding: 0.2rem 0.8rem;
+      padding: 0.3rem 0.6rem;
       margin: 0.4rem;
       border: none;
       border-radius: 5px;
@@ -146,13 +146,14 @@ template.innerHTML = `
       color: #fff;
       font-weight: bold;
       cursor: pointer;
-      transition: transform 0.10s ease-in-out;
+      outline: none;
+      transition: transform 0.05s ease-in;
     }
 
     .size-button:hover {
       background-image: linear-gradient( 50deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
-      transform: scale(1.03);
-      box-shadow: 2px 2px 20px -8px rgba(0,0,0,0.75);
+      transform: scale(1.02);
+      box-shadow: 2px 2px 16px -8px rgba(0,0,0,0.75);
     }
 
     .size-button:active {
@@ -218,6 +219,12 @@ customElements.define('dab-memory-game',
 
       // The number of tries.
       this._numberOfTries = 0
+
+      // The size buttons.
+      this._sizeButtons = this.shadowRoot.querySelectorAll('.size-button')
+
+      // Binding this.
+      this._pickNewGameBoardSize = this._pickNewGameBoardSize.bind(this)
     }
 
     /**
@@ -300,6 +307,7 @@ customElements.define('dab-memory-game',
       this.addEventListener('dragstart', this._onDragStart)
       this.addEventListener('gameover', this._gameover)
       this._playAgainButton.addEventListener('click', this._resetGame)
+      this._sizeButtons.forEach((sb) => sb.addEventListener('click', this._pickNewGameBoardSize))
     }
 
     /**
@@ -471,8 +479,12 @@ customElements.define('dab-memory-game',
       this._initialize()
     }
 
-    _pickNewGameBoardSize () {
-
+    _pickNewGameBoardSize (event) {
+      this.setAttribute('boardsize', event.target.value)
+      // Resetting the number of tries.
+      this._numberOfTries = 0
+      this._displayNumberOfTries.textContent = this._numberOfTries
+      this._initialize()
     }
   }
 )

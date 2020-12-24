@@ -11,15 +11,14 @@
 const template = document.createElement('template')
 template.innerHTML = `
   <style>
-    #game-window-wrapper {
+    #window-wrapper {
       background-color: #fff;
-      overflow: hidden;
       border-radius: 7px;
       touch-action: none;
-      box-shadow: 5px 5px 15px rgba(119, 119, 119, 0.5);
+      box-shadow: 2px 2px 5px -2px rgba(119, 119, 119, 0.5);
     }
 
-    .game-window-wrapper-topbar {
+    .window-wrapper-topbar {
       background: rgb(131,58,180);
       background-image: linear-gradient( 110deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
       height: 40px;
@@ -32,7 +31,7 @@ template.innerHTML = `
       cursor: grab;
     }
     
-    .game-window-wrapper-topbar:active {
+    .window-wrapper-topbar:active {
       cursor: grabbing;
     }
 
@@ -81,8 +80,8 @@ template.innerHTML = `
     }
   </style>
 
-  <div id="game-window-wrapper">
-    <div class="game-window-wrapper-topbar">
+  <div id="window-wrapper">
+    <div class="window-wrapper-topbar">
       <button class="cancel-button"></button>
     </div>
     <slot name="application-container" />
@@ -109,10 +108,10 @@ customElements.define('dab-game-window',
         .appendChild(template.content.cloneNode(true))
 
       // Selecting the window wrapper.
-      this._windowWrapper = this.shadowRoot.querySelector('#game-window-wrapper')
+      this._windowWrapper = this.shadowRoot.querySelector('#window-wrapper')
 
       // Selecting the top bar.
-      this._topbar = this.shadowRoot.querySelector('.game-window-wrapper-topbar')
+      this._topbar = this.shadowRoot.querySelector('.window-wrapper-topbar')
 
       // Selecting the cancel button.
       this._cancelButton = this.shadowRoot.querySelector('.cancel-button')
