@@ -98,7 +98,7 @@ template.innerHTML = `
     <h3>This app is using a pretrained model in Tensorflow.js for object detection.</h3>
     <p class="description-paragraph">Before you can click the button to enable your camera you have to wait for the model to load.</p>
     <section id="video-section-wrapper" class="invisible">
-      <p class="description-paragraph">When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window). Hold some objects up close to your webcam. </p>
+      <p class="description-paragraph">When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window). Hold an objects up close to your webcam. </p>
       <div id="live-view-wrapper" class="cam-view-wrapper">
         <button class="enable-webcam-button">Enable your webcam</button>
         <video id="webcam" autoplay width="480" height="360"></video>

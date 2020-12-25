@@ -37,3 +37,11 @@ body {
 .emoji-picker__preview-name {
   display: none !important;
 }
+
+.svg-inline--fa {
+  margin-bottom: 0.35rem !important;
+}
+
+.emoji-picker__search-container input {
+  padding-left: 0.5em !important;
+}
