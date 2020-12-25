@@ -5,6 +5,12 @@
  * @version 1.0.0
  */
 
+import '@tensorflow/tfjs-core'
+import '@tensorflow/tfjs-backend-cpu'
+import '@tensorflow/tfjs-backend-webgl'
+import '@tensorflow/tfjs-converter'
+import cocoSsd from '@tensorflow-models/coco-ssd'
+
 /**
  * Define template.
  */
@@ -236,13 +242,13 @@ customElements.define('dab-face-detection-application',
         video: true
       }
 
-      // Closing the webcam upon application close. 
+      // Closing the webcam upon application close.
       // TODO NEEDS TO GET FIXED!
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-        if(stream !== null) {
+        if (stream !== null) {
           stream.getTracks().map(function (val) {
-            val.stop();
-            });
+            val.stop()
+          })
         }
       })
     }
