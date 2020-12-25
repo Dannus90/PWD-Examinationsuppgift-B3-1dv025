@@ -96,7 +96,7 @@ template.innerHTML = `
   <div id="flipping-tile-wrapper" part="flipping-tile-wrapper">
     <div part="card-inner" class="card-inner">
         <div part="card-front" class="card-front">
-            <img part="front-image" class="front-side-image" src="" alt="Gramophone">
+            <img part="front-image" class="front-side-image" src="" alt="memory-card-image">
         </div>
         <div part="card-back" class="card-back">
             <img part="back-image" class="back-side-image" src="" alt="Questionmark">

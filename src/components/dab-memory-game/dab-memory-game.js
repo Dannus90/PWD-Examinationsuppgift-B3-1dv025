@@ -6,6 +6,8 @@
  */
 
 import './dab-flipping-tile/index.js'
+import './dab-high-score/index.js'
+
 const numberOfImages = 9
 
 const imageUrls = new Array(numberOfImages)
@@ -26,6 +28,13 @@ template.innerHTML = `
     #memory-game-wrapper {
       background-color: #fff;
       position: relative;
+    }
+
+    .high-score-component {
+      position: absolute;
+      top: 34.5%;
+      right: -109%;
+      transform: translate(-50%, -50%);
     }
 
     #memory-game-board {
@@ -166,8 +175,7 @@ template.innerHTML = `
   <div id="memory-game-wrapper">
     <h2>Memory game</h2>
     <p>Number of tries: <span class="number-of-tries-display"></span></p>
-    <div id="memory-game-board">
-    </div>
+    <div id="memory-game-board"></div>
     <div class="victory-modal">
       <h3>Victory!</h3>
       <p></p>
@@ -178,6 +186,7 @@ template.innerHTML = `
       <button class="size-button" value="medium">4x2</button>
       <button class="size-button" value="large">4x4</button>
     </div>
+    <dab-high-score class="high-score-component"></dab-high-score>
   </div>
 `
 
@@ -349,7 +358,7 @@ customElements.define('dab-memory-game',
         this._memoryGameBoard.classList.remove('small')
       }
 
-      // Add tiles.
+      // Adding tiles. 
       for (let i = 0; i < amountOfTiles; i++) {
         const tile = this._tileTemplate.content.cloneNode(true)
         this._memoryGameBoard.appendChild(tile)
