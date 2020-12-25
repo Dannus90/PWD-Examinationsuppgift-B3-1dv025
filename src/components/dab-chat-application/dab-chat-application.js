@@ -7,6 +7,7 @@
 
 const chatIcon = (new URL('assets/chat-application-icon.svg', import.meta.url)).href
 const sendMessage = (new URL('assets/send-message.svg', import.meta.url)).href
+const settingsIcon = (new URL('assets/settings-icon.svg', import.meta.url)).href
 
 /**
  * Define template.
@@ -31,11 +32,19 @@ template.innerHTML = `
       }
 
       .chat-application-header {
+        position: relative;
         background-color: #f9fbff;
         margin: 0;
         display: flex;
         justify-content: center;
         align-items: center;
+      }
+
+      .settings-icon {
+        position: absolute;
+        top: 12.5px;
+        right: 12.5px;
+        cursor: pointer;
       }
 
       .chat-application-header h3 {
@@ -165,6 +174,7 @@ template.innerHTML = `
       .pickname-input {
         padding: 0.5rem 0.75rem;
         outline: none;
+        padding-left: 0.25rem;
       }
 
       .pickname-button {
@@ -176,7 +186,8 @@ template.innerHTML = `
         font-family: Arial;
         font-size: 1rem;
         font-weight: bold;
-        padding: 10px 26px;
+        padding: 8px 20px;
+        border: none;
         text-decoration: none;
         margin: 1rem auto;
         outline: none;
@@ -211,6 +222,36 @@ template.innerHTML = `
       .emoji-span {
         margin-right: 0.25rem;
       }
+
+      .toggle-menu {
+        background-image: linear-gradient( 110deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
+        padding: 0 0.5rem;
+        position: absolute;
+        top: 35px;
+        right: -35px;
+        width: 100px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      .pick-new-nickname-button {
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        background-color: transparent;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        transition: color 0.10s ease-in, transform 0.10s ease-in;
+      }
+
+      .pick-new-nickname-button:hover {
+        color: #22ff01;
+      }
+
+      .pick-new-nickname-button:active {
+        transform: scale(0.98);
+      }
   </style>
 
   <div id="chat-application-wrapper">
@@ -218,7 +259,14 @@ template.innerHTML = `
       <input class="pickname-input" value="" />
       <button class="pickname-button">Pick name</button>
     </div>
-    <div class="chat-application-header"><img src="${chatIcon}" class="chat-icon" height="35" width="35" /><h3>LNU Messenger App</h3></div>
+    <div class="chat-application-header">
+      <img src="${chatIcon}" class="chat-icon" height="35" width="35" />
+      <h3>LNU Messenger App</h3>
+      <img src="${settingsIcon}" class="settings-icon" height="20" width="20" />
+      <div class="toggle-menu">
+        <button class="pick-new-nickname-button">New nickname</button>
+      </div> 
+    </div>
     <ul id="websocket-chat"></ul>
     <form>
       <textarea rows="8" cols="80" id="websocket-message" value=""></textarea>
@@ -257,6 +305,9 @@ customElements.define('dab-chat-application',
 
       this._apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
+      // Other variables
+      this._toggleMenuVisible = false
+
       // Selecting the websocket chat container.
       this._webSocketChat = this.shadowRoot.querySelector('#websocket-chat')
       // Selecting the websocket message field.
@@ -267,15 +318,23 @@ customElements.define('dab-chat-application',
       this._picknameInput = this.shadowRoot.querySelector('.pickname-input')
       // Selecting the pickname button.
       this._picknameButton = this.shadowRoot.querySelector('.pickname-button')
-      // Selecting the emoji button
+      // Selecting the emoji button.
       this._emojiButton = this.shadowRoot.querySelector('.emoji-button')
+      // Selecting the settings icon.
+      this._settingsIcon = this.shadowRoot.querySelector('.settings-icon')
+      // Selecting the toggle menu.
+      this._toggleMenu = this.shadowRoot.querySelector('.toggle-menu')
+      // Selecting the pick new nickname button.
+      this._pickNewNicknameButton = this.shadowRoot.querySelector('.pick-new-nickname-button')
 
-      // Binding this.
+      // Binding this to class methods.
       this._submitUserMessage = this._submitUserMessage.bind(this)
 
       this._updateUserInput = this._updateUserInput.bind(this)
 
       this._pickName = this._pickName.bind(this)
+
+      this._toggleSettingsMenu = this._toggleSettingsMenu.bind(this)
     }
 
     /**
@@ -311,15 +370,15 @@ customElements.define('dab-chat-application',
         input.value += emoji
       })
 
+      // Adding event listeners
       this._emojiButton.addEventListener('click', (event) => {
         event.preventDefault()
         picker.pickerVisible ? picker.hidePicker() : picker.showPicker(input)
       })
-
-      /* console.log(tinymce.get("#text-area").getContent()) */
       this._submitButton.addEventListener(('click'), this._submitUserMessage)
       this._webSocketMessage.addEventListener(('input'), this._updateUserInput)
       this._picknameButton.addEventListener(('click'), this._pickName)
+      this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
 
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
       this._websocketConnection = webSocketConnection
@@ -424,9 +483,22 @@ customElements.define('dab-chat-application',
      * @param {object} event The event object.
      */
     _pickName (event) {
+      if(this._picknameInput.value) {
+
+      }
       event.preventDefault()
       this._userName = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
+    }
+
+    _toggleSettingsMenu () {
+      if(this._toggleMenuVisible) {
+        this._toggleMenuVisible = !this._toggleMenuVisible
+        this._toggleMenu.style.display = 'block'
+      } else {
+        this._toggleMenuVisible = !this._toggleMenuVisible
+        this._toggleMenu.style.display = 'none'
+      }
     }
   }
 )
