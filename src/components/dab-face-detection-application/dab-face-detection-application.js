@@ -195,7 +195,7 @@ customElements.define('dab-face-detection-application',
 
       // The prediction related interval.
       this._predictionInterval = ''
-      
+
       // The model.
       this._model = undefined
 
@@ -311,7 +311,7 @@ customElements.define('dab-face-detection-application',
       event.target.classList.add('removed')
       this._videoSectionWrapper.classList.remove('invisible')
 
-      // facingMode for preferring front camera on mobile devices. 
+      // facingMode for preferring front camera on mobile devices.
       const constraints = {
         video: { width: 480, height: 360, facingMode: 'user' }
       }
@@ -379,6 +379,9 @@ customElements.define('dab-face-detection-application',
       })
     }
 
+    /**
+     *
+     */
     _stopLoader () {
       this._videoLoader.style.display = 'none'
     }

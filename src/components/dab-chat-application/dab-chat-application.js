@@ -252,11 +252,23 @@ template.innerHTML = `
       .pick-new-nickname-button:active {
         transform: scale(0.98);
       }
+
+      .nickname-warning-paragraph {
+        color: #ff1b1b;
+        font-weight: bold;
+        text-align: center;
+        width: 80%;
+        margin: 0;
+        margin-top: 0.75rem;
+        line-height: 1.2rem;
+        display: none;
+      }
   </style>
 
   <div id="chat-application-wrapper">
     <div class="pickname-modal">
       <input class="pickname-input" value="" />
+      <p class="nickname-warning-paragraph">Please pick a nickname with atleast 3 characters.</p>
       <button class="pickname-button">Pick name</button>
     </div>
     <div class="chat-application-header">
@@ -326,6 +338,8 @@ customElements.define('dab-chat-application',
       this._toggleMenu = this.shadowRoot.querySelector('.toggle-menu')
       // Selecting the pick new nickname button.
       this._pickNewNicknameButton = this.shadowRoot.querySelector('.pick-new-nickname-button')
+      // Selecting the nickname warning paragraph.
+      this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
 
       // Binding this to class methods.
       this._submitUserMessage = this._submitUserMessage.bind(this)
@@ -335,6 +349,10 @@ customElements.define('dab-chat-application',
       this._pickName = this._pickName.bind(this)
 
       this._toggleSettingsMenu = this._toggleSettingsMenu.bind(this)
+
+      this._openNickNameModal = this._openNickNameModal.bind(this)
+
+      this._showNicknameWarning = this._showNicknameWarning.bind(this)
     }
 
     /**
@@ -379,6 +397,7 @@ customElements.define('dab-chat-application',
       this._webSocketMessage.addEventListener(('input'), this._updateUserInput)
       this._picknameButton.addEventListener(('click'), this._pickName)
       this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
+      this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
 
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
       this._websocketConnection = webSocketConnection
@@ -436,6 +455,7 @@ customElements.define('dab-chat-application',
       this._submitButton.removeEventListener(('click'), this._submitUserMessage)
       this._webSocketMessage.removeEventListener(('input'), this._updateUserInput)
       this._picknameButton.removeEventListener(('click'), this._pickName)
+      this._settingsIcon.removeEventListener(('click'), this._toggleSettingsMenu)
     }
 
     /**
@@ -483,22 +503,43 @@ customElements.define('dab-chat-application',
      * @param {object} event The event object.
      */
     _pickName (event) {
-      if(this._picknameInput.value) {
-
+      console.log(this._picknameInput.value.length)
+      if (!(this._picknameInput.value.length >= 3)) {
+        this._showNicknameWarning()
+        return;
       }
       event.preventDefault()
       this._userName = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
     }
 
+    /**
+     * This method toggles the settings menu.
+     */
     _toggleSettingsMenu () {
-      if(this._toggleMenuVisible) {
+      if (this._toggleMenuVisible) {
         this._toggleMenuVisible = !this._toggleMenuVisible
         this._toggleMenu.style.display = 'block'
       } else {
         this._toggleMenuVisible = !this._toggleMenuVisible
         this._toggleMenu.style.display = 'none'
       }
+    }
+
+    /**
+     * This method opens the nickname modal which allows us to pick a new nickname.
+     */
+    _openNickNameModal () {
+      this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
+      this._toggleMenuVisible = !this._toggleMenuVisible
+      this._toggleMenu.style.display = 'none'
+    }
+
+    _showNicknameWarning () {
+      this._nicknameWarningParagraph.style.display = 'block'
+      setTimeout(() => {
+        this._nicknameWarningParagraph.style.display = 'none'
+      }, 1500)
     }
   }
 )
