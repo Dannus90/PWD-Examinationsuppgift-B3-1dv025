@@ -92,6 +92,22 @@ template.innerHTML = `
       z-index: 1;
       position: absolute;
     }
+
+    .user-media-not-supported {
+      position: absolute;
+      top: 72.5%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255,0,0, 0.75);
+      border-radius: 10px;
+      display: none;
+    }
+
+    .user-media-not-supported p {
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+    }
   </style>
 
   <div id="face-detection-application-wrapper">
@@ -102,6 +118,9 @@ template.innerHTML = `
       <div id="live-view-wrapper" class="cam-view-wrapper">
         <button class="enable-webcam-button">Enable your webcam</button>
         <video id="webcam" autoplay width="480" height="360"></video>
+      </div>
+      <div class="user-media-not-supported">
+        <p class="warning-paragraph"></p>
       </div>
     </section>
   </div>
@@ -134,6 +153,12 @@ customElements.define('dab-face-detection-application',
 
       // Selecting the video section wrapper.
       this._videoSectionWrapper = this.shadowRoot.querySelector('#video-section-wrapper')
+
+      // Selecting the media not supported.
+      this._mediaNotSupported = this.shadowRoot.querySelector('.user-media-not-supported')
+
+      // Selecting the warning paragraph.
+      this._warningParagraph = this.shadowRoot.querySelector('.warning-paragraph')
 
       // Enable web cam button.
       this._enableWebcamButton = this.shadowRoot.querySelector('.enable-webcam-button')
@@ -194,7 +219,8 @@ customElements.define('dab-face-detection-application',
           this._videoSectionWrapper.classList.remove('invisible')
         })
       } else {
-        // TODO ADD VISUAL WARNING HERE!
+        this._mediaNotSupported.style.display = 'block'
+        this._warningParagraph.textContent = 'getUserMedia() is not supported by your browser'
         console.warn('getUserMedia() is not supported by your browser')
       }
     }
@@ -205,6 +231,20 @@ customElements.define('dab-face-detection-application',
     disconnectedCallback () {
       this._enableWebcamButton.removeEventListener('click', this._enableWebcam)
       this._webcam.removeEventListener('loadeddata', this._predictWebcam)
+
+      const constraints = {
+        video: true
+      }
+
+      // Closing the webcam upon application close. 
+      // TODO NEEDS TO GET FIXED!
+      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        if(stream !== null) {
+          stream.getTracks().map(function (val) {
+            val.stop();
+            });
+        }
+      })
     }
 
     /**
@@ -214,8 +254,9 @@ customElements.define('dab-face-detection-application',
      */
     _enableWebcam (event) {
       if (!this._model) {
-        // TODO DISPLAY THAT NO MODEL IS AVAILABLE
-        console.log('no model!')
+        this._mediaNotSupported.style.display = 'block'
+        this._warningParagraph.textContent = 'No object detection model could be found!'
+        console.warn('No model detected!')
         return
       }
 
@@ -243,7 +284,6 @@ customElements.define('dab-face-detection-application',
           this._liveViewWrapper.removeChild(child)
         })
 
-        console.log(this._children.length)
         this._children.splice(0)
 
         // Now lets loop through predictions and draw them to the live view if
