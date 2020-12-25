@@ -260,7 +260,7 @@ customElements.define('dab-face-detection-application',
     /**
      * Called after the element has been removed from the DOM.
      */
-    disconnectedCallback () {
+    async disconnectedCallback () {
       this._enableWebcamButton.removeEventListener('click', this._enableWebcam)
       this._webcam.removeEventListener('loadeddata', this._predictWebcam)
 
@@ -269,14 +269,21 @@ customElements.define('dab-face-detection-application',
       }
 
       // Closing the webcam upon application close.
+
+      // Activating the webcam stream.
       // TODO NEEDS TO GET FIXED!
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
         if (stream !== null) {
           stream.getTracks().map(function (val) {
             val.stop()
           })
         }
-      })
+        this._webcam.removeEventListener('loadeddata', this._predictWebcam)
+        this._webcam.removeEventListener('loadeddata', this._stopLoader)
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     /**
@@ -284,7 +291,7 @@ customElements.define('dab-face-detection-application',
      *
      * @param {object} event The event object.
      */
-    _enableWebcam (event) {
+    async _enableWebcam (event) {
       this._videoLoader.style.display = 'block'
       if (!this._model) {
         this._videoLoader.style.display = 'none'
@@ -302,11 +309,14 @@ customElements.define('dab-face-detection-application',
       }
 
       // Activating the webcam stream.
-      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints)
         this._webcam.srcObject = stream
         this._webcam.addEventListener('loadeddata', this._predictWebcam)
         this._webcam.addEventListener('loadeddata', this._stopLoader)
-      })
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     /**
