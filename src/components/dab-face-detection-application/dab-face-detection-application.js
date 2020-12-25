@@ -62,6 +62,18 @@ template.innerHTML = `
       );
       color: #fff;
       font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.05s ease-in;
+    }
+
+    .enable-webcam-button:hover {
+      background-image: linear-gradient( 50deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
+      transform: scale(1.02);
+      box-shadow: 2px 2px 16px -8px rgba(0,0,0,0.75);
+    }
+
+    .enable-webcam-button:active {
+      transform: scale(0.98);
     }
     
     .cam-view-wrapper p {
@@ -75,7 +87,7 @@ template.innerHTML = `
     }
     
     .highlighter {
-      background: rgba(0, 255, 0, 0.25);
+      background: rgba(0, 0, 255, 0.25);
       border: 1px dashed #fff;
       z-index: 1;
       position: absolute;
@@ -89,7 +101,7 @@ template.innerHTML = `
       <p class="description-paragraph">When ready click "enable webcam" below and accept access to the webcam when the browser asks (check the top left of your window). Hold some objects up close to your webcam. </p>
       <div id="live-view-wrapper" class="cam-view-wrapper">
         <button class="enable-webcam-button">Enable your webcam</button>
-        <video id="webcam" autoplay width="640" height="480"></video>
+        <video id="webcam" autoplay width="480" height="360"></video>
       </div>
     </section>
   </div>
@@ -161,9 +173,10 @@ customElements.define('dab-face-detection-application',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      // A check is made to see if webcam access is supported.
       /**
+       * A check is made to see if webcam access is supported.
        *
+       * @returns {boolean} Returns either true or false.
        */
       const getUserMediaSupported = () => {
         return !!(navigator.mediaDevices &&
@@ -195,7 +208,9 @@ customElements.define('dab-face-detection-application',
     }
 
     /**
-     * @param event
+     * The event used to style the event target.
+     *
+     * @param {object} event The event object.
      */
     _enableWebcam (event) {
       if (!this._model) {
@@ -219,7 +234,7 @@ customElements.define('dab-face-detection-application',
     }
 
     /**
-     *
+     * This method is responsible for displaying the object predictions on the screen.
      */
     _predictWebcam () {
       // Now let's start classifying a frame in the stream.
@@ -234,22 +249,29 @@ customElements.define('dab-face-detection-application',
         // Now lets loop through predictions and draw them to the live view if
         // they have a high confidence score.
         for (let n = 0; n < predictions.length; n++) {
-          // If we are over 66% sure we are sure we classified it right, draw it!
-          console.log(predictions)
-          if (predictions[n].score > 0.5) {
+          // If we are over 60% sure we are sure we classified it right, draw it!
+          if (predictions[n].score > 0.6) {
             const p = document.createElement('p')
-            p.innerText = `This is a ${predictions[n].class} with ${Math.round(parseFloat(predictions[n].score) * 100)} % confidence`
-            p.style = 'margin-left: ' + predictions[n].bbox[0] + 'px; margin-top: ' +
-                (predictions[n].bbox[1] - 10) + 'px; width: ' +
-                (predictions[n].bbox[2] - 10) + 'px; top: 0; left: 0;'
+            p.innerText = `${this._capitalize(predictions[n].class)} with ${Math.round(parseFloat(predictions[n].score) * 100)} % confidence`
+            p.style = `
+                margin-left: ${(predictions[n].bbox[0] * 0.75)}px;
+                margin-top: ${((predictions[n].bbox[1] - 10) * 0.5)}px;
+                width: ${((predictions[n].bbox[2] - 10) * 0.75)}px;
+                top: 0;
+                left: 0;
+                `
 
+            // Setting up the detection box.
             const highlighter = document.createElement('div')
             highlighter.setAttribute('class', 'highlighter')
-            highlighter.style = 'left: ' + predictions[n].bbox[0] + 'px; top: ' +
-                predictions[n].bbox[1] + 'px; width: ' +
-                predictions[n].bbox[2] + 'px; height: ' +
-                predictions[n].bbox[3] + 'px;'
+            highlighter.style = `
+                left: ${(predictions[n].bbox[0] * 0.75)}px;
+                top: ${(predictions[n].bbox[1] * 0.50)}px; 
+                width: ${(predictions[n].bbox[2] * 0.75)}px;
+                height: ${(predictions[n].bbox[3] * 0.85)}px;
+                `
 
+            // Appending the elements to the live-view-wrapper.
             this._liveViewWrapper.appendChild(highlighter)
             this._liveViewWrapper.appendChild(p)
             this._children.push(highlighter)
@@ -257,12 +279,21 @@ customElements.define('dab-face-detection-application',
           }
         }
 
-        // We call the function again to keep prediciting but we set a delay for a smoother behavior. 
+        // We call the function again to keep prediciting but we set a delay for a smoother behavior.
         setTimeout(() => {
           window.requestAnimationFrame(this._predictWebcam)
-        }, 1000)
-        
+        }, 500)
       })
+    }
+
+    /**
+     * This method capitalizes a string.
+     *
+     * @param {string} string A string to be capitalized.
+     * @returns {string} Returns a capitalized string.
+     */
+    _capitalize (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
     }
   }
 )
