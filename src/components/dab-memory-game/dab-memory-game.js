@@ -32,8 +32,8 @@ template.innerHTML = `
 
     .high-score-component {
       position: absolute;
-      top: 34.5%;
-      right: -109%;
+      top: 32.5%;
+      right: -91%;
       transform: translate(-50%, -50%);
     }
 
@@ -218,14 +218,18 @@ customElements.define('dab-memory-game',
       // Selecting the play again button.
       this._playAgainButton = this.shadowRoot.querySelector('.play-again-button')
 
-      // Display number of tries.
-      this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
-
-      // The size buttons.
+      // Selecting the size buttons.
       this._sizeButtons = this.shadowRoot.querySelectorAll('.size-button')
 
+      // Selecting the memory game wrapper.
       this._memoryGameWrapper = this.shadowRoot.querySelector('#memory-game-wrapper')
-
+      
+      // Selecting the high score component.
+      this._highScoreComponent = this.shadowRoot.querySelector('.high-score-component')
+      
+      // Display number of tries.
+      this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
+      
       // The number of tries.
       this._numberOfTries = 0
 
@@ -500,9 +504,18 @@ customElements.define('dab-memory-game',
       this._displayNumberOfTries.textContent = this._numberOfTries
 
       if (event.target.value === 'small') {
+        this._highScoreComponent.style.top = '23.5%'
+        this._highScoreComponent.style.right = '-131.5%'
         this._memoryGameWrapper.style.paddingLeft = '2rem'
         this._memoryGameWrapper.style.paddingRight = '2rem'
+        this._
+      } else if(event.target.value === 'medium') {
+        this._highScoreComponent.style.top = '24%'
+        this._highScoreComponent.style.right = '-91%'
+        this._memoryGameWrapper.style.padding = '0'
       } else {
+        this._highScoreComponent.style.top = '32.5%'
+        this._highScoreComponent.style.right = '-91%'
         this._memoryGameWrapper.style.padding = '0'
       }
 

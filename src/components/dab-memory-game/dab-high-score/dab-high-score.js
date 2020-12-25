@@ -12,17 +12,19 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     .high-score-container {
-      padding: 2rem;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       background-color: rgba(0,0,0,0.50);
       border-radius: 5px;
+      max-width: 250px;
     }
 
     .high-score-container h2 {
       text-align: center;
+      font-size: 1.2rem;
       margin-bottom: 0rem;
       color: #ffc65c;
     }
