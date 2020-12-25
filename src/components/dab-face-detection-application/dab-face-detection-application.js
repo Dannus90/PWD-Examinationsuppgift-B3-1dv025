@@ -380,7 +380,7 @@ customElements.define('dab-face-detection-application',
     }
 
     /**
-     *
+     * This method stops displaying the loader.
      */
     _stopLoader () {
       this._videoLoader.style.display = 'none'

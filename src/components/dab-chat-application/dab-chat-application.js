@@ -496,7 +496,6 @@ customElements.define('dab-chat-application',
       this._userInput = value
     }
 
-    // TODO ADD WARNING IF THE PICKEDNAME IS TO SHORT!
     /**
      * We set the username to the input vale and the modal is removed.
      *
@@ -506,7 +505,7 @@ customElements.define('dab-chat-application',
       console.log(this._picknameInput.value.length)
       if (!(this._picknameInput.value.length >= 3)) {
         this._showNicknameWarning()
-        return;
+        return
       }
       event.preventDefault()
       this._userName = this._picknameInput.value
@@ -535,6 +534,9 @@ customElements.define('dab-chat-application',
       this._toggleMenu.style.display = 'none'
     }
 
+    /**
+     * This method shows a warning incase the chosen nickname is to short.
+     */
     _showNicknameWarning () {
       this._nicknameWarningParagraph.style.display = 'block'
       setTimeout(() => {
