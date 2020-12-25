@@ -52,8 +52,8 @@ template.innerHTML = `
       position: relative;
       float: left;
       width: calc(100% - 20px);
-      margin: 10px;
       cursor: pointer;
+      margin-bottom: 15px;
     }
 
     .enable-webcam-button {
@@ -114,6 +114,26 @@ template.innerHTML = `
       color: #fff;
       font-weight: bold;
     }
+
+    .video-loader {
+      position: absolute;
+      border: 6px solid #f3f3f3; /* Light grey */
+      border-top: 6px solid #FF6F00; /* Blue */
+      border-radius: 50%;
+      top: 40%;
+      left: 45%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      opacity: 1;
+      animation: spin 1.2s linear infinite;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 
   <div id="face-detection-application-wrapper">
@@ -124,6 +144,7 @@ template.innerHTML = `
       <div id="live-view-wrapper" class="cam-view-wrapper">
         <button class="enable-webcam-button">Enable your webcam</button>
         <video id="webcam" autoplay width="480" height="360"></video>
+        <div class="video-loader"></div> 
       </div>
       <div class="user-media-not-supported">
         <p class="warning-paragraph"></p>
@@ -166,9 +187,12 @@ customElements.define('dab-face-detection-application',
       // Selecting the warning paragraph.
       this._warningParagraph = this.shadowRoot.querySelector('.warning-paragraph')
 
-      // Enable web cam button.
+      // Selecting the enable web cam button.
       this._enableWebcamButton = this.shadowRoot.querySelector('.enable-webcam-button')
 
+      // Selecting the video loader
+      this._videoLoader = this.shadowRoot.querySelector('.video-loader')
+      
       // The model.
       this._model = undefined
 
@@ -179,6 +203,8 @@ customElements.define('dab-face-detection-application',
       this._enableWebcam = this._enableWebcam.bind(this)
 
       this._predictWebcam = this._predictWebcam.bind(this)
+
+      this._stopLoader = this._stopLoader.bind(this)
     }
 
     /**
@@ -259,7 +285,9 @@ customElements.define('dab-face-detection-application',
      * @param {object} event The event object.
      */
     _enableWebcam (event) {
+      this._videoLoader.style.display = 'block'
       if (!this._model) {
+        this._videoLoader.style.display = 'none'
         this._mediaNotSupported.style.display = 'block'
         this._warningParagraph.textContent = 'No object detection model could be found!'
         console.warn('No model detected!')
@@ -277,6 +305,7 @@ customElements.define('dab-face-detection-application',
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         this._webcam.srcObject = stream
         this._webcam.addEventListener('loadeddata', this._predictWebcam)
+        this._webcam.addEventListener('loadeddata', this._stopLoader)
       })
     }
 
@@ -330,6 +359,10 @@ customElements.define('dab-face-detection-application',
           window.requestAnimationFrame(this._predictWebcam)
         }, 500)
       })
+    }
+
+    _stopLoader () {
+      this._videoLoader.style.display = 'none'
     }
 
     /**
