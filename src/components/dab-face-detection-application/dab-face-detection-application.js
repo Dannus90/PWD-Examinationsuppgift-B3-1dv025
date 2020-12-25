@@ -192,6 +192,9 @@ customElements.define('dab-face-detection-application',
 
       // Selecting the video loader
       this._videoLoader = this.shadowRoot.querySelector('.video-loader')
+
+      // The prediction related interval.
+      this._predictionInterval = ''
       
       // The model.
       this._model = undefined
@@ -270,18 +273,22 @@ customElements.define('dab-face-detection-application',
 
       // Closing the webcam upon application close.
 
-      // Activating the webcam stream.
-      // TODO NEEDS TO GET FIXED!
+      // Stopping the stream upon application close.
       try {
         const stream = await navigator.mediaDevices.getUserMedia(constraints)
         if (stream !== null) {
+          console.log(stream)
           stream.getTracks().map(function (val) {
             val.stop()
+            stream.removeTrack(val)
+            val.enabled = false
           })
         }
+        clearInterval(this._predictionInterval)
         this._webcam.removeEventListener('loadeddata', this._predictWebcam)
         this._webcam.removeEventListener('loadeddata', this._stopLoader)
       } catch (err) {
+        clearInterval(this._predictionInterval)
         console.error(err)
       }
     }
@@ -304,8 +311,9 @@ customElements.define('dab-face-detection-application',
       event.target.classList.add('removed')
       this._videoSectionWrapper.classList.remove('invisible')
 
+      // facingMode for preferring front camera on mobile devices. 
       const constraints = {
-        video: true
+        video: { width: 480, height: 360, facingMode: 'user' }
       }
 
       // Activating the webcam stream.
@@ -365,7 +373,7 @@ customElements.define('dab-face-detection-application',
         }
 
         // We call the function again to keep prediciting but we set a delay for a smoother behavior.
-        setTimeout(() => {
+        this._predictionInterval = setTimeout(() => {
           window.requestAnimationFrame(this._predictWebcam)
         }, 500)
       })
