@@ -52,7 +52,7 @@ template.innerHTML = `
     }
   </style>
   <div class="high-score-container">
-    <h2>High Score - Top 5</h2>
+    <h2 class="high-score-heading">High Score - Top 3</h2>
     <ul class='high-score-list-container'>
     </ul>
   </div>
@@ -77,7 +77,13 @@ customElements.define('dab-high-score',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      this._topScores = []
+      // Selecting the highscore heading.
+      this._highscoreHeading = this.shadowRoot.querySelector('.high-score-heading')
+
+      // Storing all the scores.
+      this._smallHighScore = []
+      this._mediumHighScore = []
+      this._largeHighScore = []
 
       this._highscoreContainer = this.shadowRoot.querySelector('.high-score-container')
 
@@ -85,29 +91,61 @@ customElements.define('dab-high-score',
     }
 
     /**
-     * Sets the high score of the component.
+     * Attributes to monitor for changes.
      *
-     * @param {Array} highscore An array of the current highscores stored in indexedDB.
+     * @returns {string[]} A string array of attributes to monitor.
      */
-    set highScore (highscore) {
-      this._highscoreListContainer.textContent = ''
-      const topScores = highscore.sort((a, b) => a.score - b.score).slice(0, 5)
-      const numberOfEmptyScores = 5 - topScores.length
-      this._topScores = topScores
+    static get observedAttributes () {
+      return ['size']
+    }
 
-      this._topScores.forEach((topScore, i) => {
-        const li = document.createElement('li')
-        li.textContent = `${i + 1}: ${topScore.nickname} (${topScore.score}s) - ${topScore.date}`
-        this._highscoreListContainer.appendChild(li)
-      })
-
-      if (numberOfEmptyScores > 0) {
-        for (let i = 0; i < numberOfEmptyScores; i++) {
-          const li = document.createElement('li')
-          li.innerHTML = `${i + this._topScores.length + 1}: Empty`
-          this._highscoreListContainer.appendChild(li)
+    /**
+     * Called when observed attribute(s) changes.
+     *
+     * @param {string} name - The attribute's name.
+     * @param {*} oldValue - The old value.
+     * @param {*} newValue - The new value.
+     */
+    attributeChangedCallback (name, oldValue, newValue) {
+      if (name === 'size') {
+        switch (newValue) {
+          case 'small': {
+            // TODO LOGIC FOR HIGH SCORE
+            break
+          }
+          case 'medium': {
+            // TODO LOGIC FOR HIGH SCORE
+            break
+          }
+          case 'large': {
+            // TODO LOGIC FOR HIGH SCORE
+          }
         }
       }
+    }
+
+    /**
+     *
+     */
+    set smallHighScore (highscore) {
+      this._smallHighScore = highscore
+      console.log(this._smallHighScore)
+    }
+
+    /**
+     *
+     */
+    set mediumHighScore (highscore) {
+      this._mediumHighScore = highscore
+      console.log(this._mediumHighScore)
+    }
+
+    /**
+     *
+     */
+    set largeHighScore (highscore) {
+      this._largeHighScore = highscore
+      console.log(this._largeHighScore)
     }
 
     /**

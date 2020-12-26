@@ -186,7 +186,7 @@ template.innerHTML = `
       <button class="size-button" value="medium">4x2</button>
       <button class="size-button" value="large">4x4</button>
     </div>
-    <dab-high-score class="high-score-component"></dab-high-score>
+    <dab-high-score class="high-score-component" size="large"></dab-high-score>
   </div>
 `
 
@@ -223,13 +223,13 @@ customElements.define('dab-memory-game',
 
       // Selecting the memory game wrapper.
       this._memoryGameWrapper = this.shadowRoot.querySelector('#memory-game-wrapper')
-      
+
       // Selecting the high score component.
       this._highScoreComponent = this.shadowRoot.querySelector('.high-score-component')
-      
+
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
-      
+
       // The number of tries.
       this._numberOfTries = 0
 
@@ -362,7 +362,7 @@ customElements.define('dab-memory-game',
         this._memoryGameBoard.classList.remove('small')
       }
 
-      // Adding tiles. 
+      // Adding tiles.
       for (let i = 0; i < amountOfTiles; i++) {
         const tile = this._tileTemplate.content.cloneNode(true)
         this._memoryGameBoard.appendChild(tile)
@@ -509,7 +509,7 @@ customElements.define('dab-memory-game',
         this._memoryGameWrapper.style.paddingLeft = '2rem'
         this._memoryGameWrapper.style.paddingRight = '2rem'
         this._
-      } else if(event.target.value === 'medium') {
+      } else if (event.target.value === 'medium') {
         this._highScoreComponent.style.top = '24%'
         this._highScoreComponent.style.right = '-91%'
         this._memoryGameWrapper.style.padding = '0'
