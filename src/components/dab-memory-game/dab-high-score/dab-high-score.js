@@ -95,7 +95,7 @@ customElements.define('dab-high-score',
       this._smallMemoryDbStore = 'SmallMemoryStore'
       this._mediumMemoryDbStore = 'MediumMemoryStore'
       this._largeMemoryDbStore = 'LargeMemoryStore'
-      this._request = indexedDB.open(this._dbName , this._dbVersion)
+      this._request = indexedDB.open(this._dbName, this._dbVersion)
       this._db = ''
     }
 
@@ -119,24 +119,38 @@ customElements.define('dab-high-score',
       if (name === 'size') {
         switch (newValue) {
           case 'small': {
+            /**
+             * @param errorEvent
+             */
             this._request.onerror = (errorEvent) => {
-              console.log('Got here')
               console.error(`A request error occured: ${errorEvent.target.error.message}`)
             }
-            
+
+            /**
+             * @param e
+             */
             this._request.onsuccess = async (e) => {
               this._db = await e.target.result
 
-              const smallMemoryStoreInstance = this._db.transaction(this._smallMemoryDbStore, 'readonly').objectStore(this._smallMemoryDbStore)
-              mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
-              const memoryData = await e.target.result
-              console.log(memoryData)
+              const smallMemoryStoreInstance = this._db.transaction(this._smallMemoryDbStore, 'readonly').objectStore/**
+                                                                                                                      * @param e
+                                                                                                                      */
+              (this._smallMemoryDbStore)
+              smallMemoryStoreInstance.getAll().onsuccess = async (e) => {
+                const memoryData = await e.target.result
+                console.log(memoryData)
+              }
             }
-            }
-      
+
+            /**
+             * @param e
+             */
             this._request.onupgradeneeded = async (e) => {
               console.log('Got here3')
               this._db = await e.target.result
+              /**
+               * @param errorEvent
+               */
               this._db.onerror = (errorEvent) => {
                 console.error('Database error: ', errorEvent.target.error.message)
               }
@@ -144,24 +158,37 @@ customElements.define('dab-high-score',
             break
           }
           case 'medium': {
+            /**
+             * @param errorEvent
+             */
             this._request.onerror = (errorEvent) => {
-              console.log('Got here')
               console.error(`A request error occured: ${errorEvent.target.error.message}`)
             }
-            
+
+            /**
+             * @param e
+             */
             this._request.onsuccess = async (e) => {
               this._db = await e.target.result
 
-              const mediumMemoryStoreInstance = this._db.transaction(this._mediumMemoryDbStore, 'readonly').objectStore(this._mediumMemoryDbStore)
+              const mediumMemoryStoreInstance = this._db.transaction(this._mediumMemoryDbStore, 'readonly').objectStore/**
+                                                                                                                        * @param e
+                                                                                                                        */
+              (this._mediumMemoryDbStore)
               mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
-              const memoryData = await e.target.result
-              console.log(memoryData)
+                const memoryData = await e.target.result
+                console.log(memoryData)
+              }
             }
-            }
-      
+
+            /**
+             * @param e
+             */
             this._request.onupgradeneeded = async (e) => {
-              console.log('Got here3')
               this._db = await e.target.result
+              /**
+               * @param errorEvent
+               */
               this._db.onerror = (errorEvent) => {
                 console.error('Database error: ', errorEvent.target.error.message)
               }
@@ -169,24 +196,38 @@ customElements.define('dab-high-score',
             break
           }
           case 'large': {
+            /**
+             * @param errorEvent
+             */
             this._request.onerror = (errorEvent) => {
-              console.log('Got here')
               console.error(`A request error occured: ${errorEvent.target.error.message}`)
             }
-            
+
+            /**
+             * @param e
+             */
             this._request.onsuccess = async (e) => {
               this._db = await e.target.result
 
-              const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore(this._largeMemoryDbStore)
+              const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore/**
+                                                                                                                      * @param e
+                                                                                                                      */
+              (this._largeMemoryDbStore)
               largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
-              const memoryData = await e.target.result
-              console.log(memoryData)
+                const memoryData = await e.target.result
+                console.log(memoryData)
+              }
             }
-            }
-      
+
+            /**
+             * @param e
+             */
             this._request.onupgradeneeded = async (e) => {
               console.log('Got here3')
               this._db = await e.target.result
+              /**
+               * @param errorEvent
+               */
               this._db.onerror = (errorEvent) => {
                 console.error('Database error: ', errorEvent.target.error.message)
               }
@@ -201,7 +242,7 @@ customElements.define('dab-high-score',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-      
+
     }
 
     /**

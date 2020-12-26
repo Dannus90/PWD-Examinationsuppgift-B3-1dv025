@@ -93,7 +93,7 @@ let db
      * @param {object} e The event object.
      */
     recentMemoryNameStoreInstance.getAll().onsuccess = async (e) => {
-      if(await e.target.result.length > 0) {
+      if (await e.target.result.length > 0) {
         const recentNickname = await e.target.result[0].nickname
         nicknameGameController.nameExistInDb(recentNickname)
       }
@@ -105,7 +105,7 @@ let db
      * @param {object} e The event object.
      */
     recentChatNameStoreInstance.getAll().onsuccess = async (e) => {
-      if(await e.target.result.length > 0) {
+      if (await e.target.result.length > 0) {
         const recentNickname = await e.target.result[0].nickname
         nicknameGameController.nameExistInDb(recentNickname)
       }
