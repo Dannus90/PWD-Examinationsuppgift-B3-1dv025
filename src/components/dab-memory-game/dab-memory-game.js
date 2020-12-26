@@ -251,7 +251,7 @@ customElements.define('dab-memory-game',
       // Set initial total time spent
       this._totalTimeSpentElement.textContent = this._totalTimeSpent + ' sec'
 
-      // Boolean regarding if the game has started or not. 
+      // Boolean regarding if the game has started or not.
       this._gameHasStarted = false
 
       // The game board size.
@@ -446,8 +446,8 @@ customElements.define('dab-memory-game',
      * @param {CustomEvent} event The custom event.
      */
     _tileFlipped (event) {
-      // We start the game upon the first tile flip. 
-      if(!this._gameHasStarted) {
+      // We start the game upon the first tile flip.
+      if (!this._gameHasStarted) {
         this._gameHasStarted = !this._gameHasStarted
         this._runTimer()
       }
@@ -538,6 +538,7 @@ customElements.define('dab-memory-game',
         tile.removeAttribute('disabled')
       })
 
+      // When dispatched, this event updates the highscore.
       this.dispatchEvent(new window.CustomEvent('resetMemoryGame', {
         bubbles: true,
         composed: true,

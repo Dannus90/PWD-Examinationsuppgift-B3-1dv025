@@ -189,9 +189,9 @@ customElements.define('dab-high-score',
       const highscoreCopy = [...this._highscore]
 
       highscoreCopy.sort((a, b) => {
-        if(a.numberOfTries === b.numberOfTries) {
+        if (a.numberOfTries === b.numberOfTries) {
           return a.time - b.time
-        } 
+        }
         return a.numberOfTries - b.numberOfTries
       })
       const topscores = highscoreCopy.splice(0, 3)

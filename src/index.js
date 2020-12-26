@@ -14,9 +14,10 @@ import './components/dab-chat-application/dab-chat-application'
 import './components/dab-face-detection-application/dab-face-detection-application'
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
+import './registerServiceWorker/registerServiceWorker.js'
 import './db/indexedDB.js'
 // Importing the db
-import { db, getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js' 
+import { getStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
 
 // Variables
 let translationPositionX = -50
@@ -78,9 +79,9 @@ document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed
   currentHighscoreComponent.updateHighscore(highscoreToBeDisplayed)
 })
 
-document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTimeSpent, boardsize, nickname}}) => {
+document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTimeSpent, boardsize, nickname } }) => {
   let accessedStore = ''
-  if(boardsize === 'small') {
+  if (boardsize === 'small') {
     accessedStore = getStore(smallMemoryDbStore, 'readwrite')
   } else if (boardsize === 'medium') {
     accessedStore = getStore(mediumMemoryDbStore, 'readwrite')
@@ -97,6 +98,6 @@ document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTim
   accessedStore.add(data)
 })
 
-document.addEventListener('resetMemoryGame', ({ detail: { boardsize, currentHighscoreComponent }}) => {
+document.addEventListener('resetMemoryGame', ({ detail: { boardsize, currentHighscoreComponent } }) => {
   currentHighscoreComponent.updateHighscore(boardsize)
 })
