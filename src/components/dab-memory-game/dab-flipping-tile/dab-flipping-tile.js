@@ -85,7 +85,7 @@ template.innerHTML = `
         circle,
         rgba(255, 255, 255, 1) 0%,
         rgba(255, 255, 255, 1) 19%,
-        rgba(19, 220, 206, 1) 72%
+        rgb(195 6 184) 72%
       );
       color: white;
       border-radius: 10px;

@@ -26,8 +26,9 @@ template.innerHTML = `
     }
 
     #memory-game-wrapper {
-      background-color: #fff;
+      background: radial-gradient(circle, rgb(151 151 178) 0%, rgba(106,97,176,1) 15%, rgba(80,72,140,1) 25%, rgba(2,0,36,1) 100%);
       position: relative;
+      color: #fff;
     }
 
     .high-score-component {
@@ -43,8 +44,7 @@ template.innerHTML = `
       gap: 15px;
       justify-content: center;
       align-items: center;
-      padding: 1.5rem;
-      padding-bottom: 1rem;
+      padding: 1rem 1.5rem;
     }
 
     #memory-game-board.small {
@@ -55,7 +55,7 @@ template.innerHTML = `
       text-align: center;
       margin: 0;
       font-size: 1.8rem;
-      padding-top: 1.5rem;
+      padding-top: 1rem;
       color: #b2b2b2b;
     }
 
@@ -64,10 +64,11 @@ template.innerHTML = `
       margin: 0;
       margin-top: 0.5rem;
       font-size: 1.05rem;
+      line-height: 1.2rem;
     }
 
     .number-of-tries-display {
-      color: #0d753a;
+      color: #34e380;
       font-weight: bold;
     }
 

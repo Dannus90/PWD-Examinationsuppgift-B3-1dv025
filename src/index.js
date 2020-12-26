@@ -15,7 +15,6 @@ import './components/dab-face-detection-application/dab-face-detection-applicati
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
 import './registerServiceWorker/registerServiceWorker.js'
-import './db/indexedDB.js'
 // Importing the db
 import { getStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
 
