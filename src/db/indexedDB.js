@@ -9,9 +9,9 @@ const largeMemoryDbStore = 'LargeMemoryStore'
 const nickNameIndex = 'nickname'
 const scoreIndex = 'score'
 const timeIndex = 'time'
-const recentMemoryNameDbStore = 'NicknameStore'
+const recentMemoryNameDbStore = 'MemoryNicknameStore'
 const recentMemoryNameIndex = 'nickname'
-const recentChatNameDbStore = 'NicknameStore'
+const recentChatNameDbStore = 'ChatNicknameStore'
 const recentChatNameIndex = 'nickname'
 
 // --- INITIALIZE VARIABLE FOR DB --- //
@@ -61,8 +61,8 @@ let db
      * @param {object} e The event object.
      */
     smallMemoryStoreInstance.getAll().onsuccess = async (e) => {
-      const quizData = await e.target.result
-      highScore.smallHighScore = quizData
+      const memoryData = await e.target.result
+      highScore.smallHighScore = memoryData
     }
 
     /**
@@ -72,8 +72,8 @@ let db
      * @param {object} e The event object.
      */
     mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
-      const quizData = await e.target.result
-      highScore.mediumHighScore = quizData
+      const memoryData = await e.target.result
+      highScore.mediumHighScore = memoryData
     }
 
     /**
@@ -83,8 +83,8 @@ let db
      * @param {object} e The event object.
      */
     largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
-      const quizData = await e.target.result
-      highScore.largeHighScore = quizData
+      const memoryData = await e.target.result
+      highScore.largeHighScore = memoryData
     }
 
     /**
@@ -93,169 +93,158 @@ let db
      * @param {object} e The event object.
      */
     recentMemoryNameStoreInstance.getAll().onsuccess = async (e) => {
-      const recentNickname = await e.target.result[0].nickname
-      if (recentNickname) {
+      if(await e.target.result.length > 0) {
+        const recentNickname = await e.target.result[0].nickname
         nicknameGameController.nameExistInDb(recentNickname)
-      }
-
-      /**
-       * Checks the a nickname currently exists in indexedDb and if it exists it sets name to already be picked for the player.
-       *
-       * @param {object} e The event object.
-       */
-      recentChatNameStoreInstance.getAll().onsuccess = async (e) => {
-        const recentNickname = await e.target.result[0].nickname
-        if (recentNickname) {
-          nicknameGameController.nameExistInDb(recentNickname)
-        }
-      }
-
-      /**
-       * Checks the a nickname currently exists in indexedDb and if it exists it sets name to already be picked for the player.
-       *
-       * @param {object} e The event object.
-       */
-      recentMemoryNameStoreInstance.getAll().onsuccess = async (e) => {
-        const recentNickname = await e.target.result[0].nickname
-        if (recentNickname) {
-          nicknameGameController.nameExistInDb(recentNickname)
-        }
       }
     }
 
     /**
-     * Handles upgrading of the database.
+     * Checks the a nickname currently exists in indexedDb and if it exists it sets name to already be picked for the player.
      *
-     * @param {object} e The object event.
+     * @param {object} e The event object.
      */
-    request.onupgradeneeded = async (e) => {
-      db = await e.target.result
-
-      /**
-       * Handles database errors.
-       *
-       * @param {object} errorEvent The object event.
-       */
-      db.onerror = (errorEvent) => {
-        console.error('Database error: ', errorEvent.target.error.message)
-      }
-
-      // Setting up store for small memory game.
-      const smallMemoryObjectStore = db.createObjectStore(smallMemoryDbStore, { keyPath: 'id', autoIncrement: true })
-      smallMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
-      smallMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
-      smallMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
-
-      // Setting up store for medium memory game.
-      const mediumMemoryObjectStore = db.createObjectStore(mediumMemoryDbStore, { keyPath: 'id', autoIncrement: true })
-      mediumMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
-      mediumMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
-      mediumMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
-
-      // Setting up store for large memory game.
-      const largeMemoryObjectStore = db.createObjectStore(largeMemoryDbStore, { keyPath: 'id', autoIncrement: true })
-      largeMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
-      largeMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
-      largeMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
-
-      // Setting up store for memory nickname store.
-      const memoryNicknameDbStore = await db.createObjectStore(recentMemoryNameDbStore, { keyPath: 'id', autoIncrement: true })
-      memoryNicknameDbStore.createIndex(recentMemoryNameIndex, recentMemoryNameIndex, { unique: false })
-
-      // Setting up store for memory nickname store.
-      const chatNicknameDbStore = await db.createObjectStore(recentChatNameDbStore, { keyPath: 'id', autoIncrement: true })
-      chatNicknameDbStore.createIndex(recentChatNameIndex, recentChatNameIndex, { unique: false })
-
-      // --- SEED DATA ---//
-      // Small sized memory game
-      const seedDataMemorySmall = [{
-        nickname: 'MrMemory',
-        numberOfTries: 2,
-        time: 15
-      },
-      {
-        nickname: 'MsMemory',
-        numberOfTries: 3,
-        time: 17
-      },
-      {
-        nickname: 'LordMemory',
-        numberOfTries: 4,
-        time: 20
-      }]
-
-      // Medium sized memory game
-      const seedDataMemoryMedium = [{
-        nickname: 'MrMemory',
-        numberOfTries: 9,
-        time: 15
-      },
-      {
-        nickname: 'MsMemory',
-        numberOfTries: 11,
-        time: 17
-      },
-      {
-        nickname: 'LordMemory',
-        numberOfTries: 13,
-        time: 20
-      }]
-
-      // Large sized memory game
-      const seedDataMemoryLarge = [{
-        nickname: 'MrMemory',
-        numberOfTries: 18,
-        time: 40
-      },
-      {
-        nickname: 'MsMemory',
-        numberOfTries: 22,
-        time: 50
-      },
-      {
-        nickname: 'LordMemory',
-        numberOfTries: 24,
-        time: 60
-      }]
-
-      /**
-       * Seeding the small memory object store with players.
-       *
-       * @param {object} e The event object.
-       */
-      smallMemoryObjectStore.transaction.oncomplete = async (e) => {
-        const accessedQuizStore = await db.transaction(smallMemoryDbStore, 'readwrite').objectStore(smallMemoryDbStore)
-        seedDataMemorySmall.forEach((seedPlayer) => {
-          accessedQuizStore.add(seedPlayer)
-        })
-      }
-
-      /**
-       * Seeding the medium memory object store with players.
-       *
-       * @param {object} e The event object.
-       */
-      mediumMemoryObjectStore.transaction.oncomplete = async (e) => {
-        const accessedQuizStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
-        seedDataMemoryMedium.forEach((seedPlayer) => {
-          accessedQuizStore.add(seedPlayer)
-        })
-      }
-
-      /**
-       * Seeding the large memory object store with players.
-       *
-       * @param {object} e The event object.
-       */
-      largeMemoryObjectStore.transaction.oncomplete = async (e) => {
-        const accessedQuizStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
-        seedDataMemoryLarge.forEach((seedPlayer) => {
-          accessedQuizStore.add(seedPlayer)
-        })
+    recentChatNameStoreInstance.getAll().onsuccess = async (e) => {
+      if(await e.target.result.length > 0) {
+        const recentNickname = await e.target.result[0].nickname
+        nicknameGameController.nameExistInDb(recentNickname)
       }
     }
   }
-})()
+
+  /**
+   * Handles upgrading of the database.
+   *
+   * @param {object} e The object event.
+   */
+  request.onupgradeneeded = async (e) => {
+    db = await e.target.result
+
+    /**
+     * Handles database errors.
+     *
+     * @param {object} errorEvent The object event.
+     */
+    db.onerror = (errorEvent) => {
+      console.error('Database error: ', errorEvent.target.error.message)
+    }
+
+    // Setting up store for small memory game.
+    const smallMemoryObjectStore = db.createObjectStore(smallMemoryDbStore, { keyPath: 'id', autoIncrement: true })
+    smallMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
+    smallMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
+    smallMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
+
+    // Setting up store for medium memory game.
+    const mediumMemoryObjectStore = db.createObjectStore(mediumMemoryDbStore, { keyPath: 'id', autoIncrement: true })
+    mediumMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
+    mediumMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
+    mediumMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
+
+    // Setting up store for large memory game.
+    const largeMemoryObjectStore = db.createObjectStore(largeMemoryDbStore, { keyPath: 'id', autoIncrement: true })
+    largeMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
+    largeMemoryObjectStore.createIndex(scoreIndex, scoreIndex, { unique: false })
+    largeMemoryObjectStore.createIndex(timeIndex, timeIndex, { unique: false })
+
+    // Setting up store for memory nickname store.
+    const memoryNicknameDbStore = await db.createObjectStore(recentMemoryNameDbStore, { keyPath: 'id', autoIncrement: true })
+    memoryNicknameDbStore.createIndex(recentMemoryNameIndex, recentMemoryNameIndex, { unique: false })
+
+    // Setting up store for memory nickname store.
+    const chatNicknameDbStore = await db.createObjectStore(recentChatNameDbStore, { keyPath: 'id', autoIncrement: true })
+    chatNicknameDbStore.createIndex(recentChatNameIndex, recentChatNameIndex, { unique: false })
+
+    // --- SEED DATA ---//
+    // Small sized memory game
+    const seedDataMemorySmall = [{
+      nickname: 'MrMemory',
+      numberOfTries: 2,
+      time: 15
+    },
+    {
+      nickname: 'MsMemory',
+      numberOfTries: 3,
+      time: 17
+    },
+    {
+      nickname: 'LordMemory',
+      numberOfTries: 4,
+      time: 20
+    }]
+
+    // Medium sized memory game
+    const seedDataMemoryMedium = [{
+      nickname: 'MrMemory',
+      numberOfTries: 9,
+      time: 15
+    },
+    {
+      nickname: 'MsMemory',
+      numberOfTries: 11,
+      time: 17
+    },
+    {
+      nickname: 'LordMemory',
+      numberOfTries: 13,
+      time: 20
+    }]
+
+    // Large sized memory game
+    const seedDataMemoryLarge = [{
+      nickname: 'MrMemory',
+      numberOfTries: 18,
+      time: 40
+    },
+    {
+      nickname: 'MsMemory',
+      numberOfTries: 22,
+      time: 50
+    },
+    {
+      nickname: 'LordMemory',
+      numberOfTries: 24,
+      time: 60
+    }]
+
+    /**
+     * Seeding the small memory object store with players.
+     *
+     * @param {object} e The event object.
+     */
+    smallMemoryObjectStore.transaction.oncomplete = async (e) => {
+      const accessedMemoryStore = await db.transaction(smallMemoryDbStore, 'readwrite').objectStore(smallMemoryDbStore)
+      seedDataMemorySmall.forEach((seedPlayer) => {
+        accessedMemoryStore.add(seedPlayer)
+      })
+    }
+
+    /**
+     * Seeding the medium memory object store with players.
+     *
+     * @param {object} e The event object.
+     */
+    mediumMemoryObjectStore.transaction.oncomplete = async (e) => {
+      const accessedMemoryStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
+      seedDataMemoryMedium.forEach((seedPlayer) => {
+        accessedMemoryStore.add(seedPlayer)
+      })
+    }
+
+    /**
+     * Seeding the large memory object store with players.
+     *
+     * @param {object} e The event object.
+     */
+    largeMemoryObjectStore.transaction.oncomplete = async (e) => {
+      const accessedMemoryStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
+      seedDataMemoryLarge.forEach((seedPlayer) => {
+        accessedMemoryStore.add(seedPlayer)
+      })
+    }
+  }
+}
+)()
 
 /// /////////////////////////
 //     HELPER METHODS      //
