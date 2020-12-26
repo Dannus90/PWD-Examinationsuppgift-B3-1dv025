@@ -537,6 +537,16 @@ customElements.define('dab-memory-game',
         tile.removeAttribute('hidden')
         tile.removeAttribute('disabled')
       })
+
+      this.dispatchEvent(new window.CustomEvent('resetMemoryGame', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          boardsize: this.getAttribute('boardsize'),
+          currentHighscoreComponent: this._highScoreComponent
+        }
+      }))
+
       this._initialize()
     }
 

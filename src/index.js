@@ -79,12 +79,6 @@ document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed
 })
 
 document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTimeSpent, boardsize, nickname}}) => {
-  console.log(numberOfTries)
-  console.log(totalTimeSpent)
-  console.log(boardsize)
-  console.log(nickname)
-  console.log(db)
-
   let accessedStore = ''
   if(boardsize === 'small') {
     accessedStore = getStore(smallMemoryDbStore, 'readwrite')
@@ -101,4 +95,8 @@ document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTim
   }
 
   accessedStore.add(data)
+})
+
+document.addEventListener('resetMemoryGame', ({ detail: { boardsize, currentHighscoreComponent }}) => {
+  currentHighscoreComponent.updateHighscore(boardsize)
 })
