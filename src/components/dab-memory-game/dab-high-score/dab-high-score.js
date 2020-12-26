@@ -186,10 +186,18 @@ customElements.define('dab-high-score',
       this._highscoreListContainer.textContent = ''
       this._highscore = highscore
 
-      this._highscore.sort((a, b) => a.numberOfTries - b.numberOfTries).slice(0, 3)
+      const highscoreCopy = [...this._highscore]
+
+      highscoreCopy.sort((a, b) => {
+        if(a.numberOfTries === b.numberOfTries) {
+          return a.time - b.time
+        } 
+        return a.numberOfTries - b.numberOfTries
+      })
+      const topscores = highscoreCopy.splice(0, 3)
       const numberOfEmptyScores = 3 - this._highscore.length
 
-      this._highscore.forEach((score, i) => {
+      topscores.forEach((score, i) => {
         const li = document.createElement('li')
         li.textContent = `${i + 1}: ${score.nickname} (${score.numberOfTries}) - ${score.time}s`
         this._highscoreListContainer.appendChild(li)

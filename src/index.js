@@ -15,6 +15,8 @@ import './components/dab-face-detection-application/dab-face-detection-applicati
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
 import './db/indexedDB.js'
+// Importing the db
+import { db, getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js' 
 
 // Variables
 let translationPositionX = -50
@@ -74,4 +76,29 @@ document.addEventListener('deleteAppInstance', (event) => {
 
 document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed, currentHighscoreComponent } }) => {
   currentHighscoreComponent.updateHighscore(highscoreToBeDisplayed)
+})
+
+document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTimeSpent, boardsize, nickname}}) => {
+  console.log(numberOfTries)
+  console.log(totalTimeSpent)
+  console.log(boardsize)
+  console.log(nickname)
+  console.log(db)
+
+  let accessedStore = ''
+  if(boardsize === 'small') {
+    accessedStore = getStore(smallMemoryDbStore, 'readwrite')
+  } else if (boardsize === 'medium') {
+    accessedStore = getStore(mediumMemoryDbStore, 'readwrite')
+  } else if (boardsize === 'large') {
+    accessedStore = getStore(largeMemoryDbStore, 'readwrite')
+  }
+
+  const data = {
+    nickname: nickname,
+    numberOfTries,
+    time: totalTimeSpent
+  }
+
+  accessedStore.add(data)
 })

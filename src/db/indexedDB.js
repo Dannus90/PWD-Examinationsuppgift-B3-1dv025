@@ -3,9 +3,9 @@ import '../components/dab-memory-game/dab-high-score/index.js'
 // --- VARIABLES RELATED TO INDEXEDDB --- //
 const dbName = 'MemoryGameDatabase'
 const dbVersion = 1
-const smallMemoryDbStore = 'SmallMemoryStore'
-const mediumMemoryDbStore = 'MediumMemoryStore'
-const largeMemoryDbStore = 'LargeMemoryStore'
+export const smallMemoryDbStore = 'SmallMemoryStore'
+export const mediumMemoryDbStore = 'MediumMemoryStore'
+export const largeMemoryDbStore = 'LargeMemoryStore'
 const nickNameIndex = 'nickname'
 const scoreIndex = 'score'
 const timeIndex = 'time'
@@ -15,7 +15,7 @@ const recentChatNameDbStore = 'ChatNicknameStore'
 const recentChatNameIndex = 'nickname'
 
 // --- INITIALIZE VARIABLE FOR DB --- //
-let db
+export let db
 
 /// //////////////////////////
 //   SETTING UP INDEXEDDB   //
@@ -216,19 +216,16 @@ let db
     largeMemoryObjectStore.transaction.oncomplete = async (e) => {
       const accessedLargeMemoryStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
       seedDataMemoryLarge.forEach(async (seedPlayer) => {
-        console.log('SEEDING LARGE')
         await accessedLargeMemoryStore.add(seedPlayer)
       })
 
       const accessedMediumMemoryStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
       seedDataMemoryMedium.forEach(async (seedPlayer) => {
-        console.log('SEEDING MEDIUM')
         await accessedMediumMemoryStore.add(seedPlayer)
       })
 
       const accessedSmallMemoryStore = await db.transaction(smallMemoryDbStore, 'readwrite').objectStore(smallMemoryDbStore)
       seedDataMemorySmall.forEach(async (seedPlayer) => {
-        console.log('SEEDING MEDIUM')
         await accessedSmallMemoryStore.add(seedPlayer)
       })
     }
@@ -248,7 +245,7 @@ let db
  *
  * @returns {object} An object representing the accessed store
  */
-const getStore = (storeName, method) => {
+export const getStore = (storeName, method) => {
   const accessedStore = db.transaction(storeName, method).objectStore(storeName)
   if (!accessedStore) {
     console.error('No such store exist!')
@@ -262,7 +259,7 @@ const getStore = (storeName, method) => {
  * @param {string} storeName The name of the store.
  * @param {string} method The method type.
  */
-const clearStore = (storeName, method) => {
+export const clearStore = (storeName, method) => {
   const accessedStore = getStore(storeName, method)
   const request = accessedStore.clear()
 

@@ -168,6 +168,11 @@ template.innerHTML = `
     .size-button:active {
       transform: scale(0.98);
     }
+
+    .victory-modal p {
+      line-height: 1.2rem;
+      padding: 0.5rem;
+    }
   </style>
   <template id="tile-template">
     <dab-flipping-tile></dab-flipping-tile>
@@ -175,6 +180,7 @@ template.innerHTML = `
   <div id="memory-game-wrapper">
     <h2>Memory game</h2>
     <p>Number of tries: <span class="number-of-tries-display"></span></p>
+    <p class="total-time-spent"></p>
     <div id="memory-game-board"></div>
     <div class="victory-modal">
       <h3>Victory!</h3>
@@ -227,11 +233,32 @@ customElements.define('dab-memory-game',
       // Selecting the high score component.
       this._highScoreComponent = this.shadowRoot.querySelector('.high-score-component')
 
+      // Selecting the total time spent element.
+      this._totalTimeSpentElement = this.shadowRoot.querySelector('.total-time-spent')
+
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
 
       // The number of tries.
       this._numberOfTries = 0
+
+      // TotalTime spent
+      this._totalTimeSpent = 0
+
+      // The timing interval
+      this._interval = 'interval'
+
+      // Set initial total time spent
+      this._totalTimeSpentElement.textContent = this._totalTimeSpent + ' sec'
+
+      // Boolean regarding if the game has started or not. 
+      this._gameHasStarted = false
+
+      // The game board size.
+      this._currentGameBoardSize = 'large'
+
+      // The person nickname
+      this._nickname = 'Daniel'
 
       // Binding this to methods.
       this._tileFlipped = this._tileFlipped.bind(this)
@@ -419,6 +446,11 @@ customElements.define('dab-memory-game',
      * @param {CustomEvent} event The custom event.
      */
     _tileFlipped (event) {
+      // We start the game upon the first tile flip. 
+      if(!this._gameHasStarted) {
+        this._gameHasStarted = !this._gameHasStarted
+        this._runTimer()
+      }
       const tiles = this._tiles
 
       const tilesToDisable = Array.from(tiles.faceUp)
@@ -466,18 +498,35 @@ customElements.define('dab-memory-game',
      * This method runs upon game victory and displays the amount of tries it took to finish the game.
      */
     _gameover () {
+      clearInterval(this._interval)
       this.shadowRoot.querySelector('.victory-modal').style.display = 'flex'
-      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = `Victory! It took you ${this._numberOfTries} tries.`
+      this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = `Victory! It took you ${this._numberOfTries} tries and you finished in ${Math.round(this._totalTimeSpent * 100) / 100} sec`
+      this.dispatchEvent(new window.CustomEvent('memoryGameOver', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          numberOfTries: this._numberOfTries,
+          totalTimeSpent: Math.round(this._totalTimeSpent * 100) / 100,
+          boardsize: this.getAttribute('boardsize'),
+          nickname: this._nickname
+        }
+      }))
     }
 
     /**
      * This method resets the game and happens when the modal button is clicked.
      */
     _resetGame () {
+      clearInterval(this._interval)
       this.shadowRoot.querySelector('.victory-modal').style.display = 'none'
       this.shadowRoot.querySelector('.victory-modal').querySelector('p').textContent = ''
+
+      // Resetting the number of tries, total time spent and game started status.
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
+      this._totalTimeSpent = 0
+      this._totalTimeSpentElement.textContent = this._totalTimeSpent + ' sec'
+      this._gameHasStarted = false
 
       this._tiles.all.forEach((tile, i) => {
         tile.cardMissMatch()
@@ -498,12 +547,16 @@ customElements.define('dab-memory-game',
      * @param {object} event The event object.
      */
     _pickNewGameBoardSize (event) {
-      console.log(event.target.value)
+      clearInterval(this._interval)
       this.setAttribute('boardsize', event.target.value)
-      // Resetting the number of tries.
+      // Resetting the number of tries, total time spent and game started status.
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
+      this._totalTimeSpent = 0
+      this._totalTimeSpentElement.textContent = this._totalTimeSpent + ' sec'
+      this._gameHasStarted = false
 
+      // Styling the board depending on game size.
       if (event.target.value === 'small') {
         this._highScoreComponent.style.top = '62.5%'
         this._highScoreComponent.style.right = '-161%'
@@ -529,6 +582,17 @@ customElements.define('dab-memory-game',
       }))
 
       this._initialize()
+    }
+
+    /**
+     * Runs the timer or calls the runOutOfTime method and displays "Time ran out!".
+     */
+    _runTimer () {
+      clearInterval(this._interval)
+      this._interval = setInterval(() => {
+        this._totalTimeSpent += 0.10
+        this._totalTimeSpentElement.textContent = Math.round(this._totalTimeSpent * 100) / 100 + ' sec'
+      }, 100)
     }
   }
 )
