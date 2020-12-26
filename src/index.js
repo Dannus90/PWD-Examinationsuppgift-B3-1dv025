@@ -71,3 +71,7 @@ document.addEventListener('deleteAppInstance', (event) => {
   translationPositionY += 2
   translationPositionX += 2
 })
+
+document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed, currentHighscoreComponent } }) => {
+  currentHighscoreComponent.updateHighscore(highscoreToBeDisplayed)
+})

@@ -177,17 +177,17 @@ let db
     const seedDataMemoryMedium = [{
       nickname: 'MrMemory',
       numberOfTries: 9,
-      time: 15
+      time: 25
     },
     {
       nickname: 'MsMemory',
       numberOfTries: 11,
-      time: 17
+      time: 30
     },
     {
       nickname: 'LordMemory',
       numberOfTries: 13,
-      time: 20
+      time: 32
     }]
 
     // Large sized memory game
@@ -208,38 +208,28 @@ let db
     }]
 
     /**
-     * Seeding the small memory object store with players.
-     *
-     * @param {object} e The event object.
-     */
-    smallMemoryObjectStore.transaction.oncomplete = async (e) => {
-      const accessedMemoryStore = await db.transaction(smallMemoryDbStore, 'readwrite').objectStore(smallMemoryDbStore)
-      seedDataMemorySmall.forEach((seedPlayer) => {
-        accessedMemoryStore.add(seedPlayer)
-      })
-    }
-
-    /**
-     * Seeding the medium memory object store with players.
-     *
-     * @param {object} e The event object.
-     */
-    mediumMemoryObjectStore.transaction.oncomplete = async (e) => {
-      const accessedMemoryStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
-      seedDataMemoryMedium.forEach((seedPlayer) => {
-        accessedMemoryStore.add(seedPlayer)
-      })
-    }
-
-    /**
-     * Seeding the large memory object store with players.
+     * Seeding the memory object stores with players.
+     * Has to be done in this way to successfully seed all storages.
      *
      * @param {object} e The event object.
      */
     largeMemoryObjectStore.transaction.oncomplete = async (e) => {
-      const accessedMemoryStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
-      seedDataMemoryLarge.forEach((seedPlayer) => {
-        accessedMemoryStore.add(seedPlayer)
+      const accessedLargeMemoryStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
+      seedDataMemoryLarge.forEach(async (seedPlayer) => {
+        console.log('SEEDING LARGE')
+        await accessedLargeMemoryStore.add(seedPlayer)
+      })
+
+      const accessedMediumMemoryStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
+      seedDataMemoryMedium.forEach(async (seedPlayer) => {
+        console.log('SEEDING MEDIUM')
+        await accessedMediumMemoryStore.add(seedPlayer)
+      })
+
+      const accessedSmallMemoryStore = await db.transaction(smallMemoryDbStore, 'readwrite').objectStore(smallMemoryDbStore)
+      seedDataMemorySmall.forEach(async (seedPlayer) => {
+        console.log('SEEDING MEDIUM')
+        await accessedSmallMemoryStore.add(seedPlayer)
       })
     }
   }

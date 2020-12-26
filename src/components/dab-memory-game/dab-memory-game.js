@@ -32,8 +32,8 @@ template.innerHTML = `
 
     .high-score-component {
       position: absolute;
-      top: 32.5%;
-      right: -91%;
+      top: 41.5%;
+      right: -112%;
       transform: translate(-50%, -50%);
     }
 
@@ -186,7 +186,7 @@ template.innerHTML = `
       <button class="size-button" value="medium">4x2</button>
       <button class="size-button" value="large">4x4</button>
     </div>
-    <dab-high-score class="high-score-component" size="large"></dab-high-score>
+    <dab-high-score class="high-score-component"></dab-high-score>
   </div>
 `
 
@@ -498,26 +498,35 @@ customElements.define('dab-memory-game',
      * @param {object} event The event object.
      */
     _pickNewGameBoardSize (event) {
+      console.log(event.target.value)
       this.setAttribute('boardsize', event.target.value)
       // Resetting the number of tries.
       this._numberOfTries = 0
       this._displayNumberOfTries.textContent = this._numberOfTries
 
       if (event.target.value === 'small') {
-        this._highScoreComponent.style.top = '23.5%'
-        this._highScoreComponent.style.right = '-131.5%'
+        this._highScoreComponent.style.top = '62.5%'
+        this._highScoreComponent.style.right = '-161%'
         this._memoryGameWrapper.style.paddingLeft = '2rem'
         this._memoryGameWrapper.style.paddingRight = '2rem'
-        this._
       } else if (event.target.value === 'medium') {
-        this._highScoreComponent.style.top = '24%'
-        this._highScoreComponent.style.right = '-91%'
+        this._highScoreComponent.style.top = '62.5%'
+        this._highScoreComponent.style.right = '-112%'
         this._memoryGameWrapper.style.padding = '0'
       } else {
-        this._highScoreComponent.style.top = '32.5%'
-        this._highScoreComponent.style.right = '-91%'
+        this._highScoreComponent.style.top = '41.5%'
+        this._highScoreComponent.style.right = '-112%'
         this._memoryGameWrapper.style.padding = '0'
       }
+
+      this.dispatchEvent(new window.CustomEvent('updateHighscore', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          highscoreToBeDisplayed: event.target.value,
+          currentHighscoreComponent: this._highScoreComponent
+        }
+      }))
 
       this._initialize()
     }

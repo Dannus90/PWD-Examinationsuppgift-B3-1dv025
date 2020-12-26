@@ -282,6 +282,7 @@ customElements.define('dab-face-detection-application',
             val.stop()
             stream.removeTrack(val)
             val.enabled = false
+            return val
           })
         }
         clearInterval(this._predictionInterval)

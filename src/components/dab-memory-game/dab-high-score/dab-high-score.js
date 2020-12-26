@@ -19,7 +19,7 @@ template.innerHTML = `
       align-items: center;
       background-color: rgba(0,0,0,0.50);
       border-radius: 5px;
-      max-width: 250px;
+      width: 260px;
     }
 
     .high-score-container h2 {
@@ -36,7 +36,8 @@ template.innerHTML = `
 
     .high-score-container ul li {
       list-style: none;
-      font-size: 1.2rem;
+      font-size: 1rem;
+      color: #fff;
     }
 
     @media only screen and (max-width: 1225px) {
@@ -81,9 +82,7 @@ customElements.define('dab-high-score',
       this._highscoreHeading = this.shadowRoot.querySelector('.high-score-heading')
 
       // Storing all the scores.
-      this._smallHighScore = []
-      this._mediumHighScore = []
-      this._largeHighScore = []
+      this._highscore = []
 
       this._highscoreContainer = this.shadowRoot.querySelector('.high-score-container')
 
@@ -116,133 +115,59 @@ customElements.define('dab-high-score',
      * @param {*} newValue - The new value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-      if (name === 'size') {
-        switch (newValue) {
-          case 'small': {
-            /**
-             * @param errorEvent
-             */
-            this._request.onerror = (errorEvent) => {
-              console.error(`A request error occured: ${errorEvent.target.error.message}`)
-            }
 
-            /**
-             * @param e
-             */
-            this._request.onsuccess = async (e) => {
-              this._db = await e.target.result
-
-              const smallMemoryStoreInstance = this._db.transaction(this._smallMemoryDbStore, 'readonly').objectStore/**
-                                                                                                                      * @param e
-                                                                                                                      */
-              (this._smallMemoryDbStore)
-              smallMemoryStoreInstance.getAll().onsuccess = async (e) => {
-                const memoryData = await e.target.result
-                console.log(memoryData)
-              }
-            }
-
-            /**
-             * @param e
-             */
-            this._request.onupgradeneeded = async (e) => {
-              console.log('Got here3')
-              this._db = await e.target.result
-              /**
-               * @param errorEvent
-               */
-              this._db.onerror = (errorEvent) => {
-                console.error('Database error: ', errorEvent.target.error.message)
-              }
-            }
-            break
-          }
-          case 'medium': {
-            /**
-             * @param errorEvent
-             */
-            this._request.onerror = (errorEvent) => {
-              console.error(`A request error occured: ${errorEvent.target.error.message}`)
-            }
-
-            /**
-             * @param e
-             */
-            this._request.onsuccess = async (e) => {
-              this._db = await e.target.result
-
-              const mediumMemoryStoreInstance = this._db.transaction(this._mediumMemoryDbStore, 'readonly').objectStore/**
-                                                                                                                        * @param e
-                                                                                                                        */
-              (this._mediumMemoryDbStore)
-              mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
-                const memoryData = await e.target.result
-                console.log(memoryData)
-              }
-            }
-
-            /**
-             * @param e
-             */
-            this._request.onupgradeneeded = async (e) => {
-              this._db = await e.target.result
-              /**
-               * @param errorEvent
-               */
-              this._db.onerror = (errorEvent) => {
-                console.error('Database error: ', errorEvent.target.error.message)
-              }
-            }
-            break
-          }
-          case 'large': {
-            /**
-             * @param errorEvent
-             */
-            this._request.onerror = (errorEvent) => {
-              console.error(`A request error occured: ${errorEvent.target.error.message}`)
-            }
-
-            /**
-             * @param e
-             */
-            this._request.onsuccess = async (e) => {
-              this._db = await e.target.result
-
-              const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore/**
-                                                                                                                      * @param e
-                                                                                                                      */
-              (this._largeMemoryDbStore)
-              largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
-                const memoryData = await e.target.result
-                console.log(memoryData)
-              }
-            }
-
-            /**
-             * @param e
-             */
-            this._request.onupgradeneeded = async (e) => {
-              console.log('Got here3')
-              this._db = await e.target.result
-              /**
-               * @param errorEvent
-               */
-              this._db.onerror = (errorEvent) => {
-                console.error('Database error: ', errorEvent.target.error.message)
-              }
-            }
-            break
-          }
-        }
-      }
     }
 
     /**
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      /**
+       * Runs upon request error and displays the error message.
+       *
+       * @param {object} errorEvent The event object.
+       */
+      this._request.onerror = (errorEvent) => {
+        console.error(`A request error occured: ${errorEvent.target.error.message}`)
+      }
 
+      /**
+       * Runs upon request success and initiates the database and sets the initial highscore.
+       *
+       * @param {object} e The even object.
+       */
+      this._request.onsuccess = async (e) => {
+        this._db = await e.target.result
+
+        const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore(this._largeMemoryDbStore)
+        /**
+         * Gets all current data in the large memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
+          const memoryData = await e.target.result
+          this._displayHighScore(memoryData)
+        }
+      }
+
+      /**
+       * Runs upon db upgrade to a new version and upgrades the database.
+       *
+       * @param {object} e The event object.
+       */
+      this._request.onupgradeneeded = async (e) => {
+        this._db = await e.target.result
+        /**
+         * This runs upon indexedDB database error.
+         *
+         * @param {object} errorEvent The error event object.
+         */
+        this._db.onerror = (errorEvent) => {
+          console.error('Database error: ', errorEvent.target.error.message)
+        }
+      }
     }
 
     /**
@@ -253,37 +178,75 @@ customElements.define('dab-high-score',
     }
 
     /**
+     * Displays the current high score for the current game board size.
      *
+     * @param {Array} highscore An array containing the high score to be displayed.
      */
-    set smallHighScore (highscore) {
-      this._smallHighScore = highscore
-      console.log(this._smallHighScore)
+    _displayHighScore (highscore) {
+      this._highscoreListContainer.textContent = ''
+      this._highscore = highscore
+
+      this._highscore.sort((a, b) => a.numberOfTries - b.numberOfTries).slice(0, 3)
+      const numberOfEmptyScores = 3 - this._highscore.length
+
+      this._highscore.forEach((score, i) => {
+        const li = document.createElement('li')
+        li.textContent = `${i + 1}: ${score.nickname} (${score.numberOfTries}) - ${score.time}s`
+        this._highscoreListContainer.appendChild(li)
+      })
+
+      if (numberOfEmptyScores > 0) {
+        for (let i = 0; i < numberOfEmptyScores; i++) {
+          const li = document.createElement('li')
+          li.innerHTML = `${i + this._highscore.length + 1}: Empty`
+          this._highscoreListContainer.appendChild(li)
+        }
+      }
     }
 
     /**
+     * This method updates the currently shown highscore.
      *
+     * @param {string} highscoreToBeDisplayed A string regarding which highscore that should be displayed.
      */
-    set mediumHighScore (highscore) {
-      this._mediumHighScore = highscore
-      console.log(this._mediumHighScore)
-    }
-
-    /**
-     *
-     */
-    set largeHighScore (highscore) {
-      this._largeHighScore = highscore
-      console.log(this._largeHighScore)
-    }
-
-    /**
-     * Gets the high score of the component.
-     *
-     * @readonly
-     * @returns {number[]} The current top scores.
-     */
-    get highScore () {
-      return this._topScores
+    updateHighscore (highscoreToBeDisplayed) {
+      if (highscoreToBeDisplayed === 'small') {
+        const smallMemoryStoreInstance = this._db.transaction(this._smallMemoryDbStore, 'readonly').objectStore(this._smallMemoryDbStore)
+        /**
+         * Gets all current data in the small memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        smallMemoryStoreInstance.getAll().onsuccess = async (e) => {
+          const memoryData = await e.target.result
+          this._displayHighScore(memoryData)
+        }
+      } else if (highscoreToBeDisplayed === 'medium') {
+        const mediumMemoryStoreInstance = this._db.transaction(this._mediumMemoryDbStore, 'readonly').objectStore(this._mediumMemoryDbStore)
+        /**
+         * Gets all current data in the medium memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
+          const memoryData = await e.target.result
+          this._displayHighScore(memoryData)
+        }
+      } else {
+        const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore(this._largeMemoryDbStore)
+        /**
+         * Gets all current data in the large memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
+          const memoryData = await e.target.result
+          this._displayHighScore(memoryData)
+        }
+      }
     }
   }
 )
