@@ -88,6 +88,15 @@ customElements.define('dab-high-score',
       this._highscoreContainer = this.shadowRoot.querySelector('.high-score-container')
 
       this._highscoreListContainer = this.shadowRoot.querySelector('.high-score-list-container')
+
+      // Variables related to indexedDB
+      this._dbName = 'MemoryGameDatabase'
+      this._dbVersion = 1
+      this._smallMemoryDbStore = 'SmallMemoryStore'
+      this._mediumMemoryDbStore = 'MediumMemoryStore'
+      this._largeMemoryDbStore = 'LargeMemoryStore'
+      this._request = indexedDB.open(this._dbName , this._dbVersion)
+      this._db = ''
     }
 
     /**
@@ -110,18 +119,96 @@ customElements.define('dab-high-score',
       if (name === 'size') {
         switch (newValue) {
           case 'small': {
-            // TODO LOGIC FOR HIGH SCORE
+            this._request.onerror = (errorEvent) => {
+              console.log('Got here')
+              console.error(`A request error occured: ${errorEvent.target.error.message}`)
+            }
+            
+            this._request.onsuccess = async (e) => {
+              this._db = await e.target.result
+
+              const smallMemoryStoreInstance = this._db.transaction(this._smallMemoryDbStore, 'readonly').objectStore(this._smallMemoryDbStore)
+              mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
+              const memoryData = await e.target.result
+              console.log(memoryData)
+            }
+            }
+      
+            this._request.onupgradeneeded = async (e) => {
+              console.log('Got here3')
+              this._db = await e.target.result
+              this._db.onerror = (errorEvent) => {
+                console.error('Database error: ', errorEvent.target.error.message)
+              }
+            }
             break
           }
           case 'medium': {
-            // TODO LOGIC FOR HIGH SCORE
+            this._request.onerror = (errorEvent) => {
+              console.log('Got here')
+              console.error(`A request error occured: ${errorEvent.target.error.message}`)
+            }
+            
+            this._request.onsuccess = async (e) => {
+              this._db = await e.target.result
+
+              const mediumMemoryStoreInstance = this._db.transaction(this._mediumMemoryDbStore, 'readonly').objectStore(this._mediumMemoryDbStore)
+              mediumMemoryStoreInstance.getAll().onsuccess = async (e) => {
+              const memoryData = await e.target.result
+              console.log(memoryData)
+            }
+            }
+      
+            this._request.onupgradeneeded = async (e) => {
+              console.log('Got here3')
+              this._db = await e.target.result
+              this._db.onerror = (errorEvent) => {
+                console.error('Database error: ', errorEvent.target.error.message)
+              }
+            }
             break
           }
           case 'large': {
-            // TODO LOGIC FOR HIGH SCORE
+            this._request.onerror = (errorEvent) => {
+              console.log('Got here')
+              console.error(`A request error occured: ${errorEvent.target.error.message}`)
+            }
+            
+            this._request.onsuccess = async (e) => {
+              this._db = await e.target.result
+
+              const largeMemoryStoreInstance = this._db.transaction(this._largeMemoryDbStore, 'readonly').objectStore(this._largeMemoryDbStore)
+              largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
+              const memoryData = await e.target.result
+              console.log(memoryData)
+            }
+            }
+      
+            this._request.onupgradeneeded = async (e) => {
+              console.log('Got here3')
+              this._db = await e.target.result
+              this._db.onerror = (errorEvent) => {
+                console.error('Database error: ', errorEvent.target.error.message)
+              }
+            }
+            break
           }
         }
       }
+    }
+
+    /**
+     * Called after the element is inserted into the DOM.
+     */
+    connectedCallback () {
+      
+    }
+
+    /**
+     * Called after the element has been removed from the DOM.
+     */
+    disconnectedCallback () {
+
     }
 
     /**
