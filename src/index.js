@@ -112,3 +112,16 @@ document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore }
   // Adding new nickname to the store.
   recentNameStore.add(data)
 })
+
+
+document.addEventListener('pickedChatName', ({ detail: { pickedName, dbStore } }) => {
+  // Clearing the previously stored name.
+  clearStore(dbStore, 'readwrite')
+  const recentNameStore = getStore(dbStore, 'readwrite')
+  const data = {
+    nickname: pickedName
+  }
+
+  // Adding new nickname to the store.
+  recentNameStore.add(data)
+})

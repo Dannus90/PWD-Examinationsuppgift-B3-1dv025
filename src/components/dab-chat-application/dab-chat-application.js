@@ -356,6 +356,13 @@ customElements.define('dab-chat-application',
       // Selecting the nickname warning paragraph.
       this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
 
+      // Variables related to indexedDB
+      this._dbName = 'PWDApplicationDatabase'
+      this._dbVersion = 1
+      this._recentChatNameDbStore = 'ChatNicknameStore'
+      this._request = indexedDB.open(this._dbName, this._dbVersion)
+      this._db = ''
+
       // Binding this to class methods.
       this._submitUserMessage = this._submitUserMessage.bind(this)
       this._updateUserInput = this._updateUserInput.bind(this)
@@ -456,6 +463,55 @@ customElements.define('dab-chat-application',
         // Scrolling to the bottom of the chat.
         this._webSocketChat.scrollTop = this._webSocketChat.scrollHeight
       }
+
+      /**
+       * Runs upon request error and displays the error message.
+       *
+       * @param {object} errorEvent The event object.
+       */
+      this._request.onerror = (errorEvent) => {
+        console.error(`A request error occured: ${errorEvent.target.error.message}`)
+      }
+
+      /**
+       * Runs upon request success and initiates the database and sets the initial highscore.
+       *
+       * @param {object} e The even object.
+       */
+      this._request.onsuccess = async (e) => {
+        this._db = await e.target.result
+
+        const recentChatNameDbStoreInstance = this._db.transaction(this._recentChatNameDbStore, 'readonly').objectStore(this._recentChatNameDbStore)
+        /**
+         * Gets all current data in the large memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        recentChatNameDbStoreInstance.getAll().onsuccess = async (e) => {
+          if (await e.target.result.length > 0) {
+            const memoryData = await e.target.result
+            this._picknameInput.value = memoryData[0].nickname
+          }
+        }
+      }
+
+      /**
+       * Runs upon db upgrade to a new version and upgrades the database.
+       *
+       * @param {object} e The event object.
+       */
+      this._request.onupgradeneeded = async (e) => {
+        this._db = await e.target.result
+        /**
+         * This runs upon indexedDB database error.
+         *
+         * @param {object} errorEvent The error event object.
+         */
+        this._db.onerror = (errorEvent) => {
+          console.error('Database error: ', errorEvent.target.error.message)
+        }
+      }
     }
 
     /**
@@ -517,8 +573,17 @@ customElements.define('dab-chat-application',
         this._showNicknameWarning()
         return
       }
+      
       this._userName = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
+      this.dispatchEvent(new window.CustomEvent('pickedChatName', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          pickedName: this._userName,
+          dbStore: this._recentChatNameDbStore
+        }
+      }))
     }
 
     /**
