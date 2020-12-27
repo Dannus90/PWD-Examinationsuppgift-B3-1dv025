@@ -1,7 +1,7 @@
 import '../components/dab-memory-game/dab-high-score/index.js'
 
 // --- VARIABLES RELATED TO INDEXEDDB --- //
-const dbName = 'MemoryGameDatabase'
+const dbName = 'PWDApplicationDatabase'
 const dbVersion = 1
 export const smallMemoryDbStore = 'SmallMemoryStore'
 export const mediumMemoryDbStore = 'MediumMemoryStore'

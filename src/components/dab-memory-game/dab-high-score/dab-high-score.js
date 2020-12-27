@@ -89,7 +89,7 @@ customElements.define('dab-high-score',
       this._highscoreListContainer = this.shadowRoot.querySelector('.high-score-list-container')
 
       // Variables related to indexedDB
-      this._dbName = 'MemoryGameDatabase'
+      this._dbName = 'PWDApplicationDatabase'
       this._dbVersion = 1
       this._smallMemoryDbStore = 'SmallMemoryStore'
       this._mediumMemoryDbStore = 'MediumMemoryStore'

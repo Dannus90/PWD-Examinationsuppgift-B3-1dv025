@@ -380,6 +380,13 @@ customElements.define('dab-memory-game',
       // The person nickname
       this._nickname = 'Daniel'
 
+      // Variables related to indexedDB
+      this._dbName = 'PWDApplicationDatabase'
+      this._dbVersion = 1
+      this._recentMemoryNameDbStore = 'MemoryNicknameStore'
+      this._request = indexedDB.open(this._dbName, this._dbVersion)
+      this._db = ''
+
       // Binding this to methods.
       this._tileFlipped = this._tileFlipped.bind(this)
       this._resetGame = this._resetGame.bind(this)
@@ -473,6 +480,53 @@ customElements.define('dab-memory-game',
       this._sizeButtons.forEach((sb) => sb.addEventListener('click', this._pickNewGameBoardSize))
       this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
       this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
+
+       /**
+       * Runs upon request error and displays the error message.
+       *
+       * @param {object} errorEvent The event object.
+       */
+      this._request.onerror = (errorEvent) => {
+        console.error(`A request error occured: ${errorEvent.target.error.message}`)
+      }
+
+      /**
+       * Runs upon request success and initiates the database and sets the initial highscore.
+       *
+       * @param {object} e The even object.
+       */
+      this._request.onsuccess = async (e) => {
+        this._db = await e.target.result
+
+        const _recentMemoryNameDbStoreInstance = this._db.transaction(this._recentMemoryNameDbStore, 'readonly').objectStore(this._recentMemoryNameDbStore)
+        /**
+         * Gets all current data in the large memory store.
+         * Sends the data to the highscore component.
+         *
+         * @param {object} e The event object.
+         */
+        _recentMemoryNameDbStoreInstance.getAll().onsuccess = async (e) => {
+          const memoryData = await e.target.result
+          this._picknameInput.value = memoryData[0].nickname
+        }
+      }
+
+      /**
+       * Runs upon db upgrade to a new version and upgrades the database.
+       *
+       * @param {object} e The event object.
+       */
+      this._request.onupgradeneeded = async (e) => {
+        this._db = await e.target.result
+        /**
+         * This runs upon indexedDB database error.
+         *
+         * @param {object} errorEvent The error event object.
+         */
+        this._db.onerror = (errorEvent) => {
+          console.error('Database error: ', errorEvent.target.error.message)
+        }
+      }
     }
 
     /**
@@ -592,6 +646,7 @@ customElements.define('dab-memory-game',
 
       tilesToDisable.forEach(tile => (tile.setAttribute('disabled', '')))
 
+      // Destructuring.
       const [first, second, ...tilesToEnable] = tilesToDisable
 
       if (second) {
@@ -638,6 +693,14 @@ customElements.define('dab-memory-game',
       }
       this._nickname = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
+      this.dispatchEvent(new window.CustomEvent('pickedMemoryName', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          pickedName: this._nickname,
+          dbStore: this._recentMemoryNameDbStore
+        }
+      }))
     }
 
     /**

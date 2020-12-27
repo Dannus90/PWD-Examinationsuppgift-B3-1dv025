@@ -16,7 +16,7 @@ import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
 import './registerServiceWorker/registerServiceWorker.js'
 // Importing the db
-import { getStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
+import { getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
 
 // Variables
 let translationPositionX = -50
@@ -99,4 +99,16 @@ document.addEventListener('memoryGameOver', ({ detail: { numberOfTries, totalTim
 
 document.addEventListener('resetMemoryGame', ({ detail: { boardsize, currentHighscoreComponent } }) => {
   currentHighscoreComponent.updateHighscore(boardsize)
+})
+
+document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore }}) => {
+  // Clearing the previously stored name.
+  clearStore(dbStore, 'readwrite')
+  const recentNameStore = getStore(dbStore, 'readwrite')
+  const data = {
+    nickname: pickedName
+  }
+
+  // Adding new nickname to the store.
+  recentNameStore.add(data)
 })
