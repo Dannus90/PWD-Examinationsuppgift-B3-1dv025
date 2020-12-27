@@ -52,6 +52,15 @@ document.addEventListener('createNewAppInstance', ({ detail: { applicationName }
   applicationArray.push(applicationWindow)
 
   pwdApplication.appendChild(applicationWindow)
+
+  applicationWindow.addEventListener(('mousedown'), () => {
+    applicationWindow.style.zIndex = 1000
+
+    // Setting the z-index to 1 on all other applications that are not the current one. 
+    applicationArray.filter((app) => app !== applicationWindow).forEach((app) => {
+      app.style.zIndex = 1
+    })
+  })
 })
 
 document.addEventListener('mouseup', (event) => {
@@ -61,8 +70,8 @@ document.addEventListener('mouseup', (event) => {
   }))
 })
 
-document.addEventListener('deleteAppInstance', (event) => {
-  const applicationIndex = applicationArray.indexOf(event.detail.applicationName)
+document.addEventListener('deleteAppInstance', ({ detail: { applicationName }}) => {
+  const applicationIndex = applicationArray.indexOf(applicationName)
 
   // Remove the specific application instance from the array.
   if (applicationIndex > -1) {
@@ -72,7 +81,16 @@ document.addEventListener('deleteAppInstance', (event) => {
   windowPositionTop += 1
   windowPositionLeft += 1
 
-  event.detail.applicationName.remove()
+  applicationName.removeEventListener(('mousedown'), () => {
+    applicationWindow.style.zIndex = 1000
+
+    // Setting the z-index to 1 on all other applications that are not the current one. 
+    applicationArray.filter((app) => app !== applicationWindow).forEach((app) => {
+      app.style.zIndex = 1
+    })
+  })
+
+  applicationName.remove()
 })
 
 document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed, currentHighscoreComponent } }) => {
@@ -126,3 +144,4 @@ document.addEventListener('pickedChatName', ({ detail: { pickedName, dbStore } }
   // Adding new nickname to the store.
   recentNameStore.add(data)
 })
+
