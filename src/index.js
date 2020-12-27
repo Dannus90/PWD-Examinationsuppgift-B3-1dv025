@@ -21,7 +21,8 @@ import { getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMem
 // Variables
 let translationPositionX = -50
 let translationPositionY = -50
-const uniqueId = 1
+let windowPositionTop = 50
+let windowPositionLeft = 50
 const applicationArray = []
 
 // --- TARGETING DOM ELEMENTS --- //
@@ -35,19 +36,18 @@ document.addEventListener('createNewAppInstance', ({ detail: { applicationName }
   const application = document.createElement(applicationName)
   const applicationWindow = document.createElement('dab-game-window')
   applicationWindow.setAttribute('slot', 'application')
-  applicationWindow.setAttribute('id', uniqueId)
 
   application.setAttribute('slot', 'application-container')
 
   applicationWindow.appendChild(application)
 
   applicationWindow.style.position = 'absolute'
-  applicationWindow.style.top = '50%'
-  applicationWindow.style.left = '50%'
+  applicationWindow.style.top = `${windowPositionTop}%`
+  applicationWindow.style.left = `${windowPositionLeft}%`
   applicationWindow.style.transform = `translate(${translationPositionX}%, ${translationPositionY}%)`
 
-  translationPositionX -= 2
-  translationPositionY -= 2
+  windowPositionTop -= 1
+  windowPositionLeft -= 1
 
   applicationArray.push(applicationWindow)
 
@@ -69,9 +69,10 @@ document.addEventListener('deleteAppInstance', (event) => {
     applicationArray.splice(applicationIndex, 1)
   }
 
+  windowPositionTop += 1
+  windowPositionLeft += 1
+
   event.detail.applicationName.remove()
-  translationPositionY += 2
-  translationPositionX += 2
 })
 
 document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed, currentHighscoreComponent } }) => {
