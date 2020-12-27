@@ -15,6 +15,8 @@ for (let i = 0; i < numberOfImages; i++) {
   imageUrls[i] = (new URL(`assets/${i}.png`, import.meta.url)).href
 }
 
+const settingsIcon = (new URL('assets/settings-icon.svg', import.meta.url)).href
+
 /**
  * Define template.
  */
@@ -29,6 +31,35 @@ template.innerHTML = `
       background: radial-gradient(circle, rgb(151 151 178) 0%, rgba(106,97,176,1) 15%, rgba(80,72,140,1) 25%, rgba(2,0,36,1) 100%);
       position: relative;
       color: #fff;
+    }
+
+    .settings-icon {
+      position: absolute;
+      top: 25px;
+      right: 14.5px;
+      cursor: pointer;
+    }
+
+    .toggle-menu {
+      background-image: linear-gradient( 110deg, var(--bg-color-primary) 0%, var(--bg-color-secondary) 50%, var(--bg-color-tertiary) 89% );
+      padding: 0 0.5rem;
+      position: absolute;
+      top: 35px;
+      right: -35px;
+      width: 100px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .pick-new-nickname-button {
+      outline: none;
+      cursor: pointer;
+      padding: 0;
+      background-color: transparent;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      transition: color 0.10s ease-in, transform 0.10s ease-in;
     }
 
     .high-score-component {
@@ -174,11 +205,73 @@ template.innerHTML = `
       line-height: 1.2rem;
       padding: 0.5rem;
     }
+
+    .pickname-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .pickname-input {
+      padding: 0.5rem 0.75rem;
+      outline: none;
+      padding-left: 0.25rem;
+    }
+
+    .pickname-button {
+      box-shadow: 0px 4px 5px -7px #276873;
+      border-radius: 8px;
+      display: inline-block;
+      cursor: pointer;
+      color: #fff;
+      font-family: Arial;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 8px 20px;
+      border: none;
+      text-decoration: none;
+      margin: 1rem auto;
+      outline: none;
+      background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .pickname-button:focus {
+      transform: scale(1.05);
+      box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+    }
+
+    .pickname-button:hover {
+      background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+    }
+
+    .nickname-warning-paragraph {
+      color: #ff1b1b;
+      font-weight: bold;
+      text-align: center;
+      width: 80%;
+      margin: 0;
+      margin-top: 0.75rem;
+      line-height: 1.2rem;
+      display: none;
+    }
   </style>
   <template id="tile-template">
     <dab-flipping-tile></dab-flipping-tile>
   </template>
   <div id="memory-game-wrapper">
+    <img src="${settingsIcon}" class="settings-icon" height="17.5" width="17.5" />
+    <div class="toggle-menu">
+      <button class="pick-new-nickname-button">New nickname</button>
+    </div> 
     <h2>Memory game</h2>
     <p>Number of tries: <span class="number-of-tries-display"></span></p>
     <p class="total-time-spent"></p>
@@ -187,6 +280,11 @@ template.innerHTML = `
       <h3>Victory!</h3>
       <p></p>
       <button class="play-again-button">Play again!</button>
+    </div>
+    <div class="pickname-modal">
+      <input class="pickname-input" value="" />
+      <p class="nickname-warning-paragraph">Please pick a nickname with atleast 3 characters.</p>
+      <button class="pickname-button">Pick name</button>
     </div>
     <div class="gameSize-buttons-container">
       <button class="size-button" value="small">2x2</button>
@@ -240,16 +338,37 @@ customElements.define('dab-memory-game',
       // Display number of tries.
       this._displayNumberOfTries = this.shadowRoot.querySelector('.number-of-tries-display')
 
+      // Selecting the pickname input.
+      this._picknameInput = this.shadowRoot.querySelector('.pickname-input')
+
+      // Selecting the pickname button.
+      this._picknameButton = this.shadowRoot.querySelector('.pickname-button')
+
+      // Selecting the toggle menu.
+      this._toggleMenu = this.shadowRoot.querySelector('.toggle-menu')
+      
+      // Selecting the settings icon.
+      this._settingsIcon = this.shadowRoot.querySelector('.settings-icon')
+
+      // Selecting the pick new nickname button.
+      this._pickNewNicknameButton = this.shadowRoot.querySelector('.pick-new-nickname-button')
+
+      // Selecting the nickname warning paragraph.
+      this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
+
+      // Toggle menu visible.
+      this._toggleMenuVisible = false
+
       // The number of tries.
       this._numberOfTries = 0
 
-      // TotalTime spent
+      // TotalTime spent.
       this._totalTimeSpent = 0
 
-      // The timing interval
+      // The timing interval.
       this._interval = 'interval'
 
-      // Set initial total time spent
+      // Set initial total time spent.
       this._totalTimeSpentElement.textContent = this._totalTimeSpent + ' sec'
 
       // Boolean regarding if the game has started or not.
@@ -264,7 +383,10 @@ customElements.define('dab-memory-game',
       // Binding this to methods.
       this._tileFlipped = this._tileFlipped.bind(this)
       this._resetGame = this._resetGame.bind(this)
+      this._toggleSettingsMenu = this._toggleSettingsMenu.bind(this)
+      this._openNickNameModal = this._openNickNameModal.bind(this)
       this._pickNewGameBoardSize = this._pickNewGameBoardSize.bind(this)
+      this._pickName = this._pickName.bind(this)
     }
 
     /**
@@ -346,8 +468,11 @@ customElements.define('dab-memory-game',
       this._memoryGameBoard.addEventListener('tileflipped', this._tileFlipped)
       this.addEventListener('dragstart', this._onDragStart)
       this.addEventListener('gameover', this._gameover)
+      this._picknameButton.addEventListener(('click'), this._pickName)
       this._playAgainButton.addEventListener('click', this._resetGame)
       this._sizeButtons.forEach((sb) => sb.addEventListener('click', this._pickNewGameBoardSize))
+      this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
+      this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
     }
 
     /**
@@ -357,6 +482,11 @@ customElements.define('dab-memory-game',
       this._memoryGameBoard.removeEventListener('tileflipped', this._tileFlipped)
       this.removeEventListener('dragstart', this._onDragStart)
       this.removeEventListener('gameover', this._gameover)
+      this._playAgainButton.removeEventListener('click', this._resetGame)
+      this._picknameButton.removeEventListener(('click'), this._pickName)
+      this._sizeButtons.forEach((sb) => sb.removeEventListener('click', this._pickNewGameBoardSize))
+      this._pickNewNicknameButton.removeEventListener(('click'), this._openNickNameModal)
+      this._settingsIcon.removeEventListener(('click'), this._toggleSettingsMenu)
     }
 
     /**
@@ -496,6 +626,21 @@ customElements.define('dab-memory-game',
     }
 
     /**
+     * We set the username to the input vale and the modal is removed.
+     *
+     * @param {object} event The event object.
+     */
+    _pickName (event) {
+      event.preventDefault()
+      if (!(this._picknameInput.value.length >= 3)) {
+        this._showNicknameWarning()
+        return
+      }
+      this._nickname = this._picknameInput.value
+      this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
+    }
+
+    /**
      * This method runs upon game victory and displays the amount of tries it took to finish the game.
      */
     _gameover () {
@@ -605,6 +750,38 @@ customElements.define('dab-memory-game',
         this._totalTimeSpent += 0.10
         this._totalTimeSpentElement.textContent = Math.round(this._totalTimeSpent * 100) / 100 + ' sec'
       }, 100)
+    }
+
+    /**
+     * This method toggles the settings menu.
+     */
+    _toggleSettingsMenu () {
+      if (this._toggleMenuVisible) {
+        this._toggleMenuVisible = !this._toggleMenuVisible
+        this._toggleMenu.style.display = 'block'
+      } else {
+        this._toggleMenuVisible = !this._toggleMenuVisible
+        this._toggleMenu.style.display = 'none'
+      }
+    }
+
+    /**
+     * This method opens the nickname modal which allows us to pick a new nickname.
+     */
+    _openNickNameModal () {
+      this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
+      this._toggleMenuVisible = !this._toggleMenuVisible
+      this._toggleMenu.style.display = 'none'
+    }
+
+    /**
+     * This method shows a warning incase the chosen nickname is to short.
+     */
+    _showNicknameWarning () {
+      this._nicknameWarningParagraph.style.display = 'block'
+      setTimeout(() => {
+        this._nicknameWarningParagraph.style.display = 'none'
+      }, 1500)
     }
   }
 )

@@ -322,36 +322,40 @@ customElements.define('dab-chat-application',
 
       // Selecting the websocket chat container.
       this._webSocketChat = this.shadowRoot.querySelector('#websocket-chat')
+
       // Selecting the websocket message field.
       this._webSocketMessage = this.shadowRoot.querySelector('#websocket-message')
+
       // Selecting the submit button
       this._submitButton = this.shadowRoot.querySelector('.submit-button')
+
       // Selecting the pickname input.
       this._picknameInput = this.shadowRoot.querySelector('.pickname-input')
+
       // Selecting the pickname button.
       this._picknameButton = this.shadowRoot.querySelector('.pickname-button')
+
       // Selecting the emoji button.
       this._emojiButton = this.shadowRoot.querySelector('.emoji-button')
+
       // Selecting the settings icon.
       this._settingsIcon = this.shadowRoot.querySelector('.settings-icon')
+
       // Selecting the toggle menu.
       this._toggleMenu = this.shadowRoot.querySelector('.toggle-menu')
+
       // Selecting the pick new nickname button.
       this._pickNewNicknameButton = this.shadowRoot.querySelector('.pick-new-nickname-button')
+
       // Selecting the nickname warning paragraph.
       this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
 
       // Binding this to class methods.
       this._submitUserMessage = this._submitUserMessage.bind(this)
-
       this._updateUserInput = this._updateUserInput.bind(this)
-
       this._pickName = this._pickName.bind(this)
-
       this._toggleSettingsMenu = this._toggleSettingsMenu.bind(this)
-
       this._openNickNameModal = this._openNickNameModal.bind(this)
-
       this._showNicknameWarning = this._showNicknameWarning.bind(this)
     }
 
@@ -399,6 +403,7 @@ customElements.define('dab-chat-application',
       this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
       this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
 
+      // Establishing the websocket connection
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
       this._websocketConnection = webSocketConnection
 
@@ -456,6 +461,7 @@ customElements.define('dab-chat-application',
       this._webSocketMessage.removeEventListener(('input'), this._updateUserInput)
       this._picknameButton.removeEventListener(('click'), this._pickName)
       this._settingsIcon.removeEventListener(('click'), this._toggleSettingsMenu)
+      this._pickNewNicknameButton.removeEventListener(('click'), this._openNickNameModal)
     }
 
     /**
