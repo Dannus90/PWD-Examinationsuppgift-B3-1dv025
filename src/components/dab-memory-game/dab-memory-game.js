@@ -346,7 +346,7 @@ customElements.define('dab-memory-game',
 
       // Selecting the toggle menu.
       this._toggleMenu = this.shadowRoot.querySelector('.toggle-menu')
-      
+
       // Selecting the settings icon.
       this._settingsIcon = this.shadowRoot.querySelector('.settings-icon')
 
@@ -481,7 +481,7 @@ customElements.define('dab-memory-game',
       this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
       this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
 
-       /**
+      /**
        * Runs upon request error and displays the error message.
        *
        * @param {object} errorEvent The event object.
@@ -506,8 +506,10 @@ customElements.define('dab-memory-game',
          * @param {object} e The event object.
          */
         _recentMemoryNameDbStoreInstance.getAll().onsuccess = async (e) => {
-          const memoryData = await e.target.result
-          this._picknameInput.value = memoryData[0].nickname
+          if (await e.target.result.length > 0) {
+            const memoryData = await e.target.result
+            this._picknameInput.value = memoryData[0].nickname
+          }
         }
       }
 

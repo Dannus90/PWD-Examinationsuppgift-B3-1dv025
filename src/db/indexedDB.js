@@ -51,8 +51,6 @@ export let db
     const smallMemoryStoreInstance = db.transaction(smallMemoryDbStore, 'readonly').objectStore(smallMemoryDbStore)
     const mediumMemoryStoreInstance = db.transaction(mediumMemoryDbStore, 'readonly').objectStore(mediumMemoryDbStore)
     const largeMemoryStoreInstance = db.transaction(largeMemoryDbStore, 'readonly').objectStore(largeMemoryDbStore)
-    const recentMemoryNameStoreInstance = db.transaction(recentMemoryNameDbStore, 'readonly').objectStore(recentMemoryNameDbStore)
-    const recentChatNameStoreInstance = db.transaction(recentChatNameDbStore, 'readonly').objectStore(recentChatNameDbStore)
 
     /**
      * Gets all current data in the small memory store.
@@ -85,30 +83,6 @@ export let db
     largeMemoryStoreInstance.getAll().onsuccess = async (e) => {
       const memoryData = await e.target.result
       highScore.largeHighScore = memoryData
-    }
-
-    /**
-     * Checks the a nickname currently exists in indexedDb and if it exists it sets name to already be picked for the player.
-     *
-     * @param {object} e The event object.
-     */
-    recentMemoryNameStoreInstance.getAll().onsuccess = async (e) => {
-      if (await e.target.result.length > 0) {
-        const recentNickname = await e.target.result[0].nickname
-        nicknameGameController.nameExistInDb(recentNickname)
-      }
-    }
-
-    /**
-     * Checks the a nickname currently exists in indexedDb and if it exists it sets name to already be picked for the player.
-     *
-     * @param {object} e The event object.
-     */
-    recentChatNameStoreInstance.getAll().onsuccess = async (e) => {
-      if (await e.target.result.length > 0) {
-        const recentNickname = await e.target.result[0].nickname
-        nicknameGameController.nameExistInDb(recentNickname)
-      }
     }
   }
 

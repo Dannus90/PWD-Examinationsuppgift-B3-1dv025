@@ -5,15 +5,15 @@
  * @version 1.0.0
  */
 
-const chatIcon = (new URL('assets/chat-application-icon.svg', import.meta.url)).href
-const sendMessage = (new URL('assets/send-message.svg', import.meta.url)).href
-const settingsIcon = (new URL('assets/settings-icon.svg', import.meta.url)).href
-
 import '@tensorflow-models/coco-ssd'
 import '@tensorflow/tfjs-backend-cpu'
 import '@tensorflow/tfjs-backend-webgl'
 import '@tensorflow/tfjs-converter'
 import '@tensorflow/tfjs-core'
+
+const chatIcon = (new URL('assets/chat-application-icon.svg', import.meta.url)).href
+const sendMessage = (new URL('assets/send-message.svg', import.meta.url)).href
+const settingsIcon = (new URL('assets/settings-icon.svg', import.meta.url)).href
 
 /**
  * Define template.

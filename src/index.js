@@ -101,7 +101,7 @@ document.addEventListener('resetMemoryGame', ({ detail: { boardsize, currentHigh
   currentHighscoreComponent.updateHighscore(boardsize)
 })
 
-document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore }}) => {
+document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore } }) => {
   // Clearing the previously stored name.
   clearStore(dbStore, 'readwrite')
   const recentNameStore = getStore(dbStore, 'readwrite')
