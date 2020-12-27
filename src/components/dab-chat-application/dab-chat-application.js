@@ -9,6 +9,12 @@ const chatIcon = (new URL('assets/chat-application-icon.svg', import.meta.url)).
 const sendMessage = (new URL('assets/send-message.svg', import.meta.url)).href
 const settingsIcon = (new URL('assets/settings-icon.svg', import.meta.url)).href
 
+import '@tensorflow-models/coco-ssd'
+import '@tensorflow/tfjs-backend-cpu'
+import '@tensorflow/tfjs-backend-webgl'
+import '@tensorflow/tfjs-converter'
+import '@tensorflow/tfjs-core'
+
 /**
  * Define template.
  */
@@ -497,8 +503,6 @@ customElements.define('dab-chat-application',
      * @param {string} root0.target.value A string containing the user input.
      */
     _updateUserInput ({ target: { value } }) {
-      console.log(typeof target)
-      console.log(typeof value)
       this._userInput = value
     }
 
@@ -508,12 +512,11 @@ customElements.define('dab-chat-application',
      * @param {object} event The event object.
      */
     _pickName (event) {
-      console.log(this._picknameInput.value.length)
+      event.preventDefault()
       if (!(this._picknameInput.value.length >= 3)) {
         this._showNicknameWarning()
         return
       }
-      event.preventDefault()
       this._userName = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
     }
