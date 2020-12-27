@@ -43,7 +43,7 @@ template.innerHTML = `
       position: relative;
       width: 25px;
       height: 25px;
-      border-radius: 5px;
+      border-radius: 3px;
       background-color: #fff;
       cursor:pointer;
       margin-right: 10px;
@@ -66,7 +66,7 @@ template.innerHTML = `
       height: 20px;
       width: 3px;
       border-radius: 3px;
-      background-color: #000;
+      background-color: #2b2b2b;
     }
 
     .cancel-button:before {
