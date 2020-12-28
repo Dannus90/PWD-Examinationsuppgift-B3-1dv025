@@ -19,6 +19,7 @@ template.innerHTML = `
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    outline: none;
   }
 
   #application-icon-wrapper:-moz-focusring {
@@ -27,10 +28,6 @@ template.innerHTML = `
 
   #application-icon-wrapper:focus-visible {
     outline: 2px solid #fff;
-  }
-
-  #application-icon-wrapper:focus {
-    outline: none;
   }
 
   #application-icon-wrapper:hover {

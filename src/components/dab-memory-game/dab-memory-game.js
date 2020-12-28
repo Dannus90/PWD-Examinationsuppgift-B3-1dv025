@@ -38,11 +38,20 @@ template.innerHTML = `
       top: 25px;
       right: 14.5px;
       cursor: pointer;
+      outline: none;
       transition: transform 0.2s ease-in;
     }
 
     .settings-icon:active {
       transform: scale(0.9);
+    }
+
+    settings-icon:focus-visible {
+      outline: 2px solid #fff;
+    }
+
+    settings-icon:-moz-focusring {
+      outline: 2px solid #fff;
     }
 
     .toggle-menu {
@@ -315,7 +324,7 @@ template.innerHTML = `
     <dab-flipping-tile tabindex="0" style=></dab-flipping-tile>
   </template>
   <div id="memory-game-wrapper">
-    <img src="${settingsIcon}" class="settings-icon" height="17.5" width="17.5" />
+    <img tabindex="0" src="${settingsIcon}" class="settings-icon" height="17.5" width="17.5" />
     <div class="toggle-menu">
       <button class="pick-new-nickname-button">New nickname</button>
     </div> 

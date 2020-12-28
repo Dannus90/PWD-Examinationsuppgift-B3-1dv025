@@ -56,11 +56,11 @@ template.innerHTML = `
     }
 
     .cancel-button:focus-visible {
-      outline: 2px solid #000;
+      outline: 3px solid orangered;
     }
 
     .cancel-button:-moz-focusring {
-      outline: 2px solid #000;
+      outline: 3px solid orangered;
     }
 
     .cancel-button:after {

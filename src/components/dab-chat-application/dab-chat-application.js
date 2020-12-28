@@ -51,6 +51,19 @@ template.innerHTML = `
         top: 12.5px;
         right: 12.5px;
         cursor: pointer;
+        outline: none;
+      }
+
+      .settings-icon:focus-visible {
+        outline: 2px solid #000;
+      }
+  
+      .settings-icon:-moz-focusring {
+        outline: 2px solid #000;
+      }
+
+      .settings-icon:active {
+        transform: scale(0.9);
       }
 
       .chat-application-header h3 {
@@ -151,6 +164,14 @@ template.innerHTML = `
         cursor: pointer;
         outline: none;
       }
+
+      .submit-button:-moz-focusring {
+        outline: 2px solid #000;
+      }
+
+      .submit-button:focus-visible {
+        outline: 2px solid #000;
+      }
       
       .send-message-icon {
         background: linear-gradient(to bottom left, #79C7C5 20%, #A1E2D9 100%);
@@ -210,6 +231,14 @@ template.innerHTML = `
         background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
       }
 
+      .pickname-button:focus-visible {
+        outline: 2px solid #fff;
+      }
+  
+      .pickname-button:-moz-focusring {
+        outline: 2px solid #fff;
+      }
+
       .emoji-button {
         background: transparent;
         position: absolute;
@@ -225,6 +254,14 @@ template.innerHTML = `
         outline: none;
       }
 
+      .emoji-span:focus-visible {
+        outline: 2px solid #000;
+      }
+
+      .emoji-span:-moz-focusring {
+        outline: 2px solid #000;
+      }
+
       .emoji-span {
         margin-right: 0.25rem;
       }
@@ -238,7 +275,9 @@ template.innerHTML = `
         width: 100px;
         border-radius: 5px;
         transform: scale(0.00);
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         transition: transform 0.2s ease-in-out;
       }
 
@@ -251,6 +290,12 @@ template.innerHTML = `
         font-weight: bold;
         border: none;
         transition: color 0.10s ease-in, transform 0.10s ease-in;
+        font-size: 0.7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0.3rem;
       }
 
       .pick-new-nickname-button:hover {
@@ -282,7 +327,7 @@ template.innerHTML = `
     <div class="chat-application-header">
       <img src="${chatIcon}" class="chat-icon" height="35" width="35" />
       <h3>LNU Messenger App</h3>
-      <img src="${settingsIcon}" class="settings-icon" height="20" width="20" />
+      <img tabindex="0" src="${settingsIcon}" class="settings-icon" height="20" width="20" />
       <div class="toggle-menu">
         <button class="pick-new-nickname-button">New nickname</button>
       </div> 
@@ -290,9 +335,9 @@ template.innerHTML = `
     <ul id="websocket-chat"></ul>
     <form>
       <textarea rows="8" cols="80" id="websocket-message" value=""></textarea>
-      <button class="submit-button" type="submit"><img src="${sendMessage}" class="send-message-icon" height="20" width="20" />
+      <button tabindex="0" class="submit-button" type="submit"><img src="${sendMessage}" class="send-message-icon" height="20" width="20" />
       </button>
-      <button class="emoji-button"><span class="emoji-span">😀</span><span>&laquo;</span></button>
+      <button tabindex="-1" class="emoji-button"><span tabindex="0" class="emoji-span">😀</span><span>&laquo;</span></button>
     </form>
   </div>
 `
