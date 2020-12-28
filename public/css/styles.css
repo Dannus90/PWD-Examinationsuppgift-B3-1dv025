@@ -16,6 +16,14 @@ body {
   overflow: hidden;
 }
 
+/* *:focus-visible {
+  outline: 2px solid #fff;
+}
+
+*:-moz-focusring {
+  outline: 2px solid #fff;
+} */
+
 /* Overwrite emoji popup styles */
 .emoji-picker__emojis {
   overflow-x: hidden;

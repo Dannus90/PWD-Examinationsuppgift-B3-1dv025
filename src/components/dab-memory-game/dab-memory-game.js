@@ -54,7 +54,9 @@ template.innerHTML = `
       width: 100px;
       border-radius: 5px;
       transform: scale(0.00);
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       transition: transform 0.2s ease-in-out;
     }
 
@@ -67,6 +69,12 @@ template.innerHTML = `
       font-weight: bold;
       border: none;
       transition: color 0.10s ease-in, transform 0.10s ease-in;
+      font-size: 0.7rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0.3rem;
     }
 
     .pick-new-nickname-button:hover {
@@ -264,6 +272,34 @@ template.innerHTML = `
       background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
     }
 
+    .pickname-button:focus-visible {
+      outline: 2px solid #fff;
+    }
+
+    .pickname-button:-moz-focusring {
+      outline: 2px solid #fff;
+    }
+
+    dab-flipping-tile {
+      outline: none;
+    }
+
+    dab-flipping-tile:-moz-focusring {
+      outline: 2px solid #fff; 
+    }
+
+    dab-flipping-tile:focus-visible {
+      outline: 2px solid #fff;
+    }
+
+    .size-button:focus-visible {
+      outline: 2px solid #fff;
+    }
+
+    .size-button:-moz-focusring {
+      outline: 2px solid #fff;
+    }
+
     .nickname-warning-paragraph {
       color: #ff1b1b;
       font-weight: bold;
@@ -276,7 +312,7 @@ template.innerHTML = `
     }
   </style>
   <template id="tile-template">
-    <dab-flipping-tile></dab-flipping-tile>
+    <dab-flipping-tile tabindex="0" style=></dab-flipping-tile>
   </template>
   <div id="memory-game-wrapper">
     <img src="${settingsIcon}" class="settings-icon" height="17.5" width="17.5" />
@@ -298,9 +334,9 @@ template.innerHTML = `
       <button class="pickname-button">Pick name</button>
     </div>
     <div class="gameSize-buttons-container">
-      <button class="size-button" value="small">2x2</button>
-      <button class="size-button" value="medium">4x2</button>
-      <button class="size-button" value="large">4x4</button>
+      <button class="size-button" tabindex="0" value="small">2x2</button>
+      <button class="size-button" tabindex="0" value="medium">4x2</button>
+      <button class="size-button" tabindex="0" value="large">4x4</button>
     </div>
     <dab-high-score class="high-score-component"></dab-high-score>
   </div>

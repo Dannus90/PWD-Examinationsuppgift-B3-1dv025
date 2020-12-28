@@ -192,6 +192,7 @@ customElements.define('dab-flipping-tile',
      */
     connectedCallback () {
       this.addEventListener('click', this._flipCardAndDisplayCardSide)
+      this.addEventListener('keydown', this._flipCardAndDisplayCardSide)
     }
 
     /**
@@ -199,6 +200,7 @@ customElements.define('dab-flipping-tile',
      */
     disconnectedCallback () {
       this.removeEventListener('click', this._flipCardAndDisplayCardSide)
+      this.removeEventListener('keydown', this._flipCardAndDisplayCardSide)
     }
 
     /**
@@ -214,13 +216,14 @@ customElements.define('dab-flipping-tile',
     /**
      * This method will flip the card and display information regarding which side is currently displayed.
      */
-    _flipCardAndDisplayCardSide () {
+    _flipCardAndDisplayCardSide (event) {
       // If the element nis hidden or disabled we end the class method directly.
       if (this.hasAttribute('disabled') ||
         this.hasAttribute('hidden')) {
         return
       }
 
+      if(event.keyCode === 13 || event.type === 'click') {
       // Toggle the face-up attribute depending on previous state.
       this.hasAttribute('face-up')
         ? this.removeAttribute('face-up')
@@ -245,6 +248,8 @@ customElements.define('dab-flipping-tile',
         this._frontSideDisplayed = true
         this._cardInner.style.transform = 'rotateY(180deg)'
       }
+
+    }
     }
 
     /**

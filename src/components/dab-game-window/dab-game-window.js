@@ -55,6 +55,14 @@ template.innerHTML = `
       transform: scale(0.975)
     }
 
+    .cancel-button:focus-visible {
+      outline: 2px solid #000;
+    }
+
+    .cancel-button:-moz-focusring {
+      outline: 2px solid #000;
+    }
+
     .cancel-button:after {
       position: absolute;
       top: 3px;
@@ -86,7 +94,7 @@ template.innerHTML = `
 
   <div id="window-wrapper">
     <div class="window-wrapper-topbar">
-      <button class="cancel-button"></button>
+      <button class="cancel-button" tabindex="0"></button>
     </div>
     <slot name="application-container" />
   </div>

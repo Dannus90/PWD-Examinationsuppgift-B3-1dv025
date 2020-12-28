@@ -21,16 +21,27 @@ template.innerHTML = `
     background-repeat: no-repeat;
   }
 
-  #application-icon-wrapper:active {
-      transform: scale(0.95)
+  #application-icon-wrapper:-moz-focusring {
+    outline: 2px solid #fff; 
+  }
+
+  #application-icon-wrapper:focus-visible {
+    outline: 2px solid #fff;
+  }
+
+  #application-icon-wrapper:focus {
+    outline: none;
   }
 
   #application-icon-wrapper:hover {
     box-shadow: 2px 5px 15px -10px rgba(255,255,255,0.75);
   }
-  </style>
 
-  <div id="application-icon-wrapper">
+  #application-icon-wrapper:focus-visible {
+    outline: 2px solid #fff;
+  }
+  </style>
+  <div id="application-icon-wrapper" tabindex="0">
   </div>
 `
 
@@ -94,6 +105,7 @@ customElements.define('dab-application-icon',
      */
     connectedCallback () {
       this._applicationIconWrapper.addEventListener('click', this._createNewAppInstance)
+      this.addEventListener('keydown', this._createNewAppInstance)
     }
 
     /**
@@ -101,19 +113,22 @@ customElements.define('dab-application-icon',
      */
     disconnectedCallback () {
       this._applicationIconWrapper.removeEventListener('click', this._createNewAppInstance)
+      this.removeEventListener('keydown', this._createNewAppInstance)
     }
 
     /**
      * Dispatches an events that creates a new instance of an application.
      */
-    _createNewAppInstance () {
-      this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          applicationName: this._name
-        }
-      }))
+    _createNewAppInstance (event) {
+      if(event.keyCode === 13 || event.type === 'click') {
+        this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            applicationName: this._name
+          }
+        }))
+      }
     }
   }
 )
