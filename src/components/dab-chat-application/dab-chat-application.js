@@ -237,7 +237,9 @@ template.innerHTML = `
         right: -35px;
         width: 100px;
         border-radius: 5px;
-        display: none;
+        transform: scale(0.00);
+        display: block;
+        transition: transform 0.2s ease-in-out;
       }
 
       .pick-new-nickname-button {
@@ -586,16 +588,16 @@ customElements.define('dab-chat-application',
       }))
     }
 
-    /**
+     /**
      * This method toggles the settings menu.
      */
     _toggleSettingsMenu () {
       if (this._toggleMenuVisible) {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.display = 'block'
+        this._toggleMenu.style.transform = 'scale(0.00)' 
       } else {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.display = 'none'
+        this._toggleMenu.style.transform = 'scale(1)'
       }
     }
 
@@ -605,7 +607,7 @@ customElements.define('dab-chat-application',
     _openNickNameModal () {
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
       this._toggleMenuVisible = !this._toggleMenuVisible
-      this._toggleMenu.style.display = 'none'
+      this._toggleMenu.style.transform = 'scale(0.00)' 
     }
 
     /**

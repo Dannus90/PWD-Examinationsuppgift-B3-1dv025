@@ -38,6 +38,11 @@ template.innerHTML = `
       top: 25px;
       right: 14.5px;
       cursor: pointer;
+      transition: transform 0.2s ease-in;
+    }
+
+    .settings-icon:active {
+      transform: scale(0.9);
     }
 
     .toggle-menu {
@@ -48,7 +53,9 @@ template.innerHTML = `
       right: -35px;
       width: 100px;
       border-radius: 5px;
-      display: none;
+      transform: scale(0.00);
+      display: block;
+      transition: transform 0.2s ease-in-out;
     }
 
     .pick-new-nickname-button {
@@ -60,6 +67,10 @@ template.innerHTML = `
       font-weight: bold;
       border: none;
       transition: color 0.10s ease-in, transform 0.10s ease-in;
+    }
+
+    .pick-new-nickname-button:hover {
+      color: #22ff01;
     }
 
     .high-score-component {
@@ -823,12 +834,14 @@ customElements.define('dab-memory-game',
     _toggleSettingsMenu () {
       if (this._toggleMenuVisible) {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.display = 'block'
+        this._toggleMenu.style.transform = 'scale(0.00)' 
       } else {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.display = 'none'
+        this._toggleMenu.style.transform = 'scale(1)'
       }
     }
+
+    
 
     /**
      * This method opens the nickname modal which allows us to pick a new nickname.
@@ -836,7 +849,7 @@ customElements.define('dab-memory-game',
     _openNickNameModal () {
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
       this._toggleMenuVisible = !this._toggleMenuVisible
-      this._toggleMenu.style.display = 'none'
+      this._toggleMenu.style.transform = 'scale(0.00)' 
     }
 
     /**
