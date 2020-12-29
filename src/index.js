@@ -14,13 +14,14 @@ import './components/dab-chat-application/dab-chat-application'
 import './components/dab-face-detection-application/dab-face-detection-application'
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
+import './components/dab-digital-clock/index'
 import './registerServiceWorker/registerServiceWorker.js'
 // Importing the db
 import { getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
 
 // Variables
-let translationPositionX = -50
-let translationPositionY = -50
+const translationPositionX = -50
+const translationPositionY = -50
 let windowPositionTop = 50
 let windowPositionLeft = 50
 const applicationArray = []
@@ -56,7 +57,7 @@ document.addEventListener('createNewAppInstance', ({ detail: { applicationName }
   applicationWindow.addEventListener(('mousedown'), () => {
     applicationWindow.style.zIndex = 1000
 
-    // Setting the z-index to 1 on all other applications that are not the current one. 
+    // Setting the z-index to 1 on all other applications that are not the current one.
     applicationArray.filter((app) => app !== applicationWindow).forEach((app) => {
       app.style.zIndex = 1
     })
@@ -70,7 +71,7 @@ document.addEventListener('mouseup', (event) => {
   }))
 })
 
-document.addEventListener('deleteAppInstance', ({ detail: { applicationName }}) => {
+document.addEventListener('deleteAppInstance', ({ detail: { applicationName } }) => {
   const applicationIndex = applicationArray.indexOf(applicationName)
 
   // Remove the specific application instance from the array.
@@ -82,10 +83,10 @@ document.addEventListener('deleteAppInstance', ({ detail: { applicationName }}) 
   windowPositionLeft += 1
 
   applicationName.removeEventListener(('mousedown'), () => {
-    applicationWindow.style.zIndex = 1000
+    applicationName.style.zIndex = 1000
 
-    // Setting the z-index to 1 on all other applications that are not the current one. 
-    applicationArray.filter((app) => app !== applicationWindow).forEach((app) => {
+    // Setting the z-index to 1 on all other applications that are not the current one.
+    applicationArray.filter((app) => app !== applicationName).forEach((app) => {
       app.style.zIndex = 1
     })
   })
@@ -132,7 +133,6 @@ document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore }
   recentNameStore.add(data)
 })
 
-
 document.addEventListener('pickedChatName', ({ detail: { pickedName, dbStore } }) => {
   // Clearing the previously stored name.
   clearStore(dbStore, 'readwrite')
@@ -144,4 +144,3 @@ document.addEventListener('pickedChatName', ({ detail: { pickedName, dbStore } }
   // Adding new nickname to the store.
   recentNameStore.add(data)
 })
-

@@ -620,7 +620,7 @@ customElements.define('dab-chat-application',
         this._showNicknameWarning()
         return
       }
-      
+
       this._userName = this._picknameInput.value
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'none'
       this.dispatchEvent(new window.CustomEvent('pickedChatName', {
@@ -633,13 +633,13 @@ customElements.define('dab-chat-application',
       }))
     }
 
-     /**
+    /**
      * This method toggles the settings menu.
      */
     _toggleSettingsMenu () {
       if (this._toggleMenuVisible) {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.transform = 'scale(0.00)' 
+        this._toggleMenu.style.transform = 'scale(0.00)'
       } else {
         this._toggleMenuVisible = !this._toggleMenuVisible
         this._toggleMenu.style.transform = 'scale(1)'
@@ -652,7 +652,7 @@ customElements.define('dab-chat-application',
     _openNickNameModal () {
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
       this._toggleMenuVisible = !this._toggleMenuVisible
-      this._toggleMenu.style.transform = 'scale(0.00)' 
+      this._toggleMenu.style.transform = 'scale(0.00)'
     }
 
     /**

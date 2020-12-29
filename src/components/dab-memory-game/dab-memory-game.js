@@ -879,14 +879,12 @@ customElements.define('dab-memory-game',
     _toggleSettingsMenu () {
       if (this._toggleMenuVisible) {
         this._toggleMenuVisible = !this._toggleMenuVisible
-        this._toggleMenu.style.transform = 'scale(0.00)' 
+        this._toggleMenu.style.transform = 'scale(0.00)'
       } else {
         this._toggleMenuVisible = !this._toggleMenuVisible
         this._toggleMenu.style.transform = 'scale(1)'
       }
     }
-
-    
 
     /**
      * This method opens the nickname modal which allows us to pick a new nickname.
@@ -894,7 +892,7 @@ customElements.define('dab-memory-game',
     _openNickNameModal () {
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
       this._toggleMenuVisible = !this._toggleMenuVisible
-      this._toggleMenu.style.transform = 'scale(0.00)' 
+      this._toggleMenu.style.transform = 'scale(0.00)'
     }
 
     /**

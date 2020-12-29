@@ -64,7 +64,7 @@ template.innerHTML = `
         overflow: hidden;
     }
 
-    .pwd-application-icons-container {
+    .pwd-application-footer {
         background-image: linear-gradient(
             110deg,
             var(--bg-color-primary) 0%,
@@ -73,7 +73,20 @@ template.innerHTML = `
           );
           width: 100%;
           display: flex;
-          padding: 1rem;
+          justify-content: space-between;
+          align-items: center;
+    }
+
+    .pwd-application-icons-container {
+      display: flex;
+      margin-left: 1rem;
+    }
+
+    .application-clock-container {
+      margin: 0.35rem 1rem 0.35rem 0.35rem;
+      display:flex;
+      justify-content: flex-end;
+      width: 100%;
     }
 
     @media only screen and (max-width: 1150px) {
@@ -110,8 +123,13 @@ template.innerHTML = `
     <div class="pwd-application-applications-container">
         <slot name="application" />
     </div>
-    <div class="pwd-application-icons-container">
+    <div class="pwd-application-footer">
+      <div class="pwd-application-icons-container">
         <slot name="application-icon" />
+      </div>
+      <div class="application-clock-container">
+        <slot name="application-clock" />
+      </div>
     <div>    
   </div>
 `

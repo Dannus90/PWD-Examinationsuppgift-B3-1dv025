@@ -115,9 +115,11 @@ customElements.define('dab-application-icon',
 
     /**
      * Dispatches an events that creates a new instance of an application.
+     *
+     * @param {object} event The event object.
      */
     _createNewAppInstance (event) {
-      if(event.keyCode === 13 || event.type === 'click') {
+      if (event.keyCode === 13 || event.type === 'click') {
         this.dispatchEvent(new window.CustomEvent('createNewAppInstance', {
           bubbles: true,
           composed: true,

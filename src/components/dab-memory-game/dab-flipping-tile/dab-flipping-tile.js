@@ -215,6 +215,8 @@ customElements.define('dab-flipping-tile',
 
     /**
      * This method will flip the card and display information regarding which side is currently displayed.
+     *
+     * @param {object} event The event object.
      */
     _flipCardAndDisplayCardSide (event) {
       // If the element nis hidden or disabled we end the class method directly.
@@ -223,33 +225,32 @@ customElements.define('dab-flipping-tile',
         return
       }
 
-      if(event.keyCode === 13 || event.type === 'click') {
+      if (event.keyCode === 13 || event.type === 'click') {
       // Toggle the face-up attribute depending on previous state.
-      this.hasAttribute('face-up')
-        ? this.removeAttribute('face-up')
-        : this.setAttribute('face-up', '')
+        this.hasAttribute('face-up')
+          ? this.removeAttribute('face-up')
+          : this.setAttribute('face-up', '')
 
-      // Dispatch the tile flipped custom event.
-      this.dispatchEvent(new CustomEvent('tileflipped', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          faceUp: this.hasAttribute('face-up')
+        // Dispatch the tile flipped custom event.
+        this.dispatchEvent(new CustomEvent('tileflipped', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            faceUp: this.hasAttribute('face-up')
+          }
+        }))
+
+        if (this._frontSideDisplayed) {
+          this._frontSideDisplayed = false
+          this._cardInner.style.transform = 'rotateY(0deg)'
+          return
         }
-      }))
 
-      if (this._frontSideDisplayed) {
-        this._frontSideDisplayed = false
-        this._cardInner.style.transform = 'rotateY(0deg)'
-        return
+        if (!this._frontSideDisplayed) {
+          this._frontSideDisplayed = true
+          this._cardInner.style.transform = 'rotateY(180deg)'
+        }
       }
-
-      if (!this._frontSideDisplayed) {
-        this._frontSideDisplayed = true
-        this._cardInner.style.transform = 'rotateY(180deg)'
-      }
-
-    }
     }
 
     /**
