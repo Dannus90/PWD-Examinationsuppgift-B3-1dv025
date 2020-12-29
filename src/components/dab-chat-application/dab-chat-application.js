@@ -80,7 +80,6 @@ template.innerHTML = `
       }
 
       #websocket-chat li {
-        background-color: #79C7C5;
         border-radius: 10px;
         color: #F9FBFF;
         display: inline-block;
@@ -92,17 +91,17 @@ template.innerHTML = `
         font-size: 0.8rem;
       }
 
-      #websocket-chat li:nth-child(odd) {
+      .list-style-left {
         align-self: flex-start;
         background-color: #b2b2b2;
       }
 
-      #websocket-chat li:nth-child(even) {
+      .list-style-right {
         align-self: flex-end;
         background-color: #79C7C5;
       }
 
-      #websocket-chat li:nth-child(odd):before {
+      .list-style-left:before {
         content: "";
         width: 0px;
         height: 0px;
@@ -115,7 +114,7 @@ template.innerHTML = `
         bottom: -24px;
       }
 
-      #websocket-chat li:nth-child(even):before {
+      .list-style-right:before {
         content: "";
         width: 0px;
         height: 0px;
@@ -132,13 +131,14 @@ template.innerHTML = `
         color: #035e5c;
         font-size: 1.05rem;
         height: 65px;
-        width: 100%;
+        width: 87.5%;
         max-width: 442px;
         background-color: #f9fbff;
         display: flex;
         align-items: center;
         white-space: normal;
         padding: 1rem;
+        padding-right: 2.5rem;
         outline: none;
         border: none;
         border-top: 1px solid #ccc;
@@ -448,8 +448,9 @@ customElements.define('dab-chat-application',
         position: 'top-start'
       })
 
-      picker.on('emoji', function (emoji) {
+      picker.on('emoji', (emoji) => {
         input.value += emoji
+        this._userInput += emoji
       })
 
       // Adding event listeners
@@ -474,6 +475,7 @@ customElements.define('dab-chat-application',
       webSocketConnection.onopen = () => {
         const li = document.createElement('li')
         li.innerText = 'Welcome to LNU Messenger App!'
+        li.classList.add('list-style-right')
         this._webSocketChat.appendChild(li)
       }
 
@@ -501,8 +503,22 @@ customElements.define('dab-chat-application',
       webSocketConnection.onmessage = (event) => {
         // Parsing the retrieved data.
         const parsedData = JSON.parse(event.data)
+
+        console.log(parsedData)
+
+        // If the recieved type is a heartbeat or the username is The Server we return.
+        if(parsedData.type === 'heartbeat' || parsedData.username === 'The Server') {
+          return
+        }
         const { data, type, username } = parsedData
         const li = document.createElement('li')
+
+        if(parsedData.username === this._userName) {
+          li.classList.add('list-style-left')
+        } else {
+          li.classList.add('list-style-right')
+        }
+        
 
         // Appending username and data to the chat.
         li.innerText = `${username}: ${data}`

@@ -32,6 +32,7 @@ body {
 
 .emoji-picker {
   top: 500px;
+  z-index: 2000 !important;
 }
 
 .emoji-picker__preview {
