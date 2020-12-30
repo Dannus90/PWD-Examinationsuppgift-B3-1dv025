@@ -276,6 +276,7 @@ template.innerHTML = `
         border-radius: 5px;
         transform: scale(0.00);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         transition: transform 0.2s ease-in-out;
@@ -306,6 +307,31 @@ template.innerHTML = `
         transform: scale(0.98);
       }
 
+      .toggle-channel-button {
+        outline: none;
+        cursor: pointer;
+        padding: 0;
+        background-color: transparent;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        transition: color 0.10s ease-in, transform 0.10s ease-in;
+        font-size: 0.7rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0.3rem;
+      }
+
+      .toggle-channel-button:hover {
+        color: #22ff01;
+      }
+
+      .toggle-channel-button:active {
+        transform: scale(0.98);
+      }
+
       .nickname-warning-paragraph {
         color: #ff1b1b;
         font-weight: bold;
@@ -330,6 +356,7 @@ template.innerHTML = `
       <img tabindex="0" src="${settingsIcon}" class="settings-icon" height="20" width="20" />
       <div class="toggle-menu">
         <button class="pick-new-nickname-button">New nickname</button>
+        <button class="toggle-channel-button">Private chat</button>
       </div> 
     </div>
     <ul id="websocket-chat"></ul>
@@ -370,6 +397,8 @@ customElements.define('dab-chat-application',
 
       this._apiKey = 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
 
+      this._currentChannel = 'my, not so secret, channel'
+
       // Other variables
       this._toggleMenuVisible = false
 
@@ -400,6 +429,9 @@ customElements.define('dab-chat-application',
       // Selecting the pick new nickname button.
       this._pickNewNicknameButton = this.shadowRoot.querySelector('.pick-new-nickname-button')
 
+      // Toggle channel button
+      this._toggleChannelButton = this.shadowRoot.querySelector('.toggle-channel-button')
+
       // Selecting the nickname warning paragraph.
       this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
 
@@ -417,6 +449,7 @@ customElements.define('dab-chat-application',
       this._toggleSettingsMenu = this._toggleSettingsMenu.bind(this)
       this._openNickNameModal = this._openNickNameModal.bind(this)
       this._showNicknameWarning = this._showNicknameWarning.bind(this)
+      this._switchMessageChannel = this._switchMessageChannel.bind(this)
     }
 
     /**
@@ -463,6 +496,7 @@ customElements.define('dab-chat-application',
       this._picknameButton.addEventListener(('click'), this._pickName)
       this._settingsIcon.addEventListener(('click'), this._toggleSettingsMenu)
       this._pickNewNicknameButton.addEventListener(('click'), this._openNickNameModal)
+      this._toggleChannelButton.addEventListener(('click'), this._switchMessageChannel)
 
       // Establishing the websocket connection
       const webSocketConnection = new WebSocket('wss://cscloud6-127.lnu.se/socket/')
@@ -586,6 +620,7 @@ customElements.define('dab-chat-application',
       this._picknameButton.removeEventListener(('click'), this._pickName)
       this._settingsIcon.removeEventListener(('click'), this._toggleSettingsMenu)
       this._pickNewNicknameButton.removeEventListener(('click'), this._openNickNameModal)
+      this._toggleChannelButton.addEventListener(('click'), this._switchMessageChannel)
     }
 
     /**
@@ -604,7 +639,7 @@ customElements.define('dab-chat-application',
         type: 'message',
         data: this._userInput,
         username: this._userName,
-        channel: 'my, not so secret, channel',
+        channel: this._currentChannel,
         key: this._apiKey
       }
 
@@ -668,6 +703,22 @@ customElements.define('dab-chat-application',
       this.shadowRoot.querySelector('.pickname-modal').style.display = 'flex'
       this._toggleMenuVisible = !this._toggleMenuVisible
       this._toggleMenu.style.transform = 'scale(0.00)'
+    }
+
+    /**
+     * This method is responsible for switching channels.
+     */
+    _switchMessageChannel () {
+      this._toggleMenuVisible = !this._toggleMenuVisible
+      this._toggleMenu.style.transform = 'scale(0.00)'
+
+      if(this._currentChannel === 'my, not so secret, channel') {
+        this._currentChannel = 'daniels private channel'
+        this._toggleChannelButton.textContent = 'Switch to LNU'
+      } else if (this._currentChannel === 'daniels private channel') {
+        this._currentChannel = 'my, not so secret, channel'
+        this._toggleChannelButton.textContent = 'Switch to private'
+      }
     }
 
     /**
