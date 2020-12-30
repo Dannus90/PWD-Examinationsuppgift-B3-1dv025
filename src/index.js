@@ -7,11 +7,11 @@
 
 // --- IMPORTS --- //
 import './components/dab-pwd-application/dab-pwd-application'
-import './components/dab-game-window/dab-game-window'
+import './components/dab-application-window/dab-application-window'
 import './components/dab-memory-game/dab-memory-game'
 import './components/dab-memory-game/dab-flipping-tile/dab-flipping-tile'
 import './components/dab-chat-application/dab-chat-application'
-import './components/dab-face-detection-application/dab-face-detection-application'
+import './components/dab-object-detection-application/dab-object-detection-application'
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
 import './components/dab-digital-clock/index'
@@ -38,7 +38,7 @@ const pwdApplication = document.querySelector('#pwd-application')
 document.addEventListener('createNewAppInstance', ({ detail: { applicationName } }) => {
   // Creating a new instance of a specific application based on the detail name.
   const application = document.createElement(applicationName)
-  const applicationWindow = document.createElement('dab-game-window')
+  const applicationWindow = document.createElement('dab-application-window')
   applicationWindow.setAttribute('slot', 'application')
 
   application.setAttribute('slot', 'application-container')

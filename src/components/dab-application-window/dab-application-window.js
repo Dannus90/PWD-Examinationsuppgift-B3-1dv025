@@ -1,5 +1,5 @@
 /**
- * The game-window web component module.
+ * The application-window web component module.
  *
  * @author Daniel Persson<dp222jd@student.lnu.se>
  * @version 1.0.0
@@ -103,7 +103,7 @@ template.innerHTML = `
 /**
  * Define custom element.
  */
-customElements.define('dab-game-window',
+customElements.define('dab-application-window',
   /**
    * Class extending HTMLElement.
    */

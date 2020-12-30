@@ -1,5 +1,5 @@
 /**
- * The face-detection web component module.
+ * The object-detection web component module.
  *
  * @author Daniel Persson<dp222jd@student.lnu.se>
  * @version 1.0.0
@@ -17,12 +17,12 @@ import cocoSsd from '@tensorflow-models/coco-ssd'
 const template = document.createElement('template')
 template.innerHTML = `
   <style>
-    #face-detection-application-wrapper {
+    #object-detection-application-wrapper {
       margin: 1.5rem;
       color: #3D3D3D;
     }
 
-    #face-detection-application-wrapper h3 {
+    #object-detection-application-wrapper h3 {
       color: #FF6F00;
       line-height: 1.6rem;
     }
@@ -136,7 +136,7 @@ template.innerHTML = `
     }
   </style>
 
-  <div id="face-detection-application-wrapper">
+  <div id="object-detection-application-wrapper">
     <h3>This app is using a pretrained model in Tensorflow.js for object detection.</h3>
     <p class="description-paragraph">Before you can click the button to enable your camera you have to wait for the model to load.</p>
     <section id="video-section-wrapper" class="invisible">
@@ -156,7 +156,7 @@ template.innerHTML = `
 /**
  * Define custom element.
  */
-customElements.define('dab-face-detection-application',
+customElements.define('dab-object-detection-application',
   /**
    * Class extending HTMLElement.
    */
