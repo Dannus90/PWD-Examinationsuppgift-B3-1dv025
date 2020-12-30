@@ -507,18 +507,17 @@ customElements.define('dab-chat-application',
         console.log(parsedData)
 
         // If the recieved type is a heartbeat or the username is The Server we return.
-        if(parsedData.type === 'heartbeat' || parsedData.username === 'The Server') {
+        if (parsedData.type === 'heartbeat' || parsedData.username === 'The Server') {
           return
         }
         const { data, type, username } = parsedData
         const li = document.createElement('li')
 
-        if(parsedData.username === this._userName) {
+        if (parsedData.username === this._userName) {
           li.classList.add('list-style-left')
         } else {
           li.classList.add('list-style-right')
         }
-        
 
         // Appending username and data to the chat.
         li.innerText = `${username}: ${data}`

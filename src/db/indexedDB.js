@@ -103,6 +103,7 @@ export let db
       console.error('Database error: ', errorEvent.target.error.message)
     }
 
+    // --- SETTING UP STORES --- //
     // Setting up store for small memory game.
     const smallMemoryObjectStore = db.createObjectStore(smallMemoryDbStore, { keyPath: 'id', autoIncrement: true })
     smallMemoryObjectStore.createIndex(nickNameIndex, nickNameIndex, { unique: false })
@@ -188,11 +189,13 @@ export let db
      * @param {object} e The event object.
      */
     largeMemoryObjectStore.transaction.oncomplete = async (e) => {
+      // Seeding large memory store.
       const accessedLargeMemoryStore = await db.transaction(largeMemoryDbStore, 'readwrite').objectStore(largeMemoryDbStore)
       seedDataMemoryLarge.forEach(async (seedPlayer) => {
         await accessedLargeMemoryStore.add(seedPlayer)
       })
 
+      // Seeding medium memory
       const accessedMediumMemoryStore = await db.transaction(mediumMemoryDbStore, 'readwrite').objectStore(mediumMemoryDbStore)
       seedDataMemoryMedium.forEach(async (seedPlayer) => {
         await accessedMediumMemoryStore.add(seedPlayer)

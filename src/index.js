@@ -16,7 +16,8 @@ import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
 import './components/dab-digital-clock/index'
 import './registerServiceWorker/registerServiceWorker.js'
-// Importing the db
+
+// Importing the db and related variables.
 import { getStore, clearStore, smallMemoryDbStore, mediumMemoryDbStore, largeMemoryDbStore } from './db/indexedDB.js'
 
 // Variables
@@ -32,6 +33,8 @@ const pwdApplication = document.querySelector('#pwd-application')
 /// //////////////////////////
 //  ADDING EVENT LISTENERS  //
 /// //////////////////////////
+
+// --- CREATING AND DELETING APP INSTANCES EVENTLISTENERS --- //
 document.addEventListener('createNewAppInstance', ({ detail: { applicationName } }) => {
   // Creating a new instance of a specific application based on the detail name.
   const application = document.createElement(applicationName)
@@ -64,13 +67,6 @@ document.addEventListener('createNewAppInstance', ({ detail: { applicationName }
   })
 })
 
-document.addEventListener('mouseup', (event) => {
-  event.target.dispatchEvent(new window.CustomEvent('doneMoving', {
-    bubbles: true,
-    composed: true
-  }))
-})
-
 document.addEventListener('deleteAppInstance', ({ detail: { applicationName } }) => {
   const applicationIndex = applicationArray.indexOf(applicationName)
 
@@ -94,6 +90,15 @@ document.addEventListener('deleteAppInstance', ({ detail: { applicationName } })
   applicationName.remove()
 })
 
+// --- MOUSE EVENT RELATED EVENTLISTENERS--- //
+document.addEventListener('mouseup', (event) => {
+  event.target.dispatchEvent(new window.CustomEvent('doneMoving', {
+    bubbles: true,
+    composed: true
+  }))
+})
+
+// --- MEMORY GAME RELATED EVENTLISTENERS--- //
 document.addEventListener('updateHighscore', ({ detail: { highscoreToBeDisplayed, currentHighscoreComponent } }) => {
   currentHighscoreComponent.updateHighscore(highscoreToBeDisplayed)
 })
@@ -132,6 +137,8 @@ document.addEventListener('pickedMemoryName', ({ detail: { pickedName, dbStore }
   // Adding new nickname to the store.
   recentNameStore.add(data)
 })
+
+// --- CHAT APPLICATION RELATED EVENTLISTENERS--- //
 
 document.addEventListener('pickedChatName', ({ detail: { pickedName, dbStore } }) => {
   // Clearing the previously stored name.
