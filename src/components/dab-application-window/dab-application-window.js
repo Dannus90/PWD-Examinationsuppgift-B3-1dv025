@@ -211,6 +211,12 @@ customElements.define('dab-application-window',
        * @param {object} event The even object containing the current position on the page.
        */
       function onMouseMove (event) {
+        // TODO IMPROVE THIS ONE FURTHER!
+        if(event.pageX <= 0 || event.pageY <= 0) {
+          document.removeEventListener('mousemove', onMouseMove)
+          return
+        }
+        console.log(event)
         moveAt(event.pageX, event.pageY)
       }
 
