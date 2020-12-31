@@ -778,6 +778,16 @@ customElements.define('dab-memory-game',
           nickname: this._nickname
         }
       }))
+
+      // When dispatched, this event updates the highscore.
+      this.dispatchEvent(new window.CustomEvent('resetMemoryGame', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          boardsize: this.getAttribute('boardsize'),
+          currentHighscoreComponent: this._highScoreComponent
+        }
+      }))
     }
 
     /**
@@ -804,16 +814,6 @@ customElements.define('dab-memory-game',
         tile.removeAttribute('hidden')
         tile.removeAttribute('disabled')
       })
-
-      // When dispatched, this event updates the highscore.
-      this.dispatchEvent(new window.CustomEvent('resetMemoryGame', {
-        bubbles: true,
-        composed: true,
-        detail: {
-          boardsize: this.getAttribute('boardsize'),
-          currentHighscoreComponent: this._highScoreComponent
-        }
-      }))
 
       this._initialize()
     }
