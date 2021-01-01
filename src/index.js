@@ -14,6 +14,7 @@ import './components/dab-chat-application/dab-chat-application'
 import './components/dab-object-detection-application/dab-object-detection-application'
 import './components/dab-application-icon/dab-application-icon'
 import './components/dab-memory-game/dab-high-score/index'
+import './components/dab-shark-bubble-game/dab-shark-bubble-game.js'
 import './components/dab-digital-clock/index'
 import './registerServiceWorker/registerServiceWorker.js'
 

@@ -1,3 +1,4 @@
+// Registration of serviceworker.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {
     try {
