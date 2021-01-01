@@ -200,7 +200,17 @@ customElements.define('dab-application-window',
        * @param {number} pageX A number regarding the current position on the page.
        * @param {number} pageY A number regarding the current position on the page.
        */
-      function moveAt (pageX, pageY) {
+      function moveAt (pageX, pageY, offsetTop) {
+        // Limiting the ability to move the window outside the visible screen (top side)
+        if(offsetTop !== -17 && offsetTop <= 0 || offsetTop === undefined) {
+          return
+        }
+
+        // Limiting the ability to move the window outside the visible screen (bottom side)
+        if(window.innerHeight - offsetTop < 38) {
+          return
+        }
+
         event.target.style.left = pageX - shiftX + 'px'
         event.target.style.top = pageY - shiftY + 'px'
       }
@@ -211,13 +221,7 @@ customElements.define('dab-application-window',
        * @param {object} event The even object containing the current position on the page.
        */
       function onMouseMove (event) {
-        // TODO IMPROVE THIS ONE FURTHER!
-        if(event.pageX <= 0 || event.pageY <= 0) {
-          document.removeEventListener('mousemove', onMouseMove)
-          return
-        }
-        console.log(event)
-        moveAt(event.pageX, event.pageY)
+        moveAt(event.pageX, event.pageY, event.target.offsetTop)
       }
 
       this.style.left = event.pageX - shiftX + 'px'
@@ -227,13 +231,20 @@ customElements.define('dab-application-window',
 
       document.addEventListener('mousemove', onMouseMove)
 
+
+
       /**
-       * A function that removes the mousemove event listener and the onmouseup.
+       * A set of functions that removes the mousemove event listener and the onmouseup.
        */
       event.target.onmouseup = function () {
         document.removeEventListener('mousemove', onMouseMove)
         event.target.onmouseup = null
       }
+
+      event.target.addEventListener('click', () => {
+        document.removeEventListener('mousemove', onMouseMove)
+        event.target.onmouseup = null
+      })
 
       document.addEventListener('mouseleave', () => {
         document.removeEventListener('mousemove', onMouseMove)
