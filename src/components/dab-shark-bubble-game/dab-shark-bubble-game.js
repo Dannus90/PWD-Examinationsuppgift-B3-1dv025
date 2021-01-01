@@ -65,11 +65,8 @@ template.innerHTML = `
 
     .ball {
         -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
         border-radius: 50%;
         -webkit-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
-            inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
-        -moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
             inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
         box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
             inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
@@ -126,12 +123,8 @@ template.innerHTML = `
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0) 40%
         );
-        filter: progid:DXImageTransform.Microsoft.gradient(Colorstr='#80ffffff', endColorstr='#00ffffff',GradientType=1 );
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
         border-radius: 50%;
         -webkit-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
-        -moz-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
         box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
         content: "";
         height: 50px;
@@ -183,10 +176,74 @@ template.innerHTML = `
     .start-game-button:-moz-focusring {
     outline: 2px solid #fff;
     }
+
+    .score-container {
+        text-align: center;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        position: absolute;
+        top: 40px;
+        z-index: 1;
+        font-weight: bold;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+      }
+      
+      .score-wrap {
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        width: 200px;
+        padding: 8px 0;
+        border-radius: 10px;
+        display: inline-flex;
+        flex-direction: column;
+      }
+      
+      .score-wrap p {
+        margin: 0;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        line-height: 1rem;
+        font-family: "DM Sans"
+      }
+      
+      .score-wrap p:last-child {
+        text-align: center;
+      }
+      
+      .missed-score,
+      .hit-by-shark,
+      .total-fails {
+        color: red;
+      }
+      
+      .score {
+        color: chartreuse;
+      }
   </style>
 
   <div id="bubble-shark-game-wrapper">
     <div id="container" class="game-area">
+    <div class="score-container">
+        <div class="score-wrap">
+            <p>Score: <span id="score" class="score">0</span></p>
+            <p>
+                Missed:
+                <span id="missed-score" class="missed-score">0</span>
+            </p>
+            <p>
+                Hit By Shark:
+                <span id="hit-by-shark" class="hit-by-shark">0</span>
+            </p>
+            <p>
+                Total Fails:
+                <span id="total-fails" class="total-fails">0</span>
+            </p>
+        </div>
+    </div>
         <div id="start-game-modal" class="start-game-modal">
             <button id="start-game-button" class="start-game-button">Start game</button>
         </div>
@@ -522,7 +579,7 @@ customElements.define('dab-shark-bubble-game',
       let currentTop = 0
 
       ballEl.style.left = leftPos + 'px'
-      ballEl.style.backgroundColor = '#' + this._getRandomNo(999)
+      ballEl.style.backgroundColor = '#' + this._getRandomNoForBall(899)
 
       // Doing like this to clear the intervall
       const interval = setInterval(() => {
@@ -568,5 +625,12 @@ customElements.define('dab-shark-bubble-game',
     _getRandomNo (range) {
       return Math.floor(Math.random() * range) + 1
     }
+
+    /**
+     * @param range
+     */
+    _getRandomNoForBall (range) {
+        return Math.floor(Math.random() * range) + 100
+      }
   }
 )
