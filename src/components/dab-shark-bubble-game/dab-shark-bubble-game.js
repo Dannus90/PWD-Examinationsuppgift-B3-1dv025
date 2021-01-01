@@ -241,6 +241,14 @@ template.innerHTML = `
           font-weight: bold;
       }
 
+      .player-one-container,
+      .player-two-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+      }
+
       .player-one-container {
           margin-right: 2rem;
       }
@@ -255,6 +263,7 @@ template.innerHTML = `
           padding: 0;
           margin: 0;
           text-align: center;
+          font-size: 0.8rem;
       }
 
     .playerImageOne,
@@ -263,6 +272,7 @@ template.innerHTML = `
         height: 150px;
         perspective: 1000px;
         transition: all 1s;
+        margin-bottom: 3rem;
     }
 
     .playerImageOne a,
@@ -387,6 +397,8 @@ template.innerHTML = `
                                 <span>Leitet</span>
                             </a>
                         </div>
+                        <p>Strength: 20% change to get double score from a ball.</p>
+                        <p>Weakness: Afraid of sharks - 50% chance to take double damage.</p>
                     </div>
                     <div class="player-two-container">
                         <div class="playerImageTwo">
@@ -394,6 +406,8 @@ template.innerHTML = `
                                 <span>Loock</span>
                             </a>
                         </div>
+                        <p>Strength: Resistant to sharks - 50% chance to avoid damage.</p>
+                        <p>Weakness: Afraid of balls - 10% chance to get half points from a ball.</p>
                     </div>
                 </div>
             </div>
@@ -434,6 +448,8 @@ customElements.define('dab-shark-bubble-game',
       // Selecting game elements.
       this._gameContainer = this.shadowRoot.querySelector('#container')
       this._startGameModal = this.shadowRoot.querySelector('#start-game-modal')
+      this._playerOneContainer = this.shadowRoot.querySelector('.player-one-container')
+      this._playerTwoContainer = this.shadowRoot.querySelector('.player-two-container')
       this._bubbleSharkGameWrapper = this.shadowRoot.querySelector('#bubble-shark-game-wrapper')
       this._scoreEl = this.shadowRoot.querySelector('#score')
       this._missedScoreEl = this.shadowRoot.querySelector('#missed-score')
@@ -455,11 +471,16 @@ customElements.define('dab-shark-bubble-game',
       this._ballCount = 3
       this._dropBallSpeed = 10
       this._gameOver = false
-      this._gameContainerHeight = this._bubbleSharkGameWrapper.clientHeight;
-      this._gameContainerWidth = this._bubbleSharkGameWrapper.clientWidth;
+      this._intialLoopTiming
+      this._gameContainerHeight = this._bubbleSharkGameWrapper.clientHeight
+      this._gameContainerWidth = this._bubbleSharkGameWrapper.clientWidth
+      this._choosenPlayer = ''
 
       // Binding this
       this._startGame = this._startGame.bind(this)
+      this._playerOneInitiate = this._playerOneInitiate.bind(this)
+      this._playerTwoInitiate = this._playerTwoInitiate.bind(this)
+      this._addScore = this._addScore.bind(this)
     }
 
     /**
@@ -485,22 +506,43 @@ customElements.define('dab-shark-bubble-game',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+      this._playerOneContainer.addEventListener('click', this._playerOneInitiate)
+      this._playerTwoContainer.addEventListener('click', this._playerTwoInitiate)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+      this._playerOneContainer.removeEventListener('click', this._playerOneInitiate)
+      this._playerTwoContainer.removeEventListener('click', this._playerTwoInitiate)
     }
 
     /**
      *
      */
-    _startGame () {
+    _playerOneInitiate () {
+      this._choosenPlayer = 'Leitet'
+      this._startGame()
+    }
+
+    /**
+     *
+     */
+    _playerTwoInitiate () {
+      this._choosenPlayer = 'Loock'
+      this._startGame()
+    }
+
+    /**
+     * @param event
+     */
+    _startGame (event) {
       this._startGameModal.style.display = 'none'
       this._backgroundMusic.load()
       this._backgroundMusic.play()
 
+      console.log(event)
       // Looping shark and increase difficulty gradually
       let loopTimingShark = 3250
 
@@ -512,7 +554,7 @@ customElements.define('dab-shark-bubble-game',
           for (let i = 0; i < this._sharkCount; i++) {
             if (this._totalFailsCount < 15) {
               const clientHeight = this._bubbleSharkGameWrapper.clientHeight
-              const clientWidth = this._bubbleSharkGameWrapper.clientWidth  
+              const clientWidth = this._bubbleSharkGameWrapper.clientWidth
               const sharkEl = this._createShark()
               const topPos = this._getRandomNo(
                 clientHeight - 103
@@ -544,7 +586,7 @@ customElements.define('dab-shark-bubble-game',
 
           window.setTimeout(loopShark, loopTimingShark)
         } else {
-            return
+
         }
       }
 
@@ -560,7 +602,7 @@ customElements.define('dab-shark-bubble-game',
           for (let i = 0; i < this._ballCount; i++) {
             if (this._totalFailsCount < 15) {
               const clientHeight = this._bubbleSharkGameWrapper.clientHeight
-              const clientWidth = this._bubbleSharkGameWrapper.clientWidth   
+              const clientWidth = this._bubbleSharkGameWrapper.clientWidth
               const ballEl = this._createBall()
               const leftPos = this._getRandomNo(
                 clientWidth - 103
@@ -604,14 +646,14 @@ customElements.define('dab-shark-bubble-game',
 
     /**
      * Created a shark element and appends it to the game container.
-     * 
+     *
      * @returns {HTMLDivElement} A div with a shark image.
      */
     _createShark () {
       const sharkEl = document.createElement('div')
 
       sharkEl.classList.add(`shark-${Math.floor(Math.random() * 2) + 1}`)
-        
+
       // If the mouse is over the shark the _removeShark method runs.
       sharkEl.addEventListener('mouseover', (event) =>
         this._removeShark(event)
@@ -622,9 +664,12 @@ customElements.define('dab-shark-bubble-game',
       return sharkEl
     }
 
-    //Checking if game over
-    _gameEnded() {
-        this._gameContainer.innerHTML = `<div class="background">
+    // Checking if game over
+    /**
+     *
+     */
+    _gameEnded () {
+      this._gameContainer.innerHTML = `<div class="background">
         <div class="modal">
             <p class="lost-game-text">
                 You lost the game! Please try again!
@@ -633,31 +678,31 @@ customElements.define('dab-shark-bubble-game',
                 Final score: <span class="score">${this.score}</span>
             </p>
         </div>
-    </div>`;
+    </div>`
 
-        // this.shootingAudio.pause();
-        // this.missedAudio.pause();
-        this._backgroundMusic.pause();
+      // this.shootingAudio.pause();
+      // this.missedAudio.pause();
+      this._backgroundMusic.pause()
     }
 
     /**
      * This method resets the game.
      */
-    _gameEndedRemover() {
-        this._missedCount = 0;
-        this._hitBySharkCount = 0;
-        this._totalFailsCount = 0;
-        this._sharkSpeed = 10;
-        this._dropBallSpeed = 10;
-        this._score = 0;
-        this._loopTimingShark = 3250;
-        this._loopTimingBall = 3250;
-        this._hitBySharkEl.textContent = this.hitBySharkCount.toString();
-        this._totalFailsEl.textContent = this.totalFailsCount.toString();
-        this._missedScoreEl.textContent = this.missedCount.toString();
-        this._scoreEl.textContent = this.score.toString();
+    _gameEndedRemover () {
+      this._missedCount = 0
+      this._hitBySharkCount = 0
+      this._totalFailsCount = 0
+      this._sharkSpeed = 10
+      this._dropBallSpeed = 10
+      this._score = 0
+      this._loopTimingShark = 3250
+      this._loopTimingBall = 3250
+      this._hitBySharkEl.textContent = this.hitBySharkCount.toString()
+      this._totalFailsEl.textContent = this.totalFailsCount.toString()
+      this._missedScoreEl.textContent = this.missedCount.toString()
+      this._scoreEl.textContent = this.score.toString()
 
-        this._startGame();
+      this._startGame()
     }
 
     /**
@@ -665,8 +710,23 @@ customElements.define('dab-shark-bubble-game',
      */
     _removeShark (event) {
       const targetSharkEl = event.target
-      this._hitBySharkCount += 1
-      this._totalFailsCount += 1
+      const randomNumber = Math.random()
+
+      // If player is Loock there is a 50% chance to dodge damage from shark.
+      if (this._choosenPlayer === 'Loock' && randomNumber < 0.5) {
+        this._missedAudio.play()
+        targetSharkEl.remove()
+        return
+      }
+
+      // If player is Leitet there is a 50% chance to take double shark damage.
+      if (this._choosenPlayer === 'Leitet' && randomNumber < 0.5) {
+        this._hitBySharkCount += 2
+        this._totalFailsCount += 2
+      } else {
+        this._hitBySharkCount += 1
+        this._totalFailsCount += 1
+      }
 
       this._totalFailsEl.textContent = `${this._totalFailsCount}`
       this._hitBySharkEl.textContent = `${this._hitBySharkCount}`
@@ -698,9 +758,8 @@ customElements.define('dab-shark-bubble-game',
       }, speed)
     }
 
-    // Ball Events
     /**
-     *
+     * Creates a ball to be dropped.
      */
     _createBall () {
       const ballEl = document.createElement('div')
@@ -743,7 +802,6 @@ customElements.define('dab-shark-bubble-game',
           this._totalFailsCount += 1
           this._missedScoreEl.textContent = `${this._missedCount}`
           this._totalFailsEl.textContent = `${this._totalFailsCount}`
-
         } else {
           currentTop += 2
           ballEl.style.top = currentTop + 'px'
@@ -754,7 +812,7 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     * @param event
+     * @param {object} event The event object.
      */
     _shotBall (event) {
       const targetEl = event.target
@@ -771,15 +829,26 @@ customElements.define('dab-shark-bubble-game',
      * @param points
      */
     _addScore (points) {
-      this._score += parseInt(points)
+      const randomNumber = Math.random()
+      let parsedPoints = parseInt(points)
+      // If player is Leitet there is a 20% to get 50% more score from a ball.
+      if (this._choosenPlayer === 'Leitet' && randomNumber > 0.8) {
+        parsedPoints = parsedPoints * 1.5
+      }
+
+      // If player is Loock there is a 10% to get 50% less score from a ball.
+      if (this._choosenPlayer === 'Mats' && randomNumber > 0.9) {
+        parsedPoints = parsedPoints * 0.5
+      }
+      this._score += parsedPoints
       this._scoreEl.textContent = `${this._score}`
     }
 
     /**
      * This method returns a random number used for ball and shark positioning.
-     * 
+     *
      * @param {number} range A number describing the maximum range.
-     * 
+     *
      * @returns {number} Returns a random number between 1 and the given range.
      */
     _getRandomNo (range) {
@@ -788,13 +857,13 @@ customElements.define('dab-shark-bubble-game',
 
     /**
      * This method returns a random number and is used for drop ball styling.
-     * 
+     *
      * @param {number} range A number describing the maximum range.
-     * 
+     *
      * @returns {number} Returns a random number between 100 and the given range.
      */
     _getRandomNoForBallStyle (range) {
-        return Math.floor(Math.random() * range) + 100
-      }
+      return Math.floor(Math.random() * range) + 100
+    }
   }
 )
