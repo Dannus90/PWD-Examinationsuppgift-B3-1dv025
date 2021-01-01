@@ -5,12 +5,14 @@
  * @version 1.0.0
  */
 
-const shootingSound = (new URL('sound/shooting.mp3', import.meta.url)).href
+const shootingSound = (new URL('sound/popBall.mp3', import.meta.url)).href
 const missedSound = (new URL('sound/missed.mp3', import.meta.url)).href
 const backgroundMusic = (new URL('sound/game-background.mp3', import.meta.url)).href
 const backgroundImage = (new URL('assets/background.jpg', import.meta.url)).href
 const sharkImage1 = (new URL('assets/shark-1.png', import.meta.url)).href
 const sharkImage2 = (new URL('assets/shark-2.png', import.meta.url)).href
+const playerOneImage = (new URL('assets/johan.jpg', import.meta.url)).href
+const playerTwoImage = (new URL('assets/mats.jpeg', import.meta.url)).href
 
 /**
  * Define template.
@@ -223,6 +225,137 @@ template.innerHTML = `
       .score {
         color: chartreuse;
       }
+
+      .player-pick-container {
+          display: flex;
+          flex-direction: column;
+      }
+
+      .player-images-container {
+          display: flex;
+      }
+
+      .player-pick-container h3 {
+          color: #fff;
+          text-align: center;
+          font-weight: bold;
+      }
+
+      .player-one-container {
+          margin-right: 2rem;
+      }
+
+      .player-two-container {
+          margin-left: 2rem;
+      }
+
+      .player-one-container p,
+      .player-two-container p {
+          color: #fff;
+          padding: 0;
+          margin: 0;
+          text-align: center;
+      }
+
+    .playerImageOne,
+    .playerImageTwo {
+        width: 150px;
+        height: 150px;
+        perspective: 1000px;
+        transition: all 1s;
+    }
+
+    .playerImageOne a,
+    .playerImageTwo a {
+        display: block;
+        width: 150px;
+        height: 150px;
+        transform-style: preserve-3d;
+        transition: all 0.5s ease-in-out;
+        transform: rotateX(20deg);
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    .playerImageOne a {
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+            url("${playerOneImage}");
+            background-size: 0, cover;
+    }
+
+    .playerImageTwo a {
+        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+            url("${playerTwoImage}");
+            background-size: 0, cover;
+    }
+
+    .playerImageOne:hover a,
+    .playerImageTwo:hover a {
+        transform: rotateX(0deg);
+        transform-origin: bottom;
+    }
+
+    .playerImageOne:hover a:after,
+    .playerImageTwo:hover a:after {
+        transform: rotateX(180deg);
+    }
+
+    .playerImageOne:hover a span,
+    .playerImageTwo:hover a span {
+        transform: rotateX(15.99deg);
+    }
+
+    .playerImageOne a:after,
+    .playerImageTwo a:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 36px;
+        background: inherit;
+        background-size: cover, cover;
+        background-position: bottom;
+        transform: rotateX(120deg);
+        transform-origin: bottom;
+    }
+
+    .playerImageOne a span,
+    .playerImageTwo a span {
+        color: white;
+        text-transform: uppercase;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        font: bold 12px/36px "Open Sans";
+        text-align: center;
+        transform: rotateX(-55.99deg);
+        transform-origin: top;
+        z-index: 1;
+    }
+
+    .playerImageOne a:before,
+    .playerImageTwo a:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 100px 50px rgba(0, 0, 0, 0.5);
+        transition: all 0.5s;
+        opacity: 0.15;
+        transform: rotateX(95deg) translateZ(-80px) scale(0.75);
+        transform-origin: bottom;
+    }
+
+    .playerImageOne:hover a:before,
+    .playerImageTwo:hover a:before {
+        opacity: 1;
+        box-shadow: 0 0 25px 25px rgba(0, 0, 0, 0.5);
+        transform: rotateX(0) translateZ(-60px) scale(0.85);
+    }
   </style>
 
   <div id="bubble-shark-game-wrapper">
@@ -245,7 +378,25 @@ template.innerHTML = `
         </div>
     </div>
         <div id="start-game-modal" class="start-game-modal">
-            <button id="start-game-button" class="start-game-button">Start game</button>
+            <div class="player-pick-container">
+                <h3>Choose your player</h3>
+                <div class="player-images-container">
+                    <div class="player-one-container">
+                        <div class="playerImageOne">
+                            <a href="#">
+                                <span>Leitet</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="player-two-container">
+                        <div class="playerImageTwo">
+                            <a href="#">
+                                <span>Loock</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -282,9 +433,12 @@ customElements.define('dab-shark-bubble-game',
 
       // Selecting game elements.
       this._gameContainer = this.shadowRoot.querySelector('#container')
-      this._startButton = this.shadowRoot.querySelector('#start-game-button')
       this._startGameModal = this.shadowRoot.querySelector('#start-game-modal')
       this._bubbleSharkGameWrapper = this.shadowRoot.querySelector('#bubble-shark-game-wrapper')
+      this._scoreEl = this.shadowRoot.querySelector('#score')
+      this._missedScoreEl = this.shadowRoot.querySelector('#missed-score')
+      this._hitBySharkEl = this.shadowRoot.querySelector('#hit-by-shark')
+      this._totalFailsEl = this.shadowRoot.querySelector('#total-fails')
 
       // Selecting the audio elements.
       this._shootingAudio = this.shadowRoot.querySelector('#shooting-audio')
@@ -331,7 +485,6 @@ customElements.define('dab-shark-bubble-game',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
-        this._startButton.addEventListener('click', this._startGame)
     }
 
     /**
@@ -481,9 +634,6 @@ customElements.define('dab-shark-bubble-game',
             </p>
         </div>
     </div>`;
-        this.startBtnEl.addEventListener("click", () =>
-            this.gameEndedRemover()
-        );
 
         // this.shootingAudio.pause();
         // this.missedAudio.pause();
@@ -494,7 +644,6 @@ customElements.define('dab-shark-bubble-game',
      * This method resets the game.
      */
     _gameEndedRemover() {
-        this._startBtnEl.remove();
         this._missedCount = 0;
         this._hitBySharkCount = 0;
         this._totalFailsCount = 0;
@@ -516,8 +665,11 @@ customElements.define('dab-shark-bubble-game',
      */
     _removeShark (event) {
       const targetSharkEl = event.target
-      this.hitBySharkCount += 1
-      this.totalFailsCount += 1
+      this._hitBySharkCount += 1
+      this._totalFailsCount += 1
+
+      this._totalFailsEl.textContent = `${this._totalFailsCount}`
+      this._hitBySharkEl.textContent = `${this._hitBySharkCount}`
 
       this._missedAudio.play()
       targetSharkEl.remove()
@@ -579,7 +731,7 @@ customElements.define('dab-shark-bubble-game',
       let currentTop = 0
 
       ballEl.style.left = leftPos + 'px'
-      ballEl.style.backgroundColor = '#' + this._getRandomNoForBall(899)
+      ballEl.style.backgroundColor = '#' + this._getRandomNoForBallStyle(899)
 
       // Doing like this to clear the intervall
       const interval = setInterval(() => {
@@ -589,6 +741,9 @@ customElements.define('dab-shark-bubble-game',
           ballEl.remove()
           this._missedCount += 1
           this._totalFailsCount += 1
+          this._missedScoreEl.textContent = `${this._missedCount}`
+          this._totalFailsEl.textContent = `${this._totalFailsCount}`
+
         } else {
           currentTop += 2
           ballEl.style.top = currentTop + 'px'
@@ -616,20 +771,29 @@ customElements.define('dab-shark-bubble-game',
      * @param points
      */
     _addScore (points) {
-      this.score += parseInt(points)
+      this._score += parseInt(points)
+      this._scoreEl.textContent = `${this._score}`
     }
 
     /**
-     * @param range
+     * This method returns a random number used for ball and shark positioning.
+     * 
+     * @param {number} range A number describing the maximum range.
+     * 
+     * @returns {number} Returns a random number between 1 and the given range.
      */
     _getRandomNo (range) {
       return Math.floor(Math.random() * range) + 1
     }
 
     /**
-     * @param range
+     * This method returns a random number and is used for drop ball styling.
+     * 
+     * @param {number} range A number describing the maximum range.
+     * 
+     * @returns {number} Returns a random number between 100 and the given range.
      */
-    _getRandomNoForBall (range) {
+    _getRandomNoForBallStyle (range) {
         return Math.floor(Math.random() * range) + 100
       }
   }
