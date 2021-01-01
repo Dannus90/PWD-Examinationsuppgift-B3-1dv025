@@ -59,7 +59,7 @@ template.innerHTML = `
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
-        height: 3rem;
+        height: 5rem;
         width: 7rem;
     }
 
@@ -67,17 +67,24 @@ template.innerHTML = `
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         border-radius: 50%;
-    
         -webkit-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
             inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
         -moz-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
             inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
         box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
             inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
-    
-        height: 100px;
+        height: 50px;
         position: absolute;
-        width: 100px;
+        width: 50px;
+        top: -100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: hotpink;
+        font-size: 12px;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
     }
     
     .ball:after {
@@ -119,7 +126,7 @@ template.innerHTML = `
             rgba(255, 255, 255, 0.5) 0%,
             rgba(255, 255, 255, 0) 40%
         );
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#80ffffff', endColorstr='#00ffffff',GradientType=1 );
+        filter: progid:DXImageTransform.Microsoft.gradient(Colorstr='#80ffffff', endColorstr='#00ffffff',GradientType=1 );
         -webkit-border-radius: 50%;
         -moz-border-radius: 50%;
         border-radius: 50%;
@@ -127,16 +134,63 @@ template.innerHTML = `
         -moz-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
         box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
         content: "";
-        height: 100px;
+        height: 50px;
         left: 0;
         position: absolute;
-        width: 100px;
+        width: 50px;
     }
 
+    .start-game-modal {
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .start-game-button {
+        box-shadow: 0px 4px 5px -7px #276873;
+        border-radius: 8px;
+        display: inline-block;
+        cursor: pointer;
+        color: #fff;
+        font-family: Arial;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 8px 20px;
+        border: none;
+        text-decoration: none;
+        margin: 1rem auto;
+        outline: none;
+        background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .start-game-button:focus {
+        transform: scale(1.05);
+        box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+      }
+
+    .start-game-button:hover {
+    background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+    }
+
+    .start-game-button:focus-visible {
+    outline: 2px solid #fff;
+    }
+
+    .start-game-button:-moz-focusring {
+    outline: 2px solid #fff;
+    }
   </style>
 
   <div id="bubble-shark-game-wrapper">
-    <div id="container" class="game-area"></div>
+    <div id="container" class="game-area">
+        <div id="start-game-modal" class="start-game-modal">
+            <button id="start-game-button" class="start-game-button">Start game</button>
+        </div>
+    </div>
 
     <audio id="shooting-audio" controls>
         <source src="${shootingSound}" type="audio/mp3" />
@@ -168,6 +222,33 @@ customElements.define('dab-shark-bubble-game',
       append the template to the shadow root. */
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+
+      // Selecting game elements.
+      this._gameContainer = this.shadowRoot.querySelector('#container')
+      this._startButton = this.shadowRoot.querySelector('#start-game-button')
+      this._startGameModal = this.shadowRoot.querySelector('#start-game-modal')
+      this._bubbleSharkGameWrapper = this.shadowRoot.querySelector('#bubble-shark-game-wrapper')
+
+      // Selecting the audio elements.
+      this._shootingAudio = this.shadowRoot.querySelector('#shooting-audio')
+      this._missedAudio = this.shadowRoot.querySelector('#lost-audio')
+      this._backgroundMusic = this.shadowRoot.querySelector('#game-background')
+
+      // Game variables.
+      this._sharkCount = 3
+      this._sharkSpeed = 10
+      this._score = 0
+      this._missedCount = 0
+      this._hitBySharkCount = 0
+      this._totalFailsCount = 0
+      this._ballCount = 3
+      this._dropBallSpeed = 10
+      this._gameOver = false
+      this._gameContainerHeight = this._bubbleSharkGameWrapper.clientHeight;
+      this._gameContainerWidth = this._bubbleSharkGameWrapper.clientWidth;
+
+      // Binding this
+      this._startGame = this._startGame.bind(this)
     }
 
     /**
@@ -193,12 +274,299 @@ customElements.define('dab-shark-bubble-game',
      * Called after the element is inserted into the DOM.
      */
     connectedCallback () {
+        this._startButton.addEventListener('click', this._startGame)
     }
 
     /**
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+    }
+
+    /**
+     *
+     */
+    _startGame () {
+      this._startGameModal.style.display = 'none'
+      this._backgroundMusic.load()
+      this._backgroundMusic.play()
+
+      // Looping shark and increase difficulty gradually
+      let loopTimingShark = 3250
+
+      /**
+       *
+       */
+      const loopShark = () => {
+        if (this._totalFailsCount < 15) {
+          for (let i = 0; i < this._sharkCount; i++) {
+            if (this._totalFailsCount < 15) {
+              const clientHeight = this._bubbleSharkGameWrapper.clientHeight
+              const clientWidth = this._bubbleSharkGameWrapper.clientWidth  
+              const sharkEl = this._createShark()
+              const topPos = this._getRandomNo(
+                clientHeight - 103
+              )
+              const endPos = clientWidth
+
+              const intervalTimeShark = this._getRandomNo(100) + i * 1000
+
+              const intervalShark = setInterval(() => {
+                this._moveShark(
+                  sharkEl,
+                  topPos,
+                  endPos,
+                  this._sharkSpeed
+                )
+                clearInterval(intervalShark)
+              }, intervalTimeShark)
+            } else {
+              return
+            }
+          }
+          if (loopTimingShark > 1000) {
+            loopTimingShark -= 20
+          }
+
+          if (this._sharkSpeed > 0.3) {
+            this._sharkSpeed -= 0.1
+          }
+
+          window.setTimeout(loopShark, loopTimingShark)
+        } else {
+            return
+        }
+      }
+
+      // The amount of ms before next ball drop round happens.
+      // Increases gradually in the game.
+      let loopTimingBall = 3250
+
+      /**
+       *
+       */
+      const loopBall = () => {
+        if (this._totalFailsCount < 15) {
+          for (let i = 0; i < this._ballCount; i++) {
+            if (this._totalFailsCount < 15) {
+              const clientHeight = this._bubbleSharkGameWrapper.clientHeight
+              const clientWidth = this._bubbleSharkGameWrapper.clientWidth   
+              const ballEl = this._createBall()
+              const leftPos = this._getRandomNo(
+                clientWidth - 103
+              )
+
+              // The endposition where the ball touches the bottom and totalFailsCount increases.
+              const endPos = clientHeight - 50
+              const intervalTimeBall = this._getRandomNo(100) + i * 1000
+
+              const intervalBall = setInterval(() => {
+                this._dropBall(
+                  ballEl,
+                  leftPos,
+                  endPos,
+                  this._dropBallSpeed
+                )
+
+                clearInterval(intervalBall)
+              }, intervalTimeBall)
+            } else {
+              return
+            }
+          }
+          if (loopTimingBall > 1000) {
+            loopTimingBall -= 20
+          }
+
+          if (this._dropBallSpeed > 0.3) {
+            this._dropBallSpeed -= 0.1
+          }
+
+          window.setTimeout(loopBall, loopTimingBall)
+        } else {
+          this._gameEnded()
+        }
+      }
+
+      loopBall()
+      loopShark()
+    }
+
+    /**
+     * Created a shark element and appends it to the game container.
+     * 
+     * @returns {HTMLDivElement} A div with a shark image.
+     */
+    _createShark () {
+      const sharkEl = document.createElement('div')
+
+      sharkEl.classList.add(`shark-${Math.floor(Math.random() * 2) + 1}`)
+        
+      // If the mouse is over the shark the _removeShark method runs.
+      sharkEl.addEventListener('mouseover', (event) =>
+        this._removeShark(event)
+      )
+
+      this._gameContainer.appendChild(sharkEl)
+
+      return sharkEl
+    }
+
+    //Checking if game over
+    _gameEnded() {
+        this._gameContainer.innerHTML = `<div class="background">
+        <div class="modal">
+            <p class="lost-game-text">
+                You lost the game! Please try again!
+            </p>
+            <p class="final-score">
+                Final score: <span class="score">${this.score}</span>
+            </p>
+        </div>
+    </div>`;
+        this.startBtnEl.addEventListener("click", () =>
+            this.gameEndedRemover()
+        );
+
+        // this.shootingAudio.pause();
+        // this.missedAudio.pause();
+        this._backgroundMusic.pause();
+    }
+
+    /**
+     * This method resets the game.
+     */
+    _gameEndedRemover() {
+        this._startBtnEl.remove();
+        this._missedCount = 0;
+        this._hitBySharkCount = 0;
+        this._totalFailsCount = 0;
+        this._sharkSpeed = 10;
+        this._dropBallSpeed = 10;
+        this._score = 0;
+        this._loopTimingShark = 3250;
+        this._loopTimingBall = 3250;
+        this._hitBySharkEl.textContent = this.hitBySharkCount.toString();
+        this._totalFailsEl.textContent = this.totalFailsCount.toString();
+        this._missedScoreEl.textContent = this.missedCount.toString();
+        this._scoreEl.textContent = this.score.toString();
+
+        this._startGame();
+    }
+
+    /**
+     * @param {object} event The event object.
+     */
+    _removeShark (event) {
+      const targetSharkEl = event.target
+      this.hitBySharkCount += 1
+      this.totalFailsCount += 1
+
+      this._missedAudio.play()
+      targetSharkEl.remove()
+    }
+
+    // Move Shark
+    /**
+     * @param sharkEl
+     * @param topPos
+     * @param endPos
+     * @param speed
+     */
+    _moveShark (sharkEl, topPos, endPos, speed) {
+      let currentLeft = 0
+
+      sharkEl.style.top = topPos + 'px'
+
+      const interval = setInterval(() => {
+        if (endPos === currentLeft) {
+          clearInterval(interval)
+          sharkEl.remove()
+        } else {
+          currentLeft += 2
+          sharkEl.style.left = currentLeft + 'px'
+        }
+      }, speed)
+    }
+
+    // Ball Events
+    /**
+     *
+     */
+    _createBall () {
+      const ballEl = document.createElement('div')
+
+      const points = this._getRandomNo(99)
+
+      ballEl.classList.add('ball')
+
+      ballEl.textContent = points.toString()
+
+      // SET AND GET ATTRIBUTE TO GRAB POINTS
+      ballEl.setAttribute('data-points', points)
+
+      ballEl.addEventListener('click', (event) => this._shotBall(event))
+
+      this._gameContainer.appendChild(ballEl)
+
+      return ballEl
+    }
+
+    /**
+     * @param ballEl
+     * @param leftPos
+     * @param endPos
+     * @param speed
+     */
+    _dropBall (ballEl, leftPos, endPos, speed) {
+      let currentTop = 0
+
+      ballEl.style.left = leftPos + 'px'
+      ballEl.style.backgroundColor = '#' + this._getRandomNo(999)
+
+      // Doing like this to clear the intervall
+      const interval = setInterval(() => {
+        if (endPos <= currentTop) {
+          clearInterval(interval)
+          this._missedAudio.play()
+          ballEl.remove()
+          this._missedCount += 1
+          this._totalFailsCount += 1
+        } else {
+          currentTop += 2
+          ballEl.style.top = currentTop + 'px'
+        }
+      }, speed)
+      // Binding the inteval to this particular ball
+      ballEl.setAttribute('data-interval-id', interval)
+    }
+
+    /**
+     * @param event
+     */
+    _shotBall (event) {
+      const targetEl = event.target
+      const points = targetEl.getAttribute('data-points')
+      const intervalId = parseInt(targetEl.getAttribute('data-interval-id'))
+
+      clearInterval(intervalId)
+      this._addScore(points)
+      this._shootingAudio.play()
+      targetEl.remove()
+    }
+
+    /**
+     * @param points
+     */
+    _addScore (points) {
+      this.score += parseInt(points)
+    }
+
+    /**
+     * @param range
+     */
+    _getRandomNo (range) {
+      return Math.floor(Math.random() * range) + 1
     }
   }
 )

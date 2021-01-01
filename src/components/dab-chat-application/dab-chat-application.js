@@ -712,7 +712,7 @@ customElements.define('dab-chat-application',
       this._toggleMenuVisible = !this._toggleMenuVisible
       this._toggleMenu.style.transform = 'scale(0.00)'
 
-      if(this._currentChannel === 'my, not so secret, channel') {
+      if (this._currentChannel === 'my, not so secret, channel') {
         this._currentChannel = 'daniels private channel'
         this._toggleChannelButton.textContent = 'Switch to LNU'
       } else if (this._currentChannel === 'daniels private channel') {

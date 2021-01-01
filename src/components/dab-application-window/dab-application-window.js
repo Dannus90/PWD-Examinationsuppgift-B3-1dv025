@@ -199,15 +199,16 @@ customElements.define('dab-application-window',
        *
        * @param {number} pageX A number regarding the current position on the page.
        * @param {number} pageY A number regarding the current position on the page.
+       * @param offsetTop
        */
       function moveAt (pageX, pageY, offsetTop) {
         // Limiting the ability to move the window outside the visible screen (top side)
-        if(offsetTop !== -17 && offsetTop <= 0 || offsetTop === undefined) {
+        if (offsetTop !== -17 && offsetTop <= 0 || offsetTop === undefined) {
           return
         }
 
         // Limiting the ability to move the window outside the visible screen (bottom side)
-        if(window.innerHeight - offsetTop < 38) {
+        if (window.innerHeight - offsetTop < 38) {
           return
         }
 
@@ -230,8 +231,6 @@ customElements.define('dab-application-window',
       event.target.parentNode.style.zIndex = 1000
 
       document.addEventListener('mousemove', onMouseMove)
-
-
 
       /**
        * A set of functions that removes the mousemove event listener and the onmouseup.
