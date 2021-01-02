@@ -21,109 +21,109 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     #bubble-shark-game-wrapper {
-        width: 1000px;
-        height: 500px;
+      width: 1000px;
+      height: 500px;
     }
 
     .game-area {
-        position: relative;
-        overflow: hidden;
-        background: url("${backgroundImage}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        height: 100%;
-        width: 100%;
+      position: relative;
+      overflow: hidden;
+      background: url("${backgroundImage}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: 100%;
+      width: 100%;
     }
 
     #shooting-audio,
     #lost-audio,
     #game-background {
-        display: none;
+      display: none;
     }
 
     /* Shark style*/
     .shark-1 {
-        background: url("${sharkImage1}");
-        position: absolute;
-        left: -300px;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        height: 3rem;
-        width: 3rem;
+      background: url("${sharkImage1}");
+      position: absolute;
+      left: -300px;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 3rem;
+      width: 3rem;
     }
 
     .shark-2 {
-        background: url("${sharkImage2}");
-        position: absolute;
-        left: -300px;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        height: 5rem;
-        width: 7rem;
+      background: url("${sharkImage2}");
+      position: absolute;
+      left: -300px;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 5rem;
+      width: 7rem;
     }
 
     .ball {
-        -webkit-border-radius: 50%;
-        border-radius: 50%;
-        -webkit-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
-            inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
-        box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
-            inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
-        height: 50px;
-        position: absolute;
-        width: 50px;
-        top: -100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: hotpink;
-        font-size: 12px;
-        font-weight: bold;
-        color: #fff;
-        cursor: pointer;
+      -webkit-border-radius: 50%;
+      border-radius: 50%;
+      -webkit-box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
+          inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2),
+          inset 0px 10px 30px 5px rgba(255, 255, 255, 1);
+      height: 50px;
+      position: absolute;
+      width: 50px;
+      top: -100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: hotpink;
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
     }
     
     .ball:after {
         background: -moz-radial-gradient(
-            center,
-            ellipse cover,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0) 70%
+          center,
+          ellipse cover,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 70%
         );
         background: -webkit-gradient(
-            radial,
-            center center,
-            0px,
-            center center,
-            100%,
-            color-stop(0%, rgba(255, 255, 255, 0.5)),
-            color-stop(70%, rgba(255, 255, 255, 0))
+          radial,
+          center center,
+          0px,
+          center center,
+          100%,
+          color-stop(0%, rgba(255, 255, 255, 0.5)),
+          color-stop(70%, rgba(255, 255, 255, 0))
         );
         background: -webkit-radial-gradient(
-            center,
-            ellipse cover,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0) 70%
+          center,
+          ellipse cover,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 70%
         );
         background: -o-radial-gradient(
-            center,
-            ellipse cover,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0) 70%
+          center,
+          ellipse cover,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 70%
         );
         background: -ms-radial-gradient(
-            center,
-            ellipse cover,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0) 70%
+          center,
+          ellipse cover,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 70%
         );
         background: radial-gradient(
-            ellipse at center,
-            rgba(255, 255, 255, 0.5) 0%,
-            rgba(255, 255, 255, 0) 40%
+          ellipse at center,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0) 40%
         );
         border-radius: 50%;
         -webkit-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
@@ -136,282 +136,344 @@ template.innerHTML = `
     }
 
     .start-game-modal {
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.75);
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .start-game-button {
-        box-shadow: 0px 4px 5px -7px #276873;
-        border-radius: 8px;
-        display: inline-block;
-        cursor: pointer;
-        color: #fff;
-        font-family: Arial;
-        font-size: 1rem;
-        font-weight: bold;
-        padding: 8px 20px;
-        border: none;
-        text-decoration: none;
-        margin: 1rem auto;
-        outline: none;
-        background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
-        transition: transform 0.2s ease-in-out;
+      box-shadow: 0px 4px 5px -7px #276873;
+      border-radius: 8px;
+      display: inline-block;
+      cursor: pointer;
+      color: #fff;
+      font-family: Arial;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 8px 20px;
+      border: none;
+      text-decoration: none;
+      margin: 1rem auto;
+      outline: none;
+      background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+      transition: transform 0.2s ease-in-out;
     }
 
     .start-game-button:focus {
-        transform: scale(1.05);
-        box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
-      }
+      transform: scale(1.05);
+      box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+    }
 
     .start-game-button:hover {
-    background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+      background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
     }
 
     .start-game-button:focus-visible {
-    outline: 2px solid #fff;
+      outline: 2px solid #fff;
     }
 
     .start-game-button:-moz-focusring {
-    outline: 2px solid #fff;
+      outline: 2px solid #fff;
     }
 
     .score-container {
-        text-align: center;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        position: absolute;
-        top: 40px;
-        z-index: 1;
-        font-weight: bold;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 200px;
-      }
+      text-align: center;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      position: absolute;
+      top: 40px;
+      z-index: 1;
+      font-weight: bold;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+    }
       
-      .score-wrap {
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        width: 200px;
-        padding: 8px 0;
-        border-radius: 10px;
-        display: inline-flex;
+    .score-wrap {
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      width: 200px;
+      padding: 8px 0;
+      border-radius: 10px;
+      display: inline-flex;
+      flex-direction: column;
+    }
+      
+    .score-wrap p {
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+      align-items: center;
+      line-height: 1rem;
+      font-family: "DM Sans"
+    }
+      
+    .score-wrap p:last-child {
+      text-align: center;
+    }
+      
+    .missed-score,
+    .hit-by-shark,
+    .total-fails {
+      color: red;
+    }
+      
+    .score {
+      color: chartreuse;
+    }
+
+    .player-pick-container {
+        display: flex;
         flex-direction: column;
-      }
-      
-      .score-wrap p {
-        margin: 0;
-        padding: 0;
-        justify-content: center;
-        align-items: center;
-        line-height: 1rem;
-        font-family: "DM Sans"
-      }
-      
-      .score-wrap p:last-child {
-        text-align: center;
-      }
-      
-      .missed-score,
-      .hit-by-shark,
-      .total-fails {
-        color: red;
-      }
-      
-      .score {
-        color: chartreuse;
-      }
+    }
 
-      .player-pick-container {
-          display: flex;
-          flex-direction: column;
-      }
+    .player-images-container {
+        display: flex;
+    }
 
-      .player-images-container {
-          display: flex;
-      }
+    .player-pick-container h3 {
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+    }
 
-      .player-pick-container h3 {
-          color: #fff;
-          text-align: center;
-          font-weight: bold;
-      }
+    .player-one-container,
+    .player-two-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-      .player-one-container,
-      .player-two-container {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-      }
+    .player-one-container {
+      margin-right: 2rem;
+    }
 
-      .player-one-container {
-          margin-right: 2rem;
-      }
+    .player-two-container {
+      margin-left: 2rem;
+    }
 
-      .player-two-container {
-          margin-left: 2rem;
-      }
-
-      .player-one-container p,
-      .player-two-container p {
-          color: #fff;
-          padding: 0;
-          margin: 0;
-          text-align: center;
-          font-size: 0.8rem;
-      }
+    .player-one-container p,
+    .player-two-container p {
+      color: #fff;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+      font-size: 0.8rem;
+    }
 
     .playerImageOne,
     .playerImageTwo {
-        width: 150px;
-        height: 150px;
-        perspective: 1000px;
-        transition: all 1s;
-        margin-bottom: 3rem;
+      width: 150px;
+      height: 150px;
+      perspective: 1000px;
+      transition: all 1s;
+      margin-bottom: 3rem;
     }
 
     .playerImageOne a,
     .playerImageTwo a {
-        display: block;
-        width: 150px;
-        height: 150px;
-        transform-style: preserve-3d;
-        transition: all 0.5s ease-in-out;
-        transform: rotateX(20deg);
-        border-radius: 10px 10px 0px 0px;
+      display: block;
+      width: 150px;
+      height: 150px;
+      transform-style: preserve-3d;
+      transition: all 0.5s ease-in-out;
+      transform: rotateX(20deg);
+      border-radius: 10px 10px 0px 0px;
     }
 
     .playerImageOne a {
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-            url("${playerOneImage}");
-            background-size: 0, cover;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+      url("${playerOneImage}");
+      background-size: 0, cover;
     }
 
     .playerImageTwo a {
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-            url("${playerTwoImage}");
-            background-size: 0, cover;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+      url("${playerTwoImage}");
+      background-size: 0, cover;
     }
 
     .playerImageOne:hover a,
     .playerImageTwo:hover a {
-        transform: rotateX(0deg);
-        transform-origin: bottom;
+      transform: rotateX(0deg);
+      transform-origin: bottom;
     }
 
     .playerImageOne:hover a:after,
     .playerImageTwo:hover a:after {
-        transform: rotateX(180deg);
+      transform: rotateX(180deg);
     }
 
     .playerImageOne:hover a span,
     .playerImageTwo:hover a span {
-        transform: rotateX(15.99deg);
+      transform: rotateX(15.99deg);
     }
 
     .playerImageOne a:after,
     .playerImageTwo a:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 36px;
-        background: inherit;
-        background-size: cover, cover;
-        background-position: bottom;
-        transform: rotateX(120deg);
-        transform-origin: bottom;
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 36px;
+      background: inherit;
+      background-size: cover, cover;
+      background-position: bottom;
+      transform: rotateX(120deg);
+      transform-origin: bottom;
     }
 
     .playerImageOne a span,
     .playerImageTwo a span {
-        color: white;
-        text-transform: uppercase;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        font: bold 12px/36px "Open Sans";
-        text-align: center;
-        transform: rotateX(-55.99deg);
-        transform-origin: top;
-        z-index: 1;
+      color: white;
+      text-transform: uppercase;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      font: bold 12px/36px "Open Sans";
+      text-align: center;
+      transform: rotateX(-55.99deg);
+      transform-origin: top;
+      z-index: 1;
     }
 
     .playerImageOne a:before,
     .playerImageTwo a:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        box-shadow: 0 0 100px 50px rgba(0, 0, 0, 0.5);
-        transition: all 0.5s;
-        opacity: 0.15;
-        transform: rotateX(95deg) translateZ(-80px) scale(0.75);
-        transform-origin: bottom;
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 100px 50px rgba(0, 0, 0, 0.5);
+      transition: all 0.5s;
+      opacity: 0.15;
+      transform: rotateX(95deg) translateZ(-80px) scale(0.75);
+      transform-origin: bottom;
     }
 
     .playerImageOne:hover a:before,
     .playerImageTwo:hover a:before {
-        opacity: 1;
-        box-shadow: 0 0 25px 25px rgba(0, 0, 0, 0.5);
-        transform: rotateX(0) translateZ(-60px) scale(0.85);
+      opacity: 1;
+      box-shadow: 0 0 25px 25px rgba(0, 0, 0, 0.5);
+      transform: rotateX(0) translateZ(-60px) scale(0.85);
+    }
+
+    .game-over-modal {
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-over-modal h3 {
+      color: #fff;
+    }
+
+    .final-score-output {
+      color: #fff;
+    }
+
+    .play-again-button {
+      box-shadow: 0px 4px 5px -7px #276873;
+      border-radius: 8px;
+      display: inline-block;
+      cursor: pointer;
+      color: #fff;
+      font-family: Arial;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 8px 20px;
+      border: none;
+      text-decoration: none;
+      margin: 1rem auto;
+      outline: none;
+      background: linear-gradient(to bottom, #22ff01 5%, #009310 100%);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .play-again-button:focus {
+      transform: scale(1.05);
+      box-shadow: 2px 5px 49px -30px rgba(255,255,255,1);
+    }
+
+    .play-again-button:hover {
+      background: linear-gradient(to bottom, #009310 5%, #22ff01 100%);
+    }
+
+    .play-again-button:focus-visible {
+      outline: 2px solid #fff;
+    }
+
+    .play-again-button:-moz-focusring {
+      outline: 2px solid #fff;
+    }
+
+    .final-score-span {
+      color: chartreuse;
     }
   </style>
 
   <div id="bubble-shark-game-wrapper">
     <div id="container" class="game-area">
     <div class="score-container">
-        <div class="score-wrap">
-            <p>Score: <span id="score" class="score">0</span></p>
-            <p>
-                Missed:
-                <span id="missed-score" class="missed-score">0</span>
-            </p>
-            <p>
-                Hit By Shark:
-                <span id="hit-by-shark" class="hit-by-shark">0</span>
-            </p>
-            <p>
-                Total Fails:
-                <span id="total-fails" class="total-fails">0</span>
-            </p>
-        </div>
+      <div class="score-wrap">
+        <p>Score: <span id="score" class="score">0</span></p>
+        <p>
+          Missed:
+          <span id="missed-score" class="missed-score">0</span>
+        </p>
+        <p>
+          Hit By Shark:
+          <span id="hit-by-shark" class="hit-by-shark">0</span>
+        </p>
+        <p>
+          Total Fails:
+          <span id="total-fails" class="total-fails">0</span>
+        </p>
+      </div>
     </div>
-        <div id="start-game-modal" class="start-game-modal">
-            <div class="player-pick-container">
-                <h3>Choose your player</h3>
-                <div class="player-images-container">
-                    <div class="player-one-container">
-                        <div class="playerImageOne">
-                            <a href="#">
-                                <span>Leitet</span>
-                            </a>
-                        </div>
-                        <p>Strength: 20% change to get double score from a ball.</p>
-                        <p>Weakness: Afraid of sharks - 50% chance to take double damage.</p>
-                    </div>
-                    <div class="player-two-container">
-                        <div class="playerImageTwo">
-                            <a href="#">
-                                <span>Loock</span>
-                            </a>
-                        </div>
-                        <p>Strength: Resistant to sharks - 50% chance to avoid damage.</p>
-                        <p>Weakness: Afraid of balls - 10% chance to get half points from a ball.</p>
-                    </div>
-                </div>
+      <div id="start-game-modal" class="start-game-modal">
+        <div class="player-pick-container">
+          <h3>Choose your player</h3>
+          <div class="player-images-container">
+            <div class="player-one-container">
+              <div class="playerImageOne">
+                <a href="#">
+                  <span>Leitet</span>
+                </a>
+              </div>
+              <p>Strength: 20% change to get double score from a ball.</p>
+              <p>Weakness: Afraid of sharks - 50% chance to take double damage.</p>
             </div>
+            <div class="player-two-container">
+              <div class="playerImageTwo">
+                <a href="#">
+                    <span>Loock</span>
+                </a>
+              </div>
+              <p>Strength: Resistant to sharks - 50% chance to avoid damage.</p>
+              <p>Weakness: Afraid of balls - 10% chance to get half points from a ball.</p>
+            </div>
+          </div>
         </div>
+      </div>
+      <div id="game-over-modal" class="game-over-modal">
+        <h3>Game over!</h3>
+        <p class="final-score-output">Your score: <span class="final-score-span">7035</span></p>
+        <button class="play-again-button">Click to play again</button>
+      </div>
     </div>
 
     <audio id="shooting-audio" controls>
@@ -455,6 +517,10 @@ customElements.define('dab-shark-bubble-game',
       this._missedScoreEl = this.shadowRoot.querySelector('#missed-score')
       this._hitBySharkEl = this.shadowRoot.querySelector('#hit-by-shark')
       this._totalFailsEl = this.shadowRoot.querySelector('#total-fails')
+      this._finalScoreOutput = this.shadowRoot.querySelector('.final-score-output')
+      this._gameOverModal = this.shadowRoot.querySelector('#game-over-modal')
+      this._playAgainButton = this.shadowRoot.querySelector('.play-again-button')
+      this._finalScoreSpan = this.shadowRoot.querySelector('.final-score-span')
 
       // Selecting the audio elements.
       this._shootingAudio = this.shadowRoot.querySelector('#shooting-audio')
@@ -481,6 +547,7 @@ customElements.define('dab-shark-bubble-game',
       this._playerOneInitiate = this._playerOneInitiate.bind(this)
       this._playerTwoInitiate = this._playerTwoInitiate.bind(this)
       this._addScore = this._addScore.bind(this)
+      this._displayStartMenu = this._displayStartMenu.bind(this)
     }
 
     /**
@@ -508,6 +575,7 @@ customElements.define('dab-shark-bubble-game',
     connectedCallback () {
       this._playerOneContainer.addEventListener('click', this._playerOneInitiate)
       this._playerTwoContainer.addEventListener('click', this._playerTwoInitiate)
+      this._playAgainButton.addEventListener('click', this._displayStartMenu)
     }
 
     /**
@@ -516,6 +584,7 @@ customElements.define('dab-shark-bubble-game',
     disconnectedCallback () {
       this._playerOneContainer.removeEventListener('click', this._playerOneInitiate)
       this._playerTwoContainer.removeEventListener('click', this._playerTwoInitiate)
+      this._playAgainButton.removeEventListener('click', this._displayStartMenu)
     }
 
     /**
@@ -532,6 +601,12 @@ customElements.define('dab-shark-bubble-game',
     _playerTwoInitiate () {
       this._choosenPlayer = 'Loock'
       this._startGame()
+    }
+
+    _displayStartMenu () {
+      this._gameOverModal.style.display = 'none'
+      this._startGameModal.style.display = 'flex'
+      this._gameEndedRemover()
     }
 
     /**
@@ -590,7 +665,7 @@ customElements.define('dab-shark-bubble-game',
 
       // The amount of ms before next ball drop round happens.
       // Increases gradually in the game.
-      let loopTimingBall = 2000
+      let loopTimingBall = 1800
 
       /**
        * This function is responsible for looping the drops of balls.
@@ -662,24 +737,13 @@ customElements.define('dab-shark-bubble-game',
      * This method runs when the game is over and is responsible for related logic to it.
      */
     _gameEnded () {
-      this._gameContainer.innerHTML = `<div class="background">
-        <div class="modal">
-            <p class="lost-game-text">
-                You lost the game! Please try again!
-            </p>
-            <p class="final-score">
-                Final score: <span class="score">${this.score}</span>
-            </p>
-        </div>
-    </div>`
-
-      // this.shootingAudio.pause();
-      // this.missedAudio.pause();
+      this._gameOverModal.style.display = 'flex'
+      this._finalScoreSpan.textContent = this._score.toString()
       this._backgroundMusic.pause()
     }
 
     /**
-     * This method resets the game.
+     * This method resets the game variables.
      */
     _gameEndedRemover () {
       this._missedCount = 0
@@ -688,14 +752,10 @@ customElements.define('dab-shark-bubble-game',
       this._sharkSpeed = 10
       this._dropBallSpeed = 10
       this._score = 0
-      this._loopTimingShark = 3250
-      this._loopTimingBall = 3250
-      this._hitBySharkEl.textContent = this.hitBySharkCount.toString()
-      this._totalFailsEl.textContent = this.totalFailsCount.toString()
-      this._missedScoreEl.textContent = this.missedCount.toString()
-      this._scoreEl.textContent = this.score.toString()
-
-      this._startGame()
+      this._hitBySharkEl.textContent = this._hitBySharkCount.toString()
+      this._totalFailsEl.textContent = this._totalFailsCount.toString()
+      this._missedScoreEl.textContent = this._missedCount.toString()
+      this._scoreEl.textContent = this._score.toString()
     }
 
     /**
@@ -798,10 +858,16 @@ customElements.define('dab-shark-bubble-game',
       const interval = setInterval(() => {
         if (endPos <= currentTop) {
           clearInterval(interval)
-          this._missedAudio.play()
-          ballEl.remove()
-          this._missedCount += 1
+       
           this._totalFailsCount += 1
+          this._missedCount += 1
+          
+          // To stop sound from playing if balls have spawned after the game is over. 
+          if(this._totalFailsCount <= 15) {
+            this._missedAudio.play()
+          }
+
+          ballEl.remove()
           this._missedScoreEl.textContent = `${this._missedCount}`
           this._totalFailsEl.textContent = `${this._totalFailsCount}`
         } else {
