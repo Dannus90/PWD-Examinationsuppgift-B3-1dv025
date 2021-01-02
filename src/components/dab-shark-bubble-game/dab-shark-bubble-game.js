@@ -546,7 +546,7 @@ customElements.define('dab-shark-bubble-game',
       this._backgroundMusic.play()
 
       // The initial loop timing for the sharks.
-      let loopTimingShark = 3250
+      let loopTimingShark = 1500
 
       /**
        * This function is responsible for looping the spawning of sharks in the game and also to gradually
@@ -554,39 +554,32 @@ customElements.define('dab-shark-bubble-game',
        */
       const loopShark = () => {
         if (this._totalFailsCount < 15) {
-          // Runs for each shark count.
-          for (let i = 0; i < this._sharkCount; i++) {
-            if (this._totalFailsCount < 15) {
-              const clientHeight = this._bubbleSharkGameWrapper.clientHeight
-              const clientWidth = this._bubbleSharkGameWrapper.clientWidth
-              const sharkEl = this._createShark()
-              const topPos = this._getRandomNo(
-                clientHeight - 103
-              )
-              const endPos = clientWidth
-              const intervalTimeShark = this._getRandomNo(100) + i * 1000
+          const clientHeight = this._bubbleSharkGameWrapper.clientHeight
+          const clientWidth = this._bubbleSharkGameWrapper.clientWidth
+          const sharkEl = this._createShark()
+          const topPos = this._getRandomNo(
+            clientHeight - 103
+          )
+          const endPos = clientWidth
+          const intervalTimeShark = this._getRandomNo(100) + (Math.random() * 2) * 1000
 
-              const intervalShark = setInterval(() => {
-                this._moveShark(
-                  sharkEl,
-                  topPos,
-                  endPos,
-                  this._sharkSpeed
-                )
-                clearInterval(intervalShark)
-              }, intervalTimeShark)
-            } else {
-              return
-            }
-          }
+          const intervalShark = setInterval(() => {
+            this._moveShark(
+              sharkEl,
+              topPos,
+              endPos,
+              this._sharkSpeed
+            )
+            clearInterval(intervalShark)
+          }, intervalTimeShark)
 
           // --- Gradually increasing difficulty --- //
           if (loopTimingShark > 1000) {
-            loopTimingShark -= 20
+            loopTimingShark -= 7.5
           }
 
           if (this._sharkSpeed > 0.3) {
-            this._sharkSpeed -= 0.1
+            this._sharkSpeed -= 0.04
           }
 
           window.setTimeout(loopShark, loopTimingShark)
@@ -597,47 +590,42 @@ customElements.define('dab-shark-bubble-game',
 
       // The amount of ms before next ball drop round happens.
       // Increases gradually in the game.
-      let loopTimingBall = 3250
+      let loopTimingBall = 2000
 
       /**
        * This function is responsible for looping the drops of balls.
        */
       const loopBall = () => {
         if (this._totalFailsCount < 15) {
-          // Runs certain amount of times based on the ball amount.
-          for (let i = 0; i < this._ballCount; i++) {
-            if (this._totalFailsCount < 15) {
-              const clientHeight = this._bubbleSharkGameWrapper.clientHeight
-              const clientWidth = this._bubbleSharkGameWrapper.clientWidth
-              const ballEl = this._createBall()
-              const leftPos = this._getRandomNo(
-                clientWidth - 103
-              )
+          const clientHeight = this._bubbleSharkGameWrapper.clientHeight
+          const clientWidth = this._bubbleSharkGameWrapper.clientWidth
+          const ballEl = this._createBall()
+          const leftPos = this._getRandomNo(
+            clientWidth - 103
+          )
 
-              // The endposition where the ball touches the bottom and totalFailsCount increases.
-              const endPos = clientHeight - 50
-              const intervalTimeBall = this._getRandomNo(100) + i * 1000
+          // The endposition where the ball touches the bottom and totalFailsCount increases.
+          const endPos = clientHeight - 50
+          const intervalTimeBall = this._getRandomNo(100) + (Math.random() * 2) * 1000
 
-              const intervalBall = setInterval(() => {
-                this._dropBall(
-                  ballEl,
-                  leftPos,
-                  endPos,
-                  this._dropBallSpeed
-                )
+          const intervalBall = setTimeout(() => {
+            this._dropBall(
+              ballEl,
+              leftPos,
+              endPos,
+              this._dropBallSpeed
+            )
 
-                clearInterval(intervalBall)
-              }, intervalTimeBall)
-            } else {
-              return
-            }
-          }
+            clearInterval(intervalBall)
+          }, intervalTimeBall)
+
+          // --- Gradually increasing the difficulty of the game. --- //
           if (loopTimingBall > 1000) {
-            loopTimingBall -= 20
+            loopTimingBall -= 7.5
           }
 
           if (this._dropBallSpeed > 0.3) {
-            this._dropBallSpeed -= 0.1
+            this._dropBallSpeed -= 0.04
           }
 
           window.setTimeout(loopBall, loopTimingBall)
