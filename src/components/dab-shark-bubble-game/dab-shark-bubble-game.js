@@ -546,7 +546,7 @@ customElements.define('dab-shark-bubble-game',
       this._backgroundMusic.play()
 
       // The initial loop timing for the sharks.
-      let loopTimingShark = 1500
+      let loopTimingShark = 1400
 
       /**
        * This function is responsible for looping the spawning of sharks in the game and also to gradually
