@@ -199,11 +199,11 @@ customElements.define('dab-application-window',
        *
        * @param {number} pageX A number regarding the current position on the page.
        * @param {number} pageY A number regarding the current position on the page.
-       * @param offsetTop
+       * @param {number} offsetTop A number regarding the current offset top.
        */
       function moveAt (pageX, pageY, offsetTop) {
         // Limiting the ability to move the window outside the visible screen (top side)
-        if (offsetTop !== -17 && offsetTop <= 0 || offsetTop === undefined) {
+        if (offsetTop !== -17 && (offsetTop <= 0 || offsetTop === undefined)) {
           return
         }
 

@@ -707,6 +707,8 @@ customElements.define('dab-memory-game',
       // Destructuring.
       const [first, second, ...tilesToEnable] = tilesToDisable
 
+      console.log(first, second)
+
       if (second) {
         this._numberOfTries++
         this._displayNumberOfTries.textContent = this._numberOfTries

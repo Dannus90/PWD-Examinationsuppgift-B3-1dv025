@@ -471,7 +471,7 @@ customElements.define('dab-shark-bubble-game',
       this._ballCount = 3
       this._dropBallSpeed = 10
       this._gameOver = false
-      this._intialLoopTiming
+      this._intialLoopTiming = ''
       this._gameContainerHeight = this._bubbleSharkGameWrapper.clientHeight
       this._gameContainerWidth = this._bubbleSharkGameWrapper.clientWidth
       this._choosenPlayer = ''
@@ -519,7 +519,7 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     *
+     * This runs when the game is initiated with player one picked.
      */
     _playerOneInitiate () {
       this._choosenPlayer = 'Leitet'
@@ -527,7 +527,7 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     *
+     * This runs when the game is initiated with player two picked.
      */
     _playerTwoInitiate () {
       this._choosenPlayer = 'Loock'
@@ -535,22 +535,26 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     * @param event
+     * This method is responsible for starting the game.
+     * This method also contains the logic for how the game keeps running.
+     *
+     * @param {object} event The event object.
      */
     _startGame (event) {
       this._startGameModal.style.display = 'none'
       this._backgroundMusic.load()
       this._backgroundMusic.play()
 
-      console.log(event)
-      // Looping shark and increase difficulty gradually
+      // The initial loop timing for the sharks.
       let loopTimingShark = 3250
 
       /**
-       *
+       * This function is responsible for looping the spawning of sharks in the game and also to gradually
+       * increase the speed of them and how often they spawn.
        */
       const loopShark = () => {
         if (this._totalFailsCount < 15) {
+          // Runs for each shark count.
           for (let i = 0; i < this._sharkCount; i++) {
             if (this._totalFailsCount < 15) {
               const clientHeight = this._bubbleSharkGameWrapper.clientHeight
@@ -560,7 +564,6 @@ customElements.define('dab-shark-bubble-game',
                 clientHeight - 103
               )
               const endPos = clientWidth
-
               const intervalTimeShark = this._getRandomNo(100) + i * 1000
 
               const intervalShark = setInterval(() => {
@@ -576,6 +579,8 @@ customElements.define('dab-shark-bubble-game',
               return
             }
           }
+
+          // --- Gradually increasing difficulty --- //
           if (loopTimingShark > 1000) {
             loopTimingShark -= 20
           }
@@ -586,7 +591,7 @@ customElements.define('dab-shark-bubble-game',
 
           window.setTimeout(loopShark, loopTimingShark)
         } else {
-
+          this._gameEnded()
         }
       }
 
@@ -595,10 +600,11 @@ customElements.define('dab-shark-bubble-game',
       let loopTimingBall = 3250
 
       /**
-       *
+       * This function is responsible for looping the drops of balls.
        */
       const loopBall = () => {
         if (this._totalFailsCount < 15) {
+          // Runs certain amount of times based on the ball amount.
           for (let i = 0; i < this._ballCount; i++) {
             if (this._totalFailsCount < 15) {
               const clientHeight = this._bubbleSharkGameWrapper.clientHeight
@@ -664,9 +670,8 @@ customElements.define('dab-shark-bubble-game',
       return sharkEl
     }
 
-    // Checking if game over
     /**
-     *
+     * This method runs when the game is over and is responsible for related logic to it.
      */
     _gameEnded () {
       this._gameContainer.innerHTML = `<div class="background">
@@ -706,6 +711,9 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
+     * This method is responsible for removing sharks when hit by the player cursor.
+     * This method also updated the hit by shark count and total fails.
+     *
      * @param {object} event The event object.
      */
     _removeShark (event) {
@@ -735,12 +743,13 @@ customElements.define('dab-shark-bubble-game',
       targetSharkEl.remove()
     }
 
-    // Move Shark
     /**
-     * @param sharkEl
-     * @param topPos
-     * @param endPos
-     * @param speed
+     * This method is responsible for moving the sharks.
+     *
+     * @param {HTMLDivElement} sharkEl The shark element that will be moved.
+     * @param {number} topPos The top position.
+     * @param {number} endPos The ending position.
+     * @param {number} speed The speed of the shark.
      */
     _moveShark (sharkEl, topPos, endPos, speed) {
       let currentLeft = 0
@@ -748,6 +757,7 @@ customElements.define('dab-shark-bubble-game',
       sharkEl.style.top = topPos + 'px'
 
       const interval = setInterval(() => {
+        // If the shark reaches the end position of the screen we remove it.
         if (endPos === currentLeft) {
           clearInterval(interval)
           sharkEl.remove()
@@ -760,6 +770,8 @@ customElements.define('dab-shark-bubble-game',
 
     /**
      * Creates a ball to be dropped.
+     *
+     * @returns {HTMLDivElement} Returns a ball element.
      */
     _createBall () {
       const ballEl = document.createElement('div')
@@ -773,7 +785,7 @@ customElements.define('dab-shark-bubble-game',
       // SET AND GET ATTRIBUTE TO GRAB POINTS
       ballEl.setAttribute('data-points', points)
 
-      ballEl.addEventListener('click', (event) => this._shotBall(event))
+      ballEl.addEventListener('click', (event) => this._popBall(event))
 
       this._gameContainer.appendChild(ballEl)
 
@@ -781,10 +793,12 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     * @param ballEl
-     * @param leftPos
-     * @param endPos
-     * @param speed
+     * This method is responsible for dropping balls.
+     *
+     * @param {HTMLDivElement} ballEl The ball element that will be dropped.
+     * @param {number} leftPos The left position from where the ball will be dropped.
+     * @param {number} endPos The end position where the ball is removed and fail score increases.
+     * @param {number} speed The ball speed that increases gradually throughout the game.
      */
     _dropBall (ballEl, leftPos, endPos, speed) {
       let currentTop = 0
@@ -812,9 +826,11 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
+     * This method is responsible for handling user clicks on balls.
+     *
      * @param {object} event The event object.
      */
-    _shotBall (event) {
+    _popBall (event) {
       const targetEl = event.target
       const points = targetEl.getAttribute('data-points')
       const intervalId = parseInt(targetEl.getAttribute('data-interval-id'))
@@ -826,7 +842,9 @@ customElements.define('dab-shark-bubble-game',
     }
 
     /**
-     * @param points
+     * This method is responsible for updating the score.
+     *
+     * @param {string} points The numbers to be added to the score.
      */
     _addScore (points) {
       const randomNumber = Math.random()
@@ -840,6 +858,7 @@ customElements.define('dab-shark-bubble-game',
       if (this._choosenPlayer === 'Mats' && randomNumber > 0.9) {
         parsedPoints = parsedPoints * 0.5
       }
+
       this._score += parsedPoints
       this._scoreEl.textContent = `${this._score}`
     }
