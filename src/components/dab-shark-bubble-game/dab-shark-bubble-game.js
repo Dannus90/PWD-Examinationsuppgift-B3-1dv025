@@ -762,8 +762,8 @@ customElements.define('dab-shark-bubble-game',
       }))
       let currentHighScore = JSON.parse(localStorage.getItem('topscore'))
 
+      // If no current high score exist we set it for the first time. 
       if (!currentHighScore) {
-        console.log('Got here!')
         currentHighScore = { score: this._score, player: this._choosenPlayer }
         localStorage.setItem('topscore', JSON.stringify(currentHighScore))
 
@@ -777,8 +777,8 @@ customElements.define('dab-shark-bubble-game',
         return
       }
 
+      // If the score from the game is high than the current high score we update it. 
       if (this._score > currentHighScore.score) {
-        console.log('Got here2!')
         currentHighScore = { score: this._score, player: this._choosenPlayer }
         localStorage.setItem('topscore', JSON.stringify(currentHighScore))
         this._gameOverModal.style.display = 'flex'
@@ -791,6 +791,7 @@ customElements.define('dab-shark-bubble-game',
         return
       }
 
+      // If none of the above are true we just display the data from the locale storage. 
       this._gameOverModal.style.display = 'flex'
       this._finalScoreOutputFirst.textContent = 'Your score: '
       this._finalScoreSpanFirst.textContent = `${this._score}`

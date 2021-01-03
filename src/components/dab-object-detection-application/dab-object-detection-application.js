@@ -346,24 +346,26 @@ customElements.define('dab-object-detection-application',
           // If we are over 60% sure we are sure we classified it right, draw it!
           if (predictions[n].score > 0.6) {
             const p = document.createElement('p')
-            p.innerText = `${this._capitalize(predictions[n].class)} with ${Math.round(parseFloat(predictions[n].score) * 100)} % confidence`
+            p.innerText = `${this._capitalize(predictions[n].class)}: ${Math.round(parseFloat(predictions[n].score) * 100)} % confidence`
             p.style = `
-                margin-left: ${(predictions[n].bbox[0] * 0.75)}px;
-                margin-top: ${((predictions[n].bbox[1] - 10) * 0.5)}px;
-                width: ${((predictions[n].bbox[2] - 10) * 0.75)}px;
-                top: 0;
-                left: 0;
-                `
+              margin-left: ${(predictions[n].bbox[0] * 1)}px;
+              margin-top: ${((predictions[n].bbox[1] - 10) * 0.5)}px;
+              width: ${((predictions[n].bbox[2] - 10) * 1)}px;
+              top: 0;
+              left: 0;
+              font-size: 10px;
+              line-height: 1rem;
+              `
 
             // Setting up the detection box.
             const highlighter = document.createElement('div')
             highlighter.setAttribute('class', 'highlighter')
             highlighter.style = `
-                left: ${(predictions[n].bbox[0] * 0.75)}px;
-                top: ${(predictions[n].bbox[1] * 0.50)}px; 
-                width: ${(predictions[n].bbox[2] * 0.75)}px;
-                height: ${(predictions[n].bbox[3] * 0.85)}px;
-                `
+              left: ${(predictions[n].bbox[0] * 1)}px;
+              top: ${(predictions[n].bbox[1] * 0.50)}px; 
+              width: ${(predictions[n].bbox[2] * 1)}px;
+              height: ${(predictions[n].bbox[3] * 1)}px;
+              `
 
             // Appending the elements to the live-view-wrapper.
             this._liveViewWrapper.appendChild(highlighter)
