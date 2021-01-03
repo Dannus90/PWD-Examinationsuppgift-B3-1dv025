@@ -1,4 +1,4 @@
-# &lt;dav-application-window&gt;
+# &lt;dab-application-window&gt;
 
 This is a web component simulating a application window. It is responsible for holding applications and also for the functionality to move and delete an application instance.
 
