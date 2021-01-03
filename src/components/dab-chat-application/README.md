@@ -22,9 +22,7 @@ Styling with css is done from within the template in the custom element. Some st
 
 ## Example
 
-## Example
-
-How it is used in this application:
+How it is created in this application:
 
 ```
 document.addEventListener('createNewAppInstance', ({ detail: { applicationName } }) => {
