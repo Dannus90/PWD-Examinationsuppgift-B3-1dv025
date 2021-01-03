@@ -62,4 +62,6 @@ document.addEventListener('createNewAppInstance', ({ detail: { applicationName }
 })
 ```
 
+An example of the application window with the memory game in the slot.
+
 ![What the component looks like](./assets/ApplicationWindow.png)
