@@ -1,34 +1,20 @@
-# &lt;dab-quiz-application&gt;
+# &lt;dab-shark-bubble-game&gt;
 
 This is a web component simulating a quiz-application. It is the main component in this application surround the other web components.
 
 ## Attributes
 
-### `name`
-
-A string representing the name of the application.
-
-Default value: "Quiz"
+This component have no attributes!
 
 ## Methods
 
-### `victory(timeTaken, message)`
-
-When called, will display a victory modal and dispatch a new custom event "updateDb" with the details nickname(string) and timeTaken(number). The method in itself takes the two parameter, timeTaken(number) and message(string).
-
-### `runOutOfTime(message, timeTaken)`
-
-When called it displays the game over modal. It takes two parameters, message(string) and timeTaken(number).
-
-When called, will display a victory modal and dispatch a new custom event "updateDb" with the details nickname(string) and timeTaken(number). The method in itself takes the two parameter, timeTaken(number) and message(string).
+This componet does not have any public methods!
 
 ## Custom Events
 
-| Event Name |  Fired When                                             |
-| ---------- | ------------------------------------------------------- |
-| `updateDb` | An event mean to start the update of indexedDb.         |
-| `tryAgain` | An event triggered when the user clicked to play again. |
-| `tryAgain` | An event triggered when the user clicked to play again. |
+| Event Name       |  Fired When                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| `sharkGameEnded` | Responsible for removing balls and sharks when the game is done. |
 
 ## Styling with CSS
 
@@ -36,11 +22,40 @@ Styling with css is done from within the template in the custom element. Some st
 
 ## Example
 
-```html
-<dab-quiz-application
-  id="quiz-application"
-  name="A Quiz about javascript and other curiosa!"
-></dab-quiz-application>
+Example how the application is created.
+
+```
+document.addEventListener('createNewAppInstance', ({ detail: { applicationName } }) => {
+  // Creating a new instance of a specific application based on the detail name.
+  const application = document.createElement(applicationName)
+  const applicationWindow = document.createElement('dab-application-window')
+  applicationWindow.setAttribute('slot', 'application')
+
+  application.setAttribute('slot', 'application-container')
+
+  applicationWindow.appendChild(application)
+
+  applicationWindow.style.position = 'absolute'
+  applicationWindow.style.top = `${windowPositionTop}%`
+  applicationWindow.style.left = `${windowPositionLeft}%`
+  applicationWindow.style.transform = `translate(${translationPositionX}%, ${translationPositionY}%)`
+
+  windowPositionTop -= 1
+  windowPositionLeft -= 1
+
+  applicationArray.push(applicationWindow)
+
+  pwdApplication.appendChild(applicationWindow)
+
+  applicationWindow.addEventListener(('mousedown'), () => {
+    applicationWindow.style.zIndex = 1000
+
+    // Setting the z-index to 1 on all other applications that are not the current one.
+    applicationArray.filter((app) => app !== applicationWindow).forEach((app) => {
+      app.style.zIndex = 1
+    })
+  })
+})
 ```
 
-![What the component looks like](./assets/QuizAppImage.png)
+![What the component looks like](./assets/SharkGame.png)
