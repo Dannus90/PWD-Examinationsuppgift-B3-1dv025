@@ -381,10 +381,6 @@ template.innerHTML = `
       color: #fff;
     }
 
-    .final-score-output {
-      color: #fff;
-    }
-
     .play-again-button {
       box-shadow: 0px 4px 5px -7px #276873;
       border-radius: 8px;
@@ -420,7 +416,17 @@ template.innerHTML = `
       outline: 2px solid #fff;
     }
 
-    .final-score-span {
+    .final-score-output-first,
+    .final-score-output-second {
+      color: #fff;
+      margin: 0;
+    }
+    .final-score-span-first,
+    .final-score-span-second {
+      color: chartreuse;
+    }
+
+    .final-score-span-second {
       color: chartreuse;
     }
   </style>
@@ -460,7 +466,7 @@ template.innerHTML = `
             <div class="player-two-container">
               <div class="playerImageTwo">
                 <a href="#">
-                    <span>Loock</span>
+                  <span>Loock</span>
                 </a>
               </div>
               <p>Strength: Resistant to sharks - 50% chance to avoid damage.</p>
@@ -471,7 +477,8 @@ template.innerHTML = `
       </div>
       <div id="game-over-modal" class="game-over-modal">
         <h3>Game over!</h3>
-        <p class="final-score-output">Your score: <span class="final-score-span">7035</span></p>
+        <p class="final-score-output-first"></p><span class="final-score-span-first"></span>
+        <p class="final-score-output-second"></p><span class="final-score-span-second"></span>
         <button class="play-again-button">Click to play again</button>
       </div>
     </div>
@@ -520,7 +527,10 @@ customElements.define('dab-shark-bubble-game',
       this._finalScoreOutput = this.shadowRoot.querySelector('.final-score-output')
       this._gameOverModal = this.shadowRoot.querySelector('#game-over-modal')
       this._playAgainButton = this.shadowRoot.querySelector('.play-again-button')
-      this._finalScoreSpan = this.shadowRoot.querySelector('.final-score-span')
+      this._finalScoreOutputFirst = this.shadowRoot.querySelector('.final-score-output-first')
+      this._finalScoreOutputSecond = this.shadowRoot.querySelector('.final-score-output-second')
+      this._finalScoreSpanFirst = this.shadowRoot.querySelector('.final-score-span-first')
+      this._finalScoreSpanSecond = this.shadowRoot.querySelector('.final-score-span-second')
 
       // Selecting the audio elements.
       this._shootingAudio = this.shadowRoot.querySelector('#shooting-audio')
@@ -537,7 +547,6 @@ customElements.define('dab-shark-bubble-game',
       this._ballCount = 3
       this._dropBallSpeed = 10
       this._gameOver = false
-      this._intialLoopTiming = ''
       this._gameContainerHeight = this._bubbleSharkGameWrapper.clientHeight
       this._gameContainerWidth = this._bubbleSharkGameWrapper.clientWidth
       this._choosenPlayer = ''
@@ -548,6 +557,7 @@ customElements.define('dab-shark-bubble-game',
       this._playerTwoInitiate = this._playerTwoInitiate.bind(this)
       this._addScore = this._addScore.bind(this)
       this._displayStartMenu = this._displayStartMenu.bind(this)
+      this._createShark = this._createShark.bind(this)
     }
 
     /**
@@ -585,6 +595,7 @@ customElements.define('dab-shark-bubble-game',
       this._playerOneContainer.removeEventListener('click', this._playerOneInitiate)
       this._playerTwoContainer.removeEventListener('click', this._playerTwoInitiate)
       this._playAgainButton.removeEventListener('click', this._displayStartMenu)
+      this._gameEnded()
     }
 
     /**
@@ -603,6 +614,9 @@ customElements.define('dab-shark-bubble-game',
       this._startGame()
     }
 
+    /**
+     * This method removes the game over modal and displays then start menu again.
+     */
     _displayStartMenu () {
       this._gameOverModal.style.display = 'none'
       this._startGameModal.style.display = 'flex'
@@ -728,6 +742,11 @@ customElements.define('dab-shark-bubble-game',
         this._removeShark(event)
       )
 
+      // Adding this to ensure all sharks are removed when the sharkGameEnded event is dispatched.
+      document.addEventListener('sharkGameEnded', () => {
+        sharkEl.remove()
+      })
+
       this._gameContainer.appendChild(sharkEl)
 
       return sharkEl
@@ -737,8 +756,46 @@ customElements.define('dab-shark-bubble-game',
      * This method runs when the game is over and is responsible for related logic to it.
      */
     _gameEnded () {
+      this.dispatchEvent(new CustomEvent('sharkGameEnded', {
+        bubbles: true,
+        composed: true
+      }))
+      let currentHighScore = JSON.parse(localStorage.getItem('topscore'))
+
+      if (!currentHighScore) {
+        console.log('Got here!')
+        currentHighScore = { score: this._score, player: this._choosenPlayer }
+        localStorage.setItem('topscore', JSON.stringify(currentHighScore))
+
+        this._gameOverModal.style.display = 'flex'
+        this._finalScoreOutputFirst.textContent = 'Your score: '
+        this._finalScoreSpanFirst.textContent = `${this._score}`
+        this._finalScoreOutputSecond.textContent = `${this._score} is the top score of all time and was achieved with player: `
+        this._finalScoreSpanSecond.textContent = `${this._choosenPlayer}`
+        this._backgroundMusic.pause()
+
+        return
+      }
+
+      if (this._score > currentHighScore.score) {
+        console.log('Got here2!')
+        currentHighScore = { score: this._score, player: this._choosenPlayer }
+        localStorage.setItem('topscore', JSON.stringify(currentHighScore))
+        this._gameOverModal.style.display = 'flex'
+        this._finalScoreOutputFirst.textContent = 'Your score: '
+        this._finalScoreSpanFirst.textContent = `${this._score}`
+        this._finalScoreOutputSecond.textContent = `${this._score} is the top score of all time and was achieved with player: `
+        this._finalScoreSpanSecond.textContent = `${this._choosenPlayer}`
+        this._backgroundMusic.pause()
+
+        return
+      }
+
       this._gameOverModal.style.display = 'flex'
-      this._finalScoreSpan.textContent = this._score.toString()
+      this._finalScoreOutputFirst.textContent = 'Your score: '
+      this._finalScoreSpanFirst.textContent = `${this._score}`
+      this._finalScoreOutputSecond.textContent = `${currentHighScore.score} is the top score of all time and was achieved with player: `
+      this._finalScoreSpanSecond.textContent = `${currentHighScore.player}`
       this._backgroundMusic.pause()
     }
 
@@ -835,6 +892,11 @@ customElements.define('dab-shark-bubble-game',
 
       ballEl.addEventListener('click', (event) => this._popBall(event))
 
+      // Adding this to ensure all balls are removed when the sharkGameEnded event is dispatched.
+      document.addEventListener('sharkGameEnded', () => {
+        ballEl.remove()
+      })
+
       this._gameContainer.appendChild(ballEl)
 
       return ballEl
@@ -858,12 +920,12 @@ customElements.define('dab-shark-bubble-game',
       const interval = setInterval(() => {
         if (endPos <= currentTop) {
           clearInterval(interval)
-       
+
           this._totalFailsCount += 1
           this._missedCount += 1
-          
-          // To stop sound from playing if balls have spawned after the game is over. 
-          if(this._totalFailsCount <= 15) {
+
+          // To stop sound from playing if balls have spawned after the game is over.
+          if (this._totalFailsCount <= 15) {
             this._missedAudio.play()
           }
 
