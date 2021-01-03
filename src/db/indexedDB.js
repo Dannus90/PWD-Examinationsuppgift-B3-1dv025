@@ -263,4 +263,5 @@ export const clearStore = (storeName, method) => {
 //      DOM SELECTORS      //
 /// /////////////////////////
 
+// Needed for the initial highscore set.
 const highScore = document.querySelectorAll('dab-high-score')

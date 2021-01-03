@@ -71,11 +71,15 @@ customElements.define('dab-digital-clock',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
+      // Class variables.
       this._timerInterval = ''
       this._weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
+      // Selecting variables.
       this._digitalClockDate = this.shadowRoot.querySelector('.digital-clock-date')
       this._digitalClockTime = this.shadowRoot.querySelector('.digital-clock-time')
+
+      // Binding this to class methods.
       this._updateTime = this._updateTime.bind(this)
     }
 
@@ -85,7 +89,7 @@ customElements.define('dab-digital-clock',
      * @returns {string[]} A string array of attributes to monitor.
      */
     static get observedAttributes () {
-      return ['name', 'src']
+      return ['', '']
     }
 
     /**
@@ -96,7 +100,6 @@ customElements.define('dab-digital-clock',
      * @param {*} newValue - The new value.
      */
     attributeChangedCallback (name, oldValue, newValue) {
-
     }
 
     /**

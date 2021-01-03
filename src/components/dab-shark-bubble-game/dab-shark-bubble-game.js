@@ -87,52 +87,52 @@ template.innerHTML = `
     }
     
     .ball:after {
-        background: -moz-radial-gradient(
-          center,
-          ellipse cover,
-          rgba(255, 255, 255, 0.5) 0%,
-          rgba(255, 255, 255, 0) 70%
-        );
-        background: -webkit-gradient(
-          radial,
-          center center,
-          0px,
-          center center,
-          100%,
-          color-stop(0%, rgba(255, 255, 255, 0.5)),
-          color-stop(70%, rgba(255, 255, 255, 0))
-        );
-        background: -webkit-radial-gradient(
-          center,
-          ellipse cover,
-          rgba(255, 255, 255, 0.5) 0%,
-          rgba(255, 255, 255, 0) 70%
-        );
-        background: -o-radial-gradient(
-          center,
-          ellipse cover,
-          rgba(255, 255, 255, 0.5) 0%,
-          rgba(255, 255, 255, 0) 70%
-        );
-        background: -ms-radial-gradient(
-          center,
-          ellipse cover,
-          rgba(255, 255, 255, 0.5) 0%,
-          rgba(255, 255, 255, 0) 70%
-        );
-        background: radial-gradient(
-          ellipse at center,
-          rgba(255, 255, 255, 0.5) 0%,
-          rgba(255, 255, 255, 0) 40%
-        );
-        border-radius: 50%;
-        -webkit-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
-        box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
-        content: "";
-        height: 50px;
-        left: 0;
-        position: absolute;
-        width: 50px;
+      background: -moz-radial-gradient(
+        center,
+        ellipse cover,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      background: -webkit-gradient(
+        radial,
+        center center,
+        0px,
+        center center,
+        100%,
+        color-stop(0%, rgba(255, 255, 255, 0.5)),
+        color-stop(70%, rgba(255, 255, 255, 0))
+      );
+      background: -webkit-radial-gradient(
+        center,
+        ellipse cover,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      background: -o-radial-gradient(
+        center,
+        ellipse cover,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      background: -ms-radial-gradient(
+        center,
+        ellipse cover,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      background: radial-gradient(
+        ellipse at center,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 40%
+      );
+      border-radius: 50%;
+      -webkit-box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 20px 30px rgba(255, 255, 255, 0.3);
+      content: "";
+      height: 50px;
+      left: 0;
+      position: absolute;
+      width: 50px;
     }
 
     .start-game-modal {
@@ -484,13 +484,13 @@ template.innerHTML = `
     </div>
 
     <audio id="shooting-audio" controls>
-        <source src="${shootingSound}" type="audio/mp3" />
+      <source src="${shootingSound}" type="audio/mp3" />
     </audio>
     <audio id="lost-audio" controls>
-        <source src="${missedSound}" type="audio/mp3" />
+      <source src="${missedSound}" type="audio/mp3" />
     </audio>
     <audio id="game-background" loop controls>
-        <source src="${backgroundMusic}" type="audio/mp3" />
+      <source src="${backgroundMusic}" type="audio/mp3" />
     </audio>
   </div>
 `
@@ -754,6 +754,7 @@ customElements.define('dab-shark-bubble-game',
 
     /**
      * This method runs when the game is over and is responsible for related logic to it.
+     * Displays information regarding player score and current top score and also dispatches the sharkGameEnded event.
      */
     _gameEnded () {
       this.dispatchEvent(new CustomEvent('sharkGameEnded', {
@@ -762,7 +763,7 @@ customElements.define('dab-shark-bubble-game',
       }))
       let currentHighScore = JSON.parse(localStorage.getItem('topscore'))
 
-      // If no current high score exist we set it for the first time. 
+      // If no current high score exist we set it for the first time.
       if (!currentHighScore) {
         currentHighScore = { score: this._score, player: this._choosenPlayer }
         localStorage.setItem('topscore', JSON.stringify(currentHighScore))
@@ -777,7 +778,7 @@ customElements.define('dab-shark-bubble-game',
         return
       }
 
-      // If the score from the game is high than the current high score we update it. 
+      // If the score from the game is high than the current high score we update it.
       if (this._score > currentHighScore.score) {
         currentHighScore = { score: this._score, player: this._choosenPlayer }
         localStorage.setItem('topscore', JSON.stringify(currentHighScore))
@@ -791,7 +792,7 @@ customElements.define('dab-shark-bubble-game',
         return
       }
 
-      // If none of the above are true we just display the data from the locale storage. 
+      // If none of the above are true we just display the data from the locale storage.
       this._gameOverModal.style.display = 'flex'
       this._finalScoreOutputFirst.textContent = 'Your score: '
       this._finalScoreSpanFirst.textContent = `${this._score}`

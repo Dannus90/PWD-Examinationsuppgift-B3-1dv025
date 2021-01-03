@@ -12,69 +12,69 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style>
     :host {
-        --bg-color-primary: rgb(0, 19, 98);
-        --bg-color-secondary: rgb(40, 158, 198);
-        --bg-color-tertiary: rgb(0, 19, 98);
+      --bg-color-primary: rgb(0, 19, 98);
+      --bg-color-secondary: rgb(40, 158, 198);
+      --bg-color-tertiary: rgb(0, 19, 98);
     }
 
     #pwd-application-wrapper {
-        height: 100%;
-        width: 100vw;
-        background-color: #fff;
-        overflow-x: hidden;
+      height: 100%;
+      width: 100vw;
+      background-color: #fff;
+      overflow-x: hidden;
     }
 
     .pwd-application-topbar {
-        background-image: linear-gradient(
-            110deg,
-            var(--bg-color-primary) 0%,
-            var(--bg-color-secondary) 50%,
-            var(--bg-color-tertiary) 89%
-          );
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+      background-image: linear-gradient(
+          110deg,
+          var(--bg-color-primary) 0%,
+          var(--bg-color-secondary) 50%,
+          var(--bg-color-tertiary) 89%
+        );
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
     }
 
     .pwd-application-topbar .pwd-application-heading {
-        color: #fff;
-        font-size: 2rem;
-        background: -webkit-linear-gradient(45deg, #ffeaea, #fdfdfd);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        line-height: 2.5rem;
-        padding: 0.15rem;
-        margin: 1rem;
+      color: #fff;
+      font-size: 2rem;
+      background: -webkit-linear-gradient(45deg, #ffeaea, #fdfdfd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      line-height: 2.5rem;
+      padding: 0.15rem;
+      margin: 1rem;
     }
 
     .pwd-application-applications-container {
-        min-height: calc(100vh - 154px);
-        width: 100%;
-        background-image: url("./assets/default-background.jpeg");
-        box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
+      min-height: calc(100vh - 154px);
+      width: 100%;
+      background-image: url("./assets/default-background.jpeg");
+      box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
     .pwd-application-footer {
-        background-image: linear-gradient(
-            110deg,
-            var(--bg-color-primary) 0%,
-            var(--bg-color-secondary) 50%,
-            var(--bg-color-tertiary) 89%
-          );
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+      background-image: linear-gradient(
+          110deg,
+          var(--bg-color-primary) 0%,
+          var(--bg-color-secondary) 50%,
+          var(--bg-color-tertiary) 89%
+        );
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .pwd-application-icons-container {
@@ -90,29 +90,29 @@ template.innerHTML = `
     }
 
     @media only screen and (max-width: 1150px) {
-        .pwd-application-topbar .pwd-application-heading {
-            font-size: 1.9rem;
-        }
+      .pwd-application-topbar .pwd-application-heading {
+          font-size: 1.9rem;
+      }
     }
 
     @media only screen and (max-width: 800px) {
-        .pwd-application-topbar .pwd-application-heading {
-            font-size: 1.8rem;
-        }
+      .pwd-application-topbar .pwd-application-heading {
+          font-size: 1.8rem;
+      }
     }
 
     @media only screen and (max-width: 500px) {
-        .pwd-application-topbar .pwd-application-heading {
-            font-size: 1.6rem;
-            line-height: 2.2rem;
-        }
+      .pwd-application-topbar .pwd-application-heading {
+          font-size: 1.6rem;
+          line-height: 2.2rem;
+      }
     }
 
     @media only screen and (max-width: 400px) {
-        .pwd-application-topbar .pwd-application-heading {
-            font-size: 1.4em;
-            line-height: 2rem;
-        }
+      .pwd-application-topbar .pwd-application-heading {
+          font-size: 1.4em;
+          line-height: 2rem;
+      }
     }
   </style>
 
@@ -199,6 +199,7 @@ customElements.define('dab-pwd-application',
      * Called after the element has been removed from the DOM.
      */
     disconnectedCallback () {
+      this._applicationHeader.textContent = ''
     }
   }
 )

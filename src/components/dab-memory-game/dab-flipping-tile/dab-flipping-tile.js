@@ -124,14 +124,13 @@ customElements.define('dab-flipping-tile',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
 
-      /* Selecting the flipping tile wrapper. */
-      this._cardContentContainer = this.shadowRoot.querySelector('#flipping-tile-wrapper')
-      /* Used to toggle side information */
+      // Variables.
       this._frontSideDisplayed = false
-      /* Front- and backside image element */
+
+      // Selecting elements.
+      this._cardContentContainer = this.shadowRoot.querySelector('#flipping-tile-wrapper')
       this._frontSideImageElement = this.shadowRoot.querySelector('.front-side-image')
       this._backSideImageElement = this.shadowRoot.querySelector('.back-side-image')
-      /* Inner card */
       this._cardInner = this.shadowRoot.querySelector('.card-inner')
     }
 

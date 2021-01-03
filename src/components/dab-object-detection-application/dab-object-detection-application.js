@@ -199,14 +199,12 @@ customElements.define('dab-object-detection-application',
       // The model.
       this._model = undefined
 
-      // Children
+      // The children.
       this._children = []
 
       // Binding this.
       this._enableWebcam = this._enableWebcam.bind(this)
-
       this._predictWebcam = this._predictWebcam.bind(this)
-
       this._stopLoader = this._stopLoader.bind(this)
     }
 

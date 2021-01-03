@@ -137,8 +137,8 @@ customElements.define('dab-application-window',
       this._xOffset = 0
       this._yOffset = 0
 
+      // Binding this to component methods.
       this._closeApplication = this._closeApplication.bind(this)
-
       this._dragStart = this._dragStart.bind(this)
     }
 
@@ -212,6 +212,7 @@ customElements.define('dab-application-window',
           return
         }
 
+        // Else we move the window.
         event.target.style.left = pageX - shiftX + 'px'
         event.target.style.top = pageY - shiftY + 'px'
       }
