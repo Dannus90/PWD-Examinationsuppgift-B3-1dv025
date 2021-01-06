@@ -31,7 +31,6 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const cachedFetch = async request => {
         try {
-            // 
             const response = await fetch(request)
             // Saving the result in the cache
             const cache = await self.caches.open(version)

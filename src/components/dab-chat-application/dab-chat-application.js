@@ -537,9 +537,7 @@ customElements.define('dab-chat-application',
       webSocketConnection.onmessage = (event) => {
         // Parsing the retrieved data.
         const parsedData = JSON.parse(event.data)
-
-        console.log(parsedData)
-
+        
         // If the recieved type is a heartbeat or the username is The Server we return.
         if (parsedData.type === 'heartbeat' || parsedData.username === 'The Server') {
           return
