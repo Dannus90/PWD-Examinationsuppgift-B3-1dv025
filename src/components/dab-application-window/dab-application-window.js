@@ -15,7 +15,7 @@ template.innerHTML = `
       background-color: #fff;
       border-radius: 7px;
       touch-action: none;
-      box-shadow: 2px 2px 5px -2px rgba(119, 119, 119, 0.5);
+      box-shadow: 1px 1px 12px -6px rgba(183, 176, 176, 0.5);
       position: absolute;
       top: 50%;
       left: 50;

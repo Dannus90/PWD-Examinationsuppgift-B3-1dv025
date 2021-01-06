@@ -211,9 +211,9 @@ template.innerHTML = `
         position: absolute;
         top: 0;
         left: 0;
-        height: 100%;
+        height: 100.1%;
         width: 100%;
-        background: rgba(0,0,0,0.85);
+        background: rgba(0,0,0,0.75);
         display: flex;
         flex-direction: column;
         justify-content: center;
