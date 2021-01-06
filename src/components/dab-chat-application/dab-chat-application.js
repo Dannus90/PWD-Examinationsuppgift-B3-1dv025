@@ -83,12 +83,13 @@ template.innerHTML = `
         border-radius: 10px;
         color: #F9FBFF;
         display: inline-block;
-        padding: 0.25rem 1rem;
+        padding: 0.5rem 1rem;
         position: relative;
         margin-bottom: 1.5rem;
         max-width: 75%;
         line-height: 1.6rem;
         font-size: 0.8rem;
+        box-shadow: 5px 7px 13px -13px rgba(0,0,0,0.75);
       }
 
       .list-style-left {
@@ -130,19 +131,40 @@ template.innerHTML = `
       #websocket-message {
         color: #035e5c;
         font-size: 1.05rem;
-        height: 65px;
+        height: 45px;
         width: 87.5%;
-        max-width: 442px;
+        max-width: 395px;
         background-color: #f9fbff;
         display: flex;
         align-items: center;
         white-space: normal;
-        padding: 1rem;
-        padding-right: 2.5rem;
+        padding: 1rem 4.2rem 2rem 1rem;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
         outline: none;
         border: none;
         border-top: 1px solid #ccc;
         resize: none;
+        scrollbar-color: #e0dcdc #f7f7f7;
+      }
+
+      #websocket-message::-webkit-scrollbar {
+        background-color: #f7f7f7;
+        width: 16px;
+      }
+      
+      #websocket-message::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #e0dcdc;
+        width: 4px;
+        border-radius: 11px;
+      }
+      #f7f7f7;
+      #websocket-message::-webkit-scrollbar-track{
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: transparent;
+        width: 4px;
+        border-radius: 11px;
       }
 
       form {
@@ -163,6 +185,7 @@ template.innerHTML = `
         opacity: 0.8;
         cursor: pointer;
         outline: none;
+        box-shadow: 5px 13px 13px -13px rgba(0,0,0,0.75);
       }
 
       .submit-button:-moz-focusring {
@@ -196,12 +219,14 @@ template.innerHTML = `
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        border-bottom-right-radius: 6px;
       }
 
       .pickname-input {
         padding: 0.5rem 0.75rem;
         outline: none;
         padding-left: 0.25rem;
+        border: none;
       }
 
       .pickname-button {
@@ -342,7 +367,26 @@ template.innerHTML = `
         line-height: 1.2rem;
         display: none;
       }
-  </style>
+
+        #websocket-message::-webkit-scrollbar {
+          background-color: #f7f7f7;
+          width: 16px;
+        }
+        
+        #websocket-message::-webkit-scrollbar-thumb {
+          box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: #e0dcdc;
+          width: 4px;
+          border-radius: 11px;
+        }
+        #f7f7f7;
+        #websocket-message::-webkit-scrollbar-track{
+          box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          background-color: transparent;
+          width: 4px;
+          border-radius: 11px;
+        }
+        </style>
 
   <div id="chat-application-wrapper">
     <div class="pickname-modal">
