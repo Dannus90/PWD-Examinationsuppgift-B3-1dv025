@@ -193,6 +193,8 @@ customElements.define('dab-application-window',
 
       const shiftX = event.clientX - event.target.getBoundingClientRect().left
       const shiftY = event.clientY - event.target.getBoundingClientRect().top
+      let currentLeft = 0
+      let currentRight = 0
 
       /**
        * A function that moves the current element by changing styling on it.
@@ -205,18 +207,31 @@ customElements.define('dab-application-window',
         console.log(pageX)
         console.log(document.documentElement.clientWidth)
         console.log(movedElement.offsetLeft)
-        let currentLeft = 0
+        
         if(pageX === 0) {
-          currentLeft = movedElement.getBoundingClientRect().left
+          console.log('Setting PageX')
+          currentLeft = movedElement.offsetLeft
         }
-        if(movedElement.offsetTop === 0 && pageY < 30) {
-          console.log("Running top")
-          event.target.style.left = pageX - shiftX + 'px'
-          event.target.style.top = 0 + 'px'
+
+        if(pageX === document.documentElement.clientWidth - 5) {
+          console.log('REACHED HERE!!!!', movedElement.offsetLeft)
+          currentRight = movedElement.offsetLeft
+        }
+
+        console.log(currentRight)
+
+        if (pageX >= document.documentElement.clientWidth) {
+          console.log('Running RIGHT')
+          event.target.style.left = currentRight + 'px'
+          event.target.style.top = pageY - shiftY + 'px'
         } else if (pageX <= 0) {
           console.log('Running LEFT')
           event.target.style.left = currentLeft + 'px'
           event.target.style.top = pageY - shiftY + 'px'
+        } else if(movedElement.offsetTop === 0 && pageY < 30) {
+          console.log("Running top")
+          event.target.style.left = pageX - shiftX + 'px'
+          event.target.style.top = 0 + 'px'
         } else if(document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
           console.log("Running bottom")
           event.target.style.left = pageX - shiftX + 'px'
