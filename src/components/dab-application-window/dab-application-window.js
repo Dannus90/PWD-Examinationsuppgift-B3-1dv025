@@ -247,6 +247,8 @@ customElements.define('dab-application-window',
           event.target.style.top = 0 + 'px'
         } else if (document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
           // This runs when we reach the bottom of the page.
+          currentLeft = currentWindowWidth
+          currentRight = document.documentElement.clientWidth - currentWindowWidth
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
         } else {
