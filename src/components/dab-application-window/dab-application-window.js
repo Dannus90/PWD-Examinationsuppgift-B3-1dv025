@@ -199,17 +199,30 @@ customElements.define('dab-application-window',
        *
        * @param {number} pageX A number regarding the current position on the page.
        * @param {number} pageY A number regarding the current position on the page.
-       * @param {number} offsetTop A number regarding the current offset top.
+       * @param {HTMLElement} movedElement The currently moved element.
        */
       function moveAt (pageX, pageY, movedElement) {
-        console.log(pageY)
-        if(movedElement.offsetTop === 0 && !(pageY > 0)) {
+        console.log(pageX)
+        console.log(document.documentElement.clientWidth)
+        console.log(movedElement.offsetLeft)
+        let currentLeft = 0
+        if(pageX === 0) {
+          currentLeft = movedElement.getBoundingClientRect().left
+        }
+        if(movedElement.offsetTop === 0 && pageY < 30) {
+          console.log("Running top")
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = 0 + 'px'
+        } else if (pageX <= 0) {
+          console.log('Running LEFT')
+          event.target.style.left = currentLeft + 'px'
+          event.target.style.top = pageY - shiftY + 'px'
         } else if(document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
+          console.log("Running bottom")
           event.target.style.left = pageX - shiftX + 'px'
-          event.target.style.top = (movedElement.offsetHeight + movedElement.offsetTop) + 'px'
+          event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
         } else {
+          console.log("Running general")
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = pageY - shiftY + 'px'
         }        
@@ -230,6 +243,9 @@ customElements.define('dab-application-window',
       event.target.parentNode.style.zIndex = 1000
 
       document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', () => {
+        document.removeEventListener('mousemove', onMouseMove)
+      })
 
       /**
        * A set of functions that removes the mousemove event listener and the onmouseup.
@@ -243,11 +259,6 @@ customElements.define('dab-application-window',
         document.removeEventListener('mousemove', onMouseMove)
         event.target.onmouseup = null
       })
-
-     /*  document.addEventListener('mouseleave', () => {
-        document.removeEventListener('mousemove', onMouseMove)
-        event.target.onmouseup = null
-      }) */
     }
 
     /**
