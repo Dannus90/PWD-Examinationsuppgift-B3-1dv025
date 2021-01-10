@@ -42,7 +42,6 @@ template.innerHTML = `
       display: none;
     }
 
-    /* Shark style*/
     .shark-1 {
       background: url("${sharkImage1}");
       position: absolute;

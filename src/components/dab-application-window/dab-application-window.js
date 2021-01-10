@@ -201,20 +201,18 @@ customElements.define('dab-application-window',
        * @param {number} pageY A number regarding the current position on the page.
        * @param {number} offsetTop A number regarding the current offset top.
        */
-      function moveAt (pageX, pageY, offsetTop) {
-        // Limiting the ability to move the window outside the visible screen (top side)
-        if (offsetTop !== -17 && (offsetTop <= 0 || offsetTop === undefined)) {
-          return
-        }
-
-        // Limiting the ability to move the window outside the visible screen (bottom side)
-        if (window.innerHeight - offsetTop < 38) {
-          return
-        }
-
-        // Else we move the window.
-        event.target.style.left = pageX - shiftX + 'px'
-        event.target.style.top = pageY - shiftY + 'px'
+      function moveAt (pageX, pageY, movedElement) {
+        console.log(pageY)
+        if(movedElement.offsetTop === 0 && !(pageY > 0)) {
+          event.target.style.left = pageX - shiftX + 'px'
+          event.target.style.top = 0 + 'px'
+        } else if(document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
+          event.target.style.left = pageX - shiftX + 'px'
+          event.target.style.top = (movedElement.offsetHeight + movedElement.offsetTop) + 'px'
+        } else {
+          event.target.style.left = pageX - shiftX + 'px'
+          event.target.style.top = pageY - shiftY + 'px'
+        }        
       }
 
       /**
@@ -223,7 +221,7 @@ customElements.define('dab-application-window',
        * @param {object} event The even object containing the current position on the page.
        */
       function onMouseMove (event) {
-        moveAt(event.pageX, event.pageY, event.target.offsetTop)
+        moveAt(event.pageX, event.pageY, event.target)
       }
 
       this.style.left = event.pageX - shiftX + 'px'
@@ -246,10 +244,10 @@ customElements.define('dab-application-window',
         event.target.onmouseup = null
       })
 
-      document.addEventListener('mouseleave', () => {
+     /*  document.addEventListener('mouseleave', () => {
         document.removeEventListener('mousemove', onMouseMove)
         event.target.onmouseup = null
-      })
+      }) */
     }
 
     /**
