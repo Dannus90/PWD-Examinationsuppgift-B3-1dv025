@@ -79,7 +79,9 @@ template.innerHTML = `
         padding: 0.25rem;
       }
 
-      #websocket-chat li {
+      .list-style-left {
+        align-self: flex-start;
+        background-color: #b2b2b2;
         border-radius: 10px;
         color: #F9FBFF;
         display: inline-block;
@@ -92,14 +94,19 @@ template.innerHTML = `
         box-shadow: 5px 7px 13px -13px rgba(0,0,0,0.75);
       }
 
-      .list-style-left {
-        align-self: flex-start;
-        background-color: #b2b2b2;
-      }
-
       .list-style-right {
         align-self: flex-end;
         background-color: #79C7C5;
+        border-radius: 10px;
+        color: #F9FBFF;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        position: relative;
+        margin-bottom: 1.5rem;
+        max-width: 75%;
+        line-height: 1.6rem;
+        font-size: 0.8rem;
+        box-shadow: 5px 7px 13px -13px rgba(0,0,0,0.75);
       }
 
       .list-style-left:before {
@@ -379,12 +386,21 @@ template.innerHTML = `
           width: 4px;
           border-radius: 11px;
         }
-        #f7f7f7;
+
         #websocket-message::-webkit-scrollbar-track{
           box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
           background-color: transparent;
           width: 4px;
           border-radius: 11px;
+        }
+
+        .time-list-style {
+          background-color: none;
+          border-radius: none: 
+          box-shadow: none;
+          color: #868686;
+          width: 100%;
+          text-align: center;
         }
         </style>
 
@@ -479,6 +495,10 @@ customElements.define('dab-chat-application',
       // Selecting the nickname warning paragraph.
       this._nicknameWarningParagraph = this.shadowRoot.querySelector('.nickname-warning-paragraph')
 
+      // Variables related to message time display in chat.
+      this._monthsArray = ['JAN', 'FEB', 'MARS', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OKT', 'NOV', 'DEC']
+      this._lastTimeOutput = ''
+      
       // Variables related to indexedDB
       this._dbName = 'PWDApplicationDatabase'
       this._dbVersion = 1
@@ -588,6 +608,19 @@ customElements.define('dab-chat-application',
         }
         const { data, username } = parsedData
         const li = document.createElement('li')
+
+        const currDate = new Date()
+        const messageTimeDisplay = `${currDate.getDate()} ${this._monthsArray[currDate.getMonth()]} ${currDate.getHours()}:${currDate.getMinutes()}`
+
+        // Checking if time updated since last message and if new time should be shown.
+        if(messageTimeDisplay !== this._lastTimeOutput) {
+          const liForTime = document.createElement('li')
+          liForTime.innerText = messageTimeDisplay
+          liForTime.classList.add('time-list-style')
+          this._webSocketChat.appendChild(liForTime)
+          this._lastTimeOutput = messageTimeDisplay
+        }
+        
 
         if (parsedData.username === this._userName) {
           li.classList.add('list-style-left')
