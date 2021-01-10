@@ -195,6 +195,7 @@ customElements.define('dab-application-window',
       const shiftY = event.clientY - event.target.getBoundingClientRect().top
       let currentLeft = 0
       let currentRight = 0
+      const currentWindowWidth = event.target.getBoundingClientRect()
 
       /**
        * A function that moves the current element by changing styling on it.
@@ -204,43 +205,55 @@ customElements.define('dab-application-window',
        * @param {HTMLElement} movedElement The currently moved element.
        */
       function moveAt (pageX, pageY, movedElement) {
-        console.log(pageX)
-        console.log(document.documentElement.clientWidth)
-        console.log(movedElement.offsetLeft)
-        
-        if(pageX === 0) {
-          console.log('Setting PageX')
+        if (pageX === 0 && movedElement.offsetLeft !== 0) {
           currentLeft = movedElement.offsetLeft
         }
 
-        if(pageX === document.documentElement.clientWidth - 5) {
-          console.log('REACHED HERE!!!!', movedElement.offsetLeft)
+        if (pageX === document.documentElement.clientWidth - 5) {
           currentRight = movedElement.offsetLeft
         }
 
-        console.log(currentRight)
+        // --- We make all these checks to have the same functionality as a desktop and also to work even when having console up and shrinking screen. --- //
 
         if (pageX >= document.documentElement.clientWidth) {
-          console.log('Running RIGHT')
-          event.target.style.left = currentRight + 'px'
-          event.target.style.top = pageY - shiftY + 'px'
+          // This one runs when reaching the right side of the page.
+          if (!(pageY < 0)) {
+            event.target.style.left = currentRight + 'px'
+          } else {
+            currentRight = document.documentElement.clientWidth - currentWindowWidth
+            event.target.style.left = document.documentElement.clientWidth - currentWindowWidth + 'px'
+          }
+
+          if (movedElement.offsetTop === 0 && pageY < 30) {
+            event.target.style.top = 0 + 'px'
+          } else if (movedElement.offsetTop === 0 && (document.documentElement.clientHeight - pageY) < 30) {
+            event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+          } else {
+            event.target.style.top = pageY - shiftY + 'px'
+          }
         } else if (pageX <= 0) {
-          console.log('Running LEFT')
+          // This one runs when reaching the left side of the page.
           event.target.style.left = currentLeft + 'px'
-          event.target.style.top = pageY - shiftY + 'px'
-        } else if(movedElement.offsetTop === 0 && pageY < 30) {
-          console.log("Running top")
+          if (movedElement.offsetTop === 0 && pageY < 30) {
+            event.target.style.top = 0 + 'px'
+          } else if ((pageY - document.documentElement.clientHeight) > -39) {
+            event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+          } else {
+            event.target.style.top = pageY - shiftY + 'px'
+          }
+        } else if (movedElement.offsetTop === 0 && pageY < 30) {
+          // This one runs when reaching the top of the page.
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = 0 + 'px'
-        } else if(document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
-          console.log("Running bottom")
+        } else if (document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
+          // This runs when we reach the bottom of the page.
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
         } else {
-          console.log("Running general")
+          // The general running condition if none of above statements are applied.
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = pageY - shiftY + 'px'
-        }        
+        }
       }
 
       /**
