@@ -207,11 +207,6 @@ customElements.define('dab-application-window',
       function moveAt (pageX, pageY, movedElement) {
         // --- FOR FIREFOX --- //
         if(navigator.userAgent.indexOf("Firefox") !== -1) {
-          console.log(currentLeft)
-          if (pageX === 0 && movedElement.offsetLeft !== undefined) {
-            currentLeft = movedElement.offsetLeft
-          }
-
           if (pageX === document.documentElement.clientWidth - 5) {
             currentRight = movedElement.offsetLeft
           }
@@ -224,42 +219,50 @@ customElements.define('dab-application-window',
             if (!(pageY < 0)) {
               event.target.style.left = currentRight + 'px'
             } else {
-              currentRight = document.documentElement.clientWidth - currentWindowWidth
-              event.target.style.left = document.documentElement.clientWidth - currentWindowWidth + 'px'
+              event.target.style.left = currentRight + 'px'
             }
-  
-            if (movedElement.offsetTop === 0 && pageY < 30) {
+            if (movedElement.offsetTop === undefined && pageY < 30) {
+              console.log('Reached here1')
               event.target.style.top = 0 + 'px'
-            } else if (movedElement.offsetTop === 0 && (document.documentElement.clientHeight - pageY) < 30) {
+            } else if (movedElement.offsetTop === undefined && (document.documentElement.clientHeight - pageY) < 30) {
+              console.log('Reached here2')
               event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
             } else {
+              console.log('Reached here3')
               event.target.style.top = pageY - shiftY + 'px'
             }
-          } else if (pageX <= 0) {
+          } else if (pageX <= 0 && !(pageY < 20)) {
             // This one runs when reaching the left side of the page.
+            console.log('Left')
             event.target.style.left = currentLeft + 'px'
-            
             if ((document.documentElement.clientHeight - pageY) < 40) {
               event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
             } else {
-              console.log('Left3')
               event.target.style.top = pageY - shiftY + 'px'
             }
-          } else if (pageY < 30) {
+          } else if (pageY < 20) {
             // This one runs when reaching the top of the page.
             console.log('Top')
-            event.target.style.left = pageX - shiftX + 'px'
-            event.target.style.top = 0 + 'px'
+            if(pageX < 0) {
+              event.target.style.left = currentLeft + 'px'
+              event.target.style.top = 0 + 'px'
+            } else {
+              currentLeft = pageX - shiftX
+              currentRight = pageX - shiftX
+              event.target.style.left = pageX - shiftX + 'px'
+              event.target.style.top = 0 + 'px'
+            }
           } else if ((document.documentElement.clientHeight - pageY) < 40) {
             // This runs when we reach the bottom of the page.
             console.log('Bottom')
             currentLeft = pageX - shiftX 
             currentRight = document.documentElement.clientWidth - currentWindowWidth
-            event.target.style.left = pageX - shiftX + 'px'
+            event.target.style.left = currentLeft + 'px'
             event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
           } else {
             // The general running condition if none of above statements are applied.
             console.log('Default')
+            currentLeft = pageX - shiftX
             event.target.style.left = pageX - shiftX + 'px'
             event.target.style.top = pageY - shiftY + 'px'
           }
