@@ -195,7 +195,7 @@ customElements.define('dab-application-window',
       const shiftY = event.clientY - event.target.getBoundingClientRect().top
       let currentLeft = 0
       let currentRight = 0
-      const currentWindowWidth = event.target.getBoundingClientRect()
+      const currentWindowWidth = event.target.getBoundingClientRect().width
 
       /**
        * A function that moves the current element by changing styling on it.
@@ -205,10 +205,70 @@ customElements.define('dab-application-window',
        * @param {HTMLElement} movedElement The currently moved element.
        */
       function moveAt (pageX, pageY, movedElement) {
+        // --- FOR FIREFOX --- //
+        if(navigator.userAgent.indexOf("Firefox") !== -1) {
+          console.log(currentLeft)
+          if (pageX === 0 && movedElement.offsetLeft !== undefined) {
+            currentLeft = movedElement.offsetLeft
+          }
+
+          if (pageX === document.documentElement.clientWidth - 5) {
+            currentRight = movedElement.offsetLeft
+          }
+  
+          // --- We make all these checks to have the same functionality as a desktop and also to work even when having console up and shrinking screen. --- //
+  
+          if (pageX >= document.documentElement.clientWidth) {
+            // This one runs when reaching the right side of the page.
+            console.log('Right')
+            if (!(pageY < 0)) {
+              event.target.style.left = currentRight + 'px'
+            } else {
+              currentRight = document.documentElement.clientWidth - currentWindowWidth
+              event.target.style.left = document.documentElement.clientWidth - currentWindowWidth + 'px'
+            }
+  
+            if (movedElement.offsetTop === 0 && pageY < 30) {
+              event.target.style.top = 0 + 'px'
+            } else if (movedElement.offsetTop === 0 && (document.documentElement.clientHeight - pageY) < 30) {
+              event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+            } else {
+              event.target.style.top = pageY - shiftY + 'px'
+            }
+          } else if (pageX <= 0) {
+            // This one runs when reaching the left side of the page.
+            event.target.style.left = currentLeft + 'px'
+            
+            if ((document.documentElement.clientHeight - pageY) < 40) {
+              event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+            } else {
+              console.log('Left3')
+              event.target.style.top = pageY - shiftY + 'px'
+            }
+          } else if (pageY < 30) {
+            // This one runs when reaching the top of the page.
+            console.log('Top')
+            event.target.style.left = pageX - shiftX + 'px'
+            event.target.style.top = 0 + 'px'
+          } else if ((document.documentElement.clientHeight - pageY) < 40) {
+            // This runs when we reach the bottom of the page.
+            console.log('Bottom')
+            currentLeft = pageX - shiftX 
+            currentRight = document.documentElement.clientWidth - currentWindowWidth
+            event.target.style.left = pageX - shiftX + 'px'
+            event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+          } else {
+            // The general running condition if none of above statements are applied.
+            console.log('Default')
+            event.target.style.left = pageX - shiftX + 'px'
+            event.target.style.top = pageY - shiftY + 'px'
+          }
+        } else {
+        // --- FOR OTHER BROWSERS ---//
         if (pageX === 0 && movedElement.offsetLeft !== 0) {
           currentLeft = movedElement.offsetLeft
         }
-
+        console.log(document.documentElement.clientWidth)
         if (pageX === document.documentElement.clientWidth - 5) {
           currentRight = movedElement.offsetLeft
         }
@@ -217,11 +277,14 @@ customElements.define('dab-application-window',
 
         if (pageX >= document.documentElement.clientWidth) {
           // This one runs when reaching the right side of the page.
+          console.log('Right')
           if (!(pageY < 0)) {
+            console.log("Right1")
             event.target.style.left = currentRight + 'px'
           } else {
-            currentRight = document.documentElement.clientWidth - currentWindowWidth
-            event.target.style.left = document.documentElement.clientWidth - currentWindowWidth + 'px'
+            console.log("Right1")
+      /*       currentRight = document.documentElement.clientWidth - currentWindowWidth */
+            event.target.style.left = currentRight + 'px'
           }
 
           if (movedElement.offsetTop === 0 && pageY < 30) {
@@ -234,6 +297,7 @@ customElements.define('dab-application-window',
         } else if (pageX <= 0) {
           // This one runs when reaching the left side of the page.
           event.target.style.left = currentLeft + 'px'
+          console.log('Left')
           if (movedElement.offsetTop === 0 && pageY < 30) {
             event.target.style.top = 0 + 'px'
           } else if ((pageY - document.documentElement.clientHeight) > -39) {
@@ -243,19 +307,25 @@ customElements.define('dab-application-window',
           }
         } else if (movedElement.offsetTop === 0 && pageY < 30) {
           // This one runs when reaching the top of the page.
+          console.log('Top')
+          currentLeft = pageX - shiftX
+          currentRight = pageX - shiftX
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = 0 + 'px'
         } else if (document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
           // This runs when we reach the bottom of the page.
-          currentLeft = currentWindowWidth
-          currentRight = document.documentElement.clientWidth - currentWindowWidth
+          console.log('Bottom')
+          currentLeft = pageX - shiftX 
+          currentRight = pageX - shiftX
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
         } else {
           // The general running condition if none of above statements are applied.
+          console.log('Default')
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = pageY - shiftY + 'px'
         }
+      }
       }
 
       /**
