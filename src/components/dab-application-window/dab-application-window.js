@@ -206,34 +206,36 @@ customElements.define('dab-application-window',
        */
       function moveAt (pageX, pageY, movedElement) {
         // --- FOR FIREFOX --- //
-        if(navigator.userAgent.indexOf("Firefox") !== -1) {
+        if (navigator.userAgent.indexOf('Firefox') !== -1) {
           if (pageX === document.documentElement.clientWidth - 5) {
             currentRight = movedElement.offsetLeft
           }
-  
-          // --- We make all these checks to have the same functionality as a desktop and also to work even when having console up and shrinking screen. --- //
-  
+
+          //////////////////////////////////////////////////////////////////////
+          // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
+          //////////////////////////////////////////////////////////////////////
+
           if (pageX >= document.documentElement.clientWidth) {
-            // This one runs when reaching the right side of the page.
-            console.log('Right')
-            if (!(pageY < 0)) {
-              event.target.style.left = currentRight + 'px'
+            // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN FIREFOX --- //
+            if ((document.documentElement.clientWidth - currentWindowWidth) > currentRight) {
+              event.target.style.left = (document.documentElement.clientWidth - currentWindowWidth / 2) + 'px'
             } else {
               event.target.style.left = currentRight + 'px'
             }
+
             if (movedElement.offsetTop === undefined && pageY < 30) {
-              console.log('Reached here1')
               event.target.style.top = 0 + 'px'
             } else if (movedElement.offsetTop === undefined && (document.documentElement.clientHeight - pageY) < 30) {
-              console.log('Reached here2')
               event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
             } else {
-              console.log('Reached here3')
               event.target.style.top = pageY - shiftY + 'px'
             }
           } else if (pageX <= 0 && !(pageY < 20)) {
-            // This one runs when reaching the left side of the page.
-            console.log('Left')
+            // THIS ONE RUNS ON THE LEFT SIDE OF THE PAGE IN FIREFOX --- //
+            // Incase we move the mouse fast half of the window gets visible on left side.
+            if (currentLeft > 0) {
+              currentLeft = - currentWindowWidth / 2
+            }
             event.target.style.left = currentLeft + 'px'
             if ((document.documentElement.clientHeight - pageY) < 40) {
               event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
@@ -241,9 +243,8 @@ customElements.define('dab-application-window',
               event.target.style.top = pageY - shiftY + 'px'
             }
           } else if (pageY < 20) {
-            // This one runs when reaching the top of the page.
-            console.log('Top')
-            if(pageX < 0) {
+            // --- RUNS ON TOP OF THE PAGE FIREFOX ---//
+            if (pageX < 0) {
               event.target.style.left = currentLeft + 'px'
               event.target.style.top = 0 + 'px'
             } else {
@@ -253,84 +254,80 @@ customElements.define('dab-application-window',
               event.target.style.top = 0 + 'px'
             }
           } else if ((document.documentElement.clientHeight - pageY) < 40) {
-            // This runs when we reach the bottom of the page.
-            console.log('Bottom')
-            currentLeft = pageX - shiftX 
-            currentRight = document.documentElement.clientWidth - currentWindowWidth
+            // --- RUNS ON BOTTOM OF THE PAGE FIREFOX --- //
+            currentLeft = pageX - shiftX
+            currentRight = pageX - shiftX
             event.target.style.left = currentLeft + 'px'
             event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
           } else {
-            // The general running condition if none of above statements are applied.
-            console.log('Default')
+            // --- GENERAL CONDITION RUNNING THE NONE OF THE OTHERS ARE MEET IN FIREFOX --- //
             currentLeft = pageX - shiftX
+            currentRight = pageX - shiftX
             event.target.style.left = pageX - shiftX + 'px'
             event.target.style.top = pageY - shiftY + 'px'
           }
         } else {
-        // --- FOR OTHER BROWSERS ---//
-        if (pageX === 0 && movedElement.offsetLeft !== 0) {
-          currentLeft = movedElement.offsetLeft
-        }
-        console.log(document.documentElement.clientWidth)
-        if (pageX === document.documentElement.clientWidth - 5) {
-          currentRight = movedElement.offsetLeft
-        }
-
-        // --- We make all these checks to have the same functionality as a desktop and also to work even when having console up and shrinking screen. --- //
-
-        if (pageX >= document.documentElement.clientWidth) {
-          // This one runs when reaching the right side of the page.
-          console.log('Right')
-          if (!(pageY < 0)) {
-            console.log("Right1")
-            event.target.style.left = currentRight + 'px'
-          } else {
-            console.log("Right1")
-      /*       currentRight = document.documentElement.clientWidth - currentWindowWidth */
-            event.target.style.left = currentRight + 'px'
+        // --- FOR OTHER BROWSERS (TESTED IN CHROME) ---//
+          if (pageX === 0 && movedElement.offsetLeft !== 0) {
+            currentLeft = movedElement.offsetLeft
           }
 
-          if (movedElement.offsetTop === 0 && pageY < 30) {
+          if (pageX === document.documentElement.clientWidth - 5) {
+            currentRight = movedElement.offsetLeft
+          }
+
+          //////////////////////////////////////////////////////////////////////
+          // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
+          //////////////////////////////////////////////////////////////////////
+
+          if (pageX >= document.documentElement.clientWidth) {
+          // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
+            if (!(pageY < 0)) {
+              event.target.style.left = currentRight + 'px'
+            } else {
+              event.target.style.left = currentRight + 'px'
+            }
+
+            if (movedElement.offsetTop === 0 && pageY < 30) {
+              event.target.style.top = 0 + 'px'
+            } else if (movedElement.offsetTop === 0 && (document.documentElement.clientHeight - pageY) < 30) {
+              event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+            } else {
+              event.target.style.top = pageY - shiftY + 'px'
+            }
+          } else if (pageX <= 0) {
+          // --- THIS ONE RUNS ON THE LEFT SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
+            if (currentLeft > 0) {
+              currentLeft = - currentWindowWidth / 2
+            }
+            event.target.style.left = currentLeft + 'px'
+            if (movedElement.offsetTop === 0 && pageY < 30) {
+              event.target.style.top = 0 + 'px'
+            } else if ((pageY - document.documentElement.clientHeight) > -39) {
+              event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
+            } else {
+              event.target.style.top = pageY - shiftY + 'px'
+            }
+          } else if (movedElement.offsetTop === 0 && pageY < 30) {
+            // --- THIS ONE RUNS ON THE TOP SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
+            currentLeft = pageX - shiftX
+            currentRight = pageX - shiftX
+            event.target.style.left = pageX - shiftX + 'px'
             event.target.style.top = 0 + 'px'
-          } else if (movedElement.offsetTop === 0 && (document.documentElement.clientHeight - pageY) < 30) {
+          } else if (document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
+          // --- THIS ONE RUNS ON THE BOTTOM SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
+            currentLeft = pageX - shiftX
+            currentRight = pageX - shiftX
+            event.target.style.left = pageX - shiftX + 'px'
             event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
           } else {
+          // --- THIS IS THE DEFAULT CONDITION RUNNING IF NONE OF THE CONDTIONS ABOVE ARE APPLIED (CHROME ETC) --- //
+            currentLeft = pageX - shiftX
+            currentRight = pageX - shiftX
+            event.target.style.left = pageX - shiftX + 'px'
             event.target.style.top = pageY - shiftY + 'px'
           }
-        } else if (pageX <= 0) {
-          // This one runs when reaching the left side of the page.
-          event.target.style.left = currentLeft + 'px'
-          console.log('Left')
-          if (movedElement.offsetTop === 0 && pageY < 30) {
-            event.target.style.top = 0 + 'px'
-          } else if ((pageY - document.documentElement.clientHeight) > -39) {
-            event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
-          } else {
-            event.target.style.top = pageY - shiftY + 'px'
-          }
-        } else if (movedElement.offsetTop === 0 && pageY < 30) {
-          // This one runs when reaching the top of the page.
-          console.log('Top')
-          currentLeft = pageX - shiftX
-          currentRight = pageX - shiftX
-          event.target.style.left = pageX - shiftX + 'px'
-          event.target.style.top = 0 + 'px'
-        } else if (document.documentElement.clientHeight - (movedElement.offsetHeight + movedElement.offsetTop) < 40) {
-          // This runs when we reach the bottom of the page.
-          console.log('Bottom')
-          currentLeft = pageX - shiftX 
-          currentRight = pageX - shiftX
-          event.target.style.left = pageX - shiftX + 'px'
-          event.target.style.top = (document.documentElement.clientHeight - 39) + 'px'
-        } else {
-          // The general running condition if none of above statements are applied.
-          console.log('Default')
-          currentLeft = pageX - shiftX
-          currentRight = pageX - shiftX
-          event.target.style.left = pageX - shiftX + 'px'
-          event.target.style.top = pageY - shiftY + 'px'
         }
-      }
       }
 
       /**

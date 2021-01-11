@@ -498,7 +498,7 @@ customElements.define('dab-chat-application',
       // Variables related to message time display in chat.
       this._monthsArray = ['JAN', 'FEB', 'MARS', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEPT', 'OKT', 'NOV', 'DEC']
       this._lastTimeOutput = ''
-      
+
       // Variables related to indexedDB
       this._dbName = 'PWDApplicationDatabase'
       this._dbVersion = 1
@@ -613,14 +613,13 @@ customElements.define('dab-chat-application',
         const messageTimeDisplay = `${currDate.getDate()} ${this._monthsArray[currDate.getMonth()]} ${currDate.getHours()}:${currDate.getMinutes()}`
 
         // Checking if time updated since last message and if new time should be shown.
-        if(messageTimeDisplay !== this._lastTimeOutput) {
+        if (messageTimeDisplay !== this._lastTimeOutput) {
           const liForTime = document.createElement('li')
           liForTime.innerText = messageTimeDisplay
           liForTime.classList.add('time-list-style')
           this._webSocketChat.appendChild(liForTime)
           this._lastTimeOutput = messageTimeDisplay
         }
-        
 
         if (parsedData.username === this._userName) {
           li.classList.add('list-style-left')
