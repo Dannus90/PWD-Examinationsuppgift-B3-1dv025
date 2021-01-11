@@ -322,6 +322,8 @@ customElements.define('dab-application-window',
         } else {
           // The general running condition if none of above statements are applied.
           console.log('Default')
+          currentLeft = pageX - shiftX
+          currentRight = pageX - shiftX
           event.target.style.left = pageX - shiftX + 'px'
           event.target.style.top = pageY - shiftY + 'px'
         }
