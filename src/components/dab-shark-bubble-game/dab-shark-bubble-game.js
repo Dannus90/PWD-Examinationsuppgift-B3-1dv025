@@ -11,8 +11,8 @@ const backgroundMusic = (new URL('sound/game-background.mp3', import.meta.url)).
 const backgroundImage = (new URL('assets/background.jpg', import.meta.url)).href
 const sharkImage1 = (new URL('assets/shark-1.png', import.meta.url)).href
 const sharkImage2 = (new URL('assets/shark-2.png', import.meta.url)).href
-const playerOneImage = (new URL('assets/johan.jpg', import.meta.url)).href
-const playerTwoImage = (new URL('assets/mats.jpeg', import.meta.url)).href
+const playerOneImage = (new URL('assets/Mario.jpg', import.meta.url)).href
+const playerTwoImage = (new URL('assets/Luigi.jpg', import.meta.url)).href
 
 /**
  * Define template.
@@ -479,7 +479,7 @@ template.innerHTML = `
             <div class="player-one-container">
               <div class="playerImageOne">
                 <a href="#">
-                  <span>Leitet</span>
+                  <span>Mario</span>
                 </a>
               </div>
               <p>Strength: 20% change to get double score from a ball.</p>
@@ -492,7 +492,7 @@ template.innerHTML = `
             <div class="player-two-container">
               <div class="playerImageTwo">
                 <a href="#">
-                  <span>Loock</span>
+                  <span>Luigi</span>
                 </a>
               </div>
               <p>Strength: Resistant to sharks - 50% chance to avoid damage.</p>
@@ -631,7 +631,7 @@ customElements.define('dab-shark-bubble-game',
      * This runs when the game is initiated with player one picked.
      */
     _playerOneInitiate () {
-      this._choosenPlayer = 'Leitet'
+      this._choosenPlayer = 'Mario'
       this._startGame()
     }
 
@@ -639,7 +639,7 @@ customElements.define('dab-shark-bubble-game',
      * This runs when the game is initiated with player two picked.
      */
     _playerTwoInitiate () {
-      this._choosenPlayer = 'Loock'
+      this._choosenPlayer = 'Luigi'
       this._startGame()
     }
 
@@ -856,15 +856,15 @@ customElements.define('dab-shark-bubble-game',
       const targetSharkEl = event.target
       const randomNumber = Math.random()
 
-      // If player is Loock there is a 50% chance to dodge damage from shark.
-      if (this._choosenPlayer === 'Loock' && randomNumber < 0.5) {
+      // If player is Luigi there is a 50% chance to dodge damage from shark.
+      if (this._choosenPlayer === 'Luigi' && randomNumber < 0.5) {
         this._missedAudio.play()
         targetSharkEl.remove()
         return
       }
 
-      // If player is Leitet there is a 50% chance to take double shark damage.
-      if (this._choosenPlayer === 'Leitet' && randomNumber < 0.5) {
+      // If player is Mario there is a 50% chance to take double shark damage.
+      if (this._choosenPlayer === 'Mario' && randomNumber < 0.5) {
         this._hitBySharkCount += 2
         this._totalFailsCount += 2
       } else {
@@ -1014,13 +1014,13 @@ customElements.define('dab-shark-bubble-game',
     _addScore (points) {
       const randomNumber = Math.random()
       let parsedPoints = parseInt(points)
-      // If player is Leitet there is a 20% to get 50% more score from a ball.
-      if (this._choosenPlayer === 'Leitet' && randomNumber > 0.8) {
+      // If player is Mario there is a 20% to get 50% more score from a ball.
+      if (this._choosenPlayer === 'Mario' && randomNumber > 0.8) {
         parsedPoints = parsedPoints * 1.5
       }
 
-      // If player is Loock there is a 10% to get 50% less score from a ball.
-      if (this._choosenPlayer === 'Mats' && randomNumber > 0.9) {
+      // If player is Luigi there is a 10% to get 50% less score from a ball.
+      if (this._choosenPlayer === 'Luigi' && randomNumber > 0.9) {
         parsedPoints = parsedPoints * 0.5
       }
 

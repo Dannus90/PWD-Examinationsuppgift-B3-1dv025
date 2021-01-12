@@ -206,14 +206,13 @@ customElements.define('dab-application-window',
        */
       function moveAt (pageX, pageY, movedElement) {
         // --- FOR FIREFOX --- //
+        /// //////////////////////////////////////////////////////////////////
+        // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
+        /// //////////////////////////////////////////////////////////////////
         if (navigator.userAgent.indexOf('Firefox') !== -1) {
           if (pageX === document.documentElement.clientWidth - 5) {
             currentRight = movedElement.offsetLeft
           }
-
-          /// ///////////////////////////////////////////////////////////////////
-          // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
-          /// ///////////////////////////////////////////////////////////////////
 
           if (pageX >= document.documentElement.clientWidth) {
             // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN FIREFOX --- //
@@ -268,6 +267,9 @@ customElements.define('dab-application-window',
           }
         } else {
         // --- FOR OTHER BROWSERS (TESTED IN CHROME) ---//
+        /// //////////////////////////////////////////////////////////////////
+        // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
+        /// //////////////////////////////////////////////////////////////////
           if (pageX === 0 && movedElement.offsetLeft !== 0) {
             currentLeft = movedElement.offsetLeft
           }
@@ -275,10 +277,6 @@ customElements.define('dab-application-window',
           if (pageX === document.documentElement.clientWidth - 5) {
             currentRight = movedElement.offsetLeft
           }
-
-          /// ///////////////////////////////////////////////////////////////////
-          // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
-          /// ///////////////////////////////////////////////////////////////////
 
           if (pageX >= document.documentElement.clientWidth) {
           // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
