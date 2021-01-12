@@ -441,6 +441,7 @@ template.innerHTML = `
       border-radius: 35px;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
+      height: 200px;
     }
     
     .game-info p {
