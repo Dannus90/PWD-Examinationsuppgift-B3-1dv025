@@ -34,7 +34,7 @@ self.addEventListener('fetch', (event) => {
             const response = await fetch(request)
             // Saving the result in the cache
             const cache = await self.caches.open(version)
-            cache.put(request, response.clone())
+            await cache.put(request, response.clone())
 
             return response
         } catch (err) {

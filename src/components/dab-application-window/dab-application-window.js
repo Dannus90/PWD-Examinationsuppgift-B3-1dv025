@@ -211,9 +211,9 @@ customElements.define('dab-application-window',
             currentRight = movedElement.offsetLeft
           }
 
-          //////////////////////////////////////////////////////////////////////
+          /// ///////////////////////////////////////////////////////////////////
           // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
-          //////////////////////////////////////////////////////////////////////
+          /// ///////////////////////////////////////////////////////////////////
 
           if (pageX >= document.documentElement.clientWidth) {
             // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN FIREFOX --- //
@@ -234,7 +234,7 @@ customElements.define('dab-application-window',
             // THIS ONE RUNS ON THE LEFT SIDE OF THE PAGE IN FIREFOX --- //
             // Incase we move the mouse fast half of the window gets visible on left side.
             if (currentLeft > 0) {
-              currentLeft = - currentWindowWidth / 2
+              currentLeft = -currentWindowWidth / 2
             }
             event.target.style.left = currentLeft + 'px'
             if ((document.documentElement.clientHeight - pageY) < 40) {
@@ -276,9 +276,9 @@ customElements.define('dab-application-window',
             currentRight = movedElement.offsetLeft
           }
 
-          //////////////////////////////////////////////////////////////////////
+          /// ///////////////////////////////////////////////////////////////////
           // ALL THESE CHECKS ARE TO MAKE IT SIMILAR TO LINUX MANJARO DESKTOP //
-          //////////////////////////////////////////////////////////////////////
+          /// ///////////////////////////////////////////////////////////////////
 
           if (pageX >= document.documentElement.clientWidth) {
           // --- THIS ONE RUNS ON THE RIGHT SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
@@ -298,7 +298,7 @@ customElements.define('dab-application-window',
           } else if (pageX <= 0) {
           // --- THIS ONE RUNS ON THE LEFT SIDE OF THE PAGE IN OTHER BROWSERS (CHROME ETC) --- //
             if (currentLeft > 0) {
-              currentLeft = - currentWindowWidth / 2
+              currentLeft = -currentWindowWidth / 2
             }
             event.target.style.left = currentLeft + 'px'
             if (movedElement.offsetTop === 0 && pageY < 30) {

@@ -563,6 +563,9 @@ customElements.define('dab-shark-bubble-game',
       this._missedAudio = this.shadowRoot.querySelector('#lost-audio')
       this._backgroundMusic = this.shadowRoot.querySelector('#game-background')
 
+      // Variables for game close.
+      this._applicationClosed = false
+
       // Game variables.
       this._sharkCount = 3
       this._sharkSpeed = 10
@@ -592,7 +595,7 @@ customElements.define('dab-shark-bubble-game',
      * @returns {string[]} A string array of attributes to monitor.
      */
     static get observedAttributes () {
-      return ['', '']
+      return ['']
     }
 
     /**
@@ -711,7 +714,7 @@ customElements.define('dab-shark-bubble-game',
        * This function is responsible for looping the drops of balls.
        */
       const loopBall = () => {
-        if (this._totalFailsCount < 15) {
+        if (this._totalFailsCount < 15 && !this._applicationClosed) {
           const clientHeight = this._bubbleSharkGameWrapper.clientHeight
           const clientWidth = this._bubbleSharkGameWrapper.clientWidth
           const ballEl = this._createBall()
@@ -874,6 +877,24 @@ customElements.define('dab-shark-bubble-game',
 
       this._missedAudio.play()
       targetSharkEl.remove()
+    }
+
+    /**
+     * Gets the applicationstate.
+     *
+     * @returns {boolean} A boolean regarding the current application state.
+     */
+    get applicationState () {
+      return this._applicationClosed
+    }
+
+    /**
+     * Sets the application state. Used when closing application to stop balls from falling.
+     *
+     * @param {boolean} boolean A boolean that sets the applicationstate to closed or open.
+     */
+    set applicationState (boolean) {
+      this._applicationClosed = boolean
     }
 
     /**

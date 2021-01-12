@@ -88,6 +88,9 @@ document.addEventListener('deleteAppInstance', ({ detail: { applicationName } })
     })
   })
 
+  // Removing application and related window.
+  applicationName.firstChild.applicationState = true
+  applicationName.firstChild.remove()
   applicationName.remove()
 })
 
