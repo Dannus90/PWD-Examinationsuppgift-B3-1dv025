@@ -39,7 +39,7 @@ self.addEventListener('fetch', (event) => {
             return response
         } catch (err) {
             // Runs when the client cannot access the server.
-            console.info('Service worker caching resuslt')
+            console.info('Service worker caching results')
             return caches.match(request)
         }
     }
@@ -47,15 +47,4 @@ self.addEventListener('fetch', (event) => {
     console.log('ServiceWorker fetching...')
     event.respondWith(cachedFetch(event.request))
 })
-
-self.addEventListener('message', (event) => {
-    console.log('ServiceWorker: Got a message')
-    // Handle events from the main application.
-})
-
-self.addEventListener('push', (event) => {
-    console.log('ServiceWorker: got apushmessage from the server')
-    // Here we show pushnotifications for the user. 
-})
-
 

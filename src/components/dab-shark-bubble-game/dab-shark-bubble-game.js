@@ -238,6 +238,7 @@ template.innerHTML = `
       color: #fff;
       text-align: center;
       font-weight: bold;
+      margin-top: 6rem;
     }
 
     .player-one-container,
@@ -246,6 +247,7 @@ template.innerHTML = `
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      flex: 1;
     }
 
     .player-one-container {
@@ -428,6 +430,26 @@ template.innerHTML = `
     .final-score-span-second {
       color: chartreuse;
     }
+
+    .game-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 20rem;
+      background-color: rgba(0, 0, 0, 0.35);
+      border-radius: 35px;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    
+    .game-info p {
+      text-align: center;
+      color:  #9ef0a7;
+      margin: 0;
+      font-size: 0.90rem;
+      line-height: 1.8rem;
+    }
   </style>
 
   <div id="bubble-shark-game-wrapper">
@@ -461,6 +483,10 @@ template.innerHTML = `
               </div>
               <p>Strength: 20% change to get double score from a ball.</p>
               <p>Weakness: Afraid of sharks - 50% chance to take double damage.</p>
+            </div>
+            <div class="game-info">
+              <p>Game info:</p>
+              <p>Avoid the sharks and click as many balls as possible to get higher score. The difficulty of the game increases gradually.</p>
             </div>
             <div class="player-two-container">
               <div class="playerImageTwo">
